@@ -21,7 +21,7 @@ namespace sensor {
 
 namespace s11n {
 
-  class SafeDistanceSerializer {
+  class ApolloPerceptionSerializer {
   public:
 
     template <typename SensorT, typename EpisodeT, typename ActorListT>
