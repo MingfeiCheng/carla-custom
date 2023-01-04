@@ -26,7 +26,7 @@ AApolloGnssSensor::AApolloGnssSensor(const FObjectInitializer &ObjectInitializer
 
 FActorDefinition AApolloGnssSensor::GetSensorDefinition()
 {
-  return UActorBlueprintFunctionLibrary::MakeGnssDefinition();
+  return UActorBlueprintFunctionLibrary::MakeApolloGnssDefinition();
 }
 
 void AApolloGnssSensor::Set(const FActorDescription &ActorDescription)

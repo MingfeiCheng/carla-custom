@@ -5,7 +5,7 @@
 // // For a copy, see <https://opensource.org/licenses/MIT>.
 
 // #include "Carla.h"
-// #include "Carla/Sensor/ApolloGnssSensor.h"
+// #include "Carla/Sensor/ApolloChassisSensor.h"
 // #include "Carla/Game/CarlaEpisode.h"
 // #include "Carla/Game/CarlaStatics.h"
 // #include "Carla/MapGen/LargeMapManager.h"
@@ -17,22 +17,21 @@
 // #include "carla/geom/Math.h"
 // #include <compiler/enable-ue4-macros.h>
 
-// AApolloGnssSensor::AApolloGnssSensor(const FObjectInitializer &ObjectInitializer)
+// AApolloChassisSensor::AApolloChassisSensor(const FObjectInitializer &ObjectInitializer)
 //   : Super(ObjectInitializer)
 // {
 //   PrimaryActorTick.bCanEverTick = true;
 //   RandomEngine = CreateDefaultSubobject<URandomEngine>(TEXT("RandomEngine"));
 // }
 
-// FActorDefinition AApolloGnssSensor::GetSensorDefinition()
+// FActorDefinition AApolloChassisSensor::GetSensorDefinition()
 // {
-//   return UActorBlueprintFunctionLibrary::MakeGnssDefinition();
+//   return UActorBlueprintFunctionLibrary::MakeChassisDefinition();
 // }
 
 // void AApolloGnssSensor::Set(const FActorDescription &ActorDescription)
 // {
 //   Super::Set(ActorDescription);
-//   UActorBlueprintFunctionLibrary::SetApolloGnss(ActorDescription, this);
 // }
 
 // void AApolloGnssSensor::SetOwner(AActor *Owner)
