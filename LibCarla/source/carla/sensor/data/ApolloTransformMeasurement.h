@@ -7,6 +7,7 @@
 
 #include "carla/geom/Location.h"
 #include "carla/sensor/SensorData.h"
+#include "Math/DVector.h"
 
 #include "carla/sensor/s11n/ApolloTransformSerializer.h"
 
