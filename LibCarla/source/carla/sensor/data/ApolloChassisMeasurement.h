@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "carla/rpc/VehicleControl.h"
+#include "Carla/Vehicle/VehicleControl.h"
 #include "carla/sensor/SensorData.h"
 
 #include "carla/sensor/s11n/ApolloChassisSerializer.h"
@@ -28,19 +28,19 @@ namespace data {
     explicit ApolloChassisMeasurement(const RawData &&data)
       : Super(data){
 
-      rpc::VehicleControl control = Serializer::DeserializeRawData(data);
+      FVehicleControl control = Serializer::DeserializeRawData(data);
       _control = control;
     }
 
   public:
 
-    rpc::VehicleControl GetControl() const {
+    FVehicleControl GetControl() const {
       return _control;
     }
 
   private:
 
-    rpc::VehicleControl _control;
+    FVehicleControl _control;
 
   };
 
