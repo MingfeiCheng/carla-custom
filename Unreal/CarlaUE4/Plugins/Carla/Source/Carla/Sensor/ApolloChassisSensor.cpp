@@ -60,7 +60,7 @@ void AApolloChassisSensor::PostPhysTick(UWorld *World, ELevelTick TickType, floa
     FVehicleControl control;
     actor->GetVehicleControl(control);
 
-    carla::rpc::VehicleControl actor_control = carla::rpc::VehicleControl(control.Throttle, control.Steer, control.Brake, control.bHandBrake, control.bReverse, control.bManualGearShift, control.Gear)
+    carla::rpc::VehicleControl actor_control = carla::rpc::VehicleControl(control.Throttle, control.Steer, control.Brake, control.bHandBrake, control.bReverse, control.bManualGearShift, control.Gear);
 
     auto Stream = GetDataStream(*this);
     Stream.Send(
