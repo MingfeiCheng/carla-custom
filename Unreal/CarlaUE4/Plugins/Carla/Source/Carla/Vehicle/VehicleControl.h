@@ -5,9 +5,9 @@
 // For a copy, see <https://opensource.org/licenses/MIT>.
 
 #pragma once
+#include "carla/MsgPack.h"
 
 #include "VehicleControl.generated.h"
-#include "carla/MsgPack.h"
 
 USTRUCT(BlueprintType)
 struct CARLA_API FVehicleControl
