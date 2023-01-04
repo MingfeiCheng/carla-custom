@@ -29,13 +29,13 @@ namespace s11n {
         const SensorT &,
         const EpisodeT &episode,
         const ActorListT &detected_actors) {
-      const uint32_t size_in_bytes = sizeof(Actor) * detected_actors.Num();
+      const uint32_t size_in_bytes = sizeof(rpc::Actor) * detected_actors.Num();
       Buffer buffer{size_in_bytes};
       unsigned char *it = buffer.data();
       for (auto *actor : detected_actors) {
-        Actor actorInfo = episode.SerializeActor(actor);
-        std::memcpy(it, &actorInfo, sizeof(Actor));
-        it += sizeof(Actor);
+        rpc::Actor actorInfo = episode.SerializeActor(actor);
+        std::memcpy(it, &actorInfo, sizeof(rpc::Actor));
+        it += sizeof(rpc::Actor);
       }
       return buffer;
       // use CarlaEpisode->SerializeActor(AActor* Actor)
