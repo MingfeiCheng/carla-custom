@@ -8,7 +8,7 @@
 
 #include "carla/Buffer.h"
 #include "carla/Memory.h"
-#include "carla/rpc/VehicleControl.h"
+#include "Carla/Vehicle/VehicleControl.h"
 #include "carla/sensor/RawData.h"
 
 #include <cstdint>
@@ -24,14 +24,14 @@ namespace s11n {
   class ApolloChassisSerializer {
   public:
 
-    static rpc::VehicleControl DeserializeRawData(const RawData &message) {
-      return MsgPack::UnPack<rpc::VehicleControl>(message.begin(), message.size());
+    static FVehicleControl DeserializeRawData(const RawData &message) {
+      return MsgPack::UnPack<FVehicleControl>(message.begin(), message.size());
     }
 
     template <typename SensorT>
     static Buffer Serialize(
       const SensorT &,
-      const rpc::VehicleControl &control) {
+      const FVehicleControl &control) {
       return MsgPack::Pack(control);
     }
 

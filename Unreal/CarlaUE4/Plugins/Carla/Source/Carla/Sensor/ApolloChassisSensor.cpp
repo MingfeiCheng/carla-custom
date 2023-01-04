@@ -13,10 +13,10 @@
 #include "Carla/Game/CarlaStatics.h"
 #include "Carla/Actor/ActorBlueprintFunctionLibrary.h"
 #include "Carla/Sensor/WorldObserver.h"
+#include "Carla/Actor/CarlaActor.h"
+#include "Carla/Vehicle/VehicleControl.h"
 
 #include <compiler/disable-ue4-macros.h>
-#include "carla/rpc/ActorId.h"
-#include "carla/rpc/VehicleControl.h"
 #include <compiler/enable-ue4-macros.h>
 
 AApolloChassisSensor::AApolloChassisSensor(const FObjectInitializer &ObjectInitializer)
@@ -54,10 +54,12 @@ void AApolloChassisSensor::PostPhysTick(UWorld *World, ELevelTick TickType, floa
   {
     TRACE_CPUPROFILER_EVENT_SCOPE_STR("AApolloChassisSensor Stream Send");
 
-    // const auto &Episode = GetEpisode();
-    carla::rpc::ActorId actor_id = GetEpisode().FindActor(GetOwner()).GetActorId();
-    carla::rpc::VehicleControl control = GetEpisode().Lock()->GetActorSnapshot(actor_id).state.vehicle_data.control; //Send point?
-
+    const auto &Episode = GetEpisode();
+    
+    FCarlaActor actor = Episode.FindCarlaActor(GetOwner());
+    FVehicleControl control;
+    actor->GetVehicleControl(control);
+    
     auto Stream = GetDataStream(*this);
     Stream.Send(
       *this, 
