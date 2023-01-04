@@ -110,4 +110,5 @@ namespace sensor {
 #include "Carla/Sensor/ApolloGnssSensor.h"
 #include "Carla/Sensor/ApolloChassisSensor.h"
 
+
 #endif // LIBCARLA_SENSOR_REGISTRY_WITH_SENSOR_INCLUDES
