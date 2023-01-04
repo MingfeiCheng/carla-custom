@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Math/DVector.h"
+#include "Math/Quat.h"
 #include "carla/Buffer.h"
 #include "carla/Memory.h"
 #include "carla/sensor/RawData.h"
