@@ -8,7 +8,7 @@
 
 #include "carla/Buffer.h"
 #include "carla/Memory.h"
-#include "Carla/Vehicle/VehicleControl.h"
+#include "carla/rpc/VehicleControl.h"
 #include "carla/sensor/RawData.h"
 
 #include <cstdint>
@@ -24,37 +24,20 @@ namespace s11n {
   class ApolloChassisSerializer {
   public:
 
-    struct Data {
-      float throttle;
-      float steer;
-      float brake;
-      bool hand_brake;
-      bool reverse;
-      bool manual_gear_shif;
-      int gear;
-
-      MSGPACK_DEFINE_ARRAY(throttle, steer, brake, hand_brake, reverse, manual_gear_shif, gear)
-    };
+    static rpc::VehicleControl DeserializeRawData(const RawData &message) {
+      return MsgPack::UnPack<rpc::VehicleControl>(message.begin(), message.size());
+    }
 
     template <typename SensorT>
     static Buffer Serialize(
-      const SensorT &sensor,
-      const FVehicleControl &control);
-    
-    static Data DeserializeRawData(const RawData &message) {
-      return MsgPack::UnPack<Data>(message.begin(), message.size());
+        const SensorT &,
+        const rpc::VehicleControl &control
+        ) {
+      return MsgPack::Pack(control);
     }
 
     static SharedPtr<SensorData> Deserialize(RawData &&data);
   };
-
-  template <typename SensorT>
-  inline Buffer ApolloChassisSerializer::Serialize(
-      const SensorT &,
-      const FVehicleControl &control) {
-    return MsgPack::Pack(Data{control.Throttle, control.Steer, control.Brake, control.bHandBrake, control.bReverse, control.bManualGearShift, control.Gear});
-  }
-
 
 } // namespace s11n
 } // namespace sensor

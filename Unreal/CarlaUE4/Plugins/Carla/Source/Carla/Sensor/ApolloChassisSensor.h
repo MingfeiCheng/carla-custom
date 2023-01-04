@@ -10,8 +10,6 @@
 
 #include "Carla/Actor/ActorDefinition.h"
 #include "Carla/Actor/ActorDescription.h"
-#include "Carla/Actor/CarlaActor.h"
-#include "Carla/Vehicle/VehicleControl.h"
 
 #include <compiler/disable-ue4-macros.h>
 #include <compiler/enable-ue4-macros.h>
