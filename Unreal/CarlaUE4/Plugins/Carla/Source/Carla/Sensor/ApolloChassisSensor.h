@@ -12,7 +12,7 @@
 #include "Carla/Actor/ActorDescription.h"
 
 #include <compiler/disable-ue4-macros.h>
-#include "carla/client/Vehicle.h"
+// #include "carla/client/Vehicle.h"
 #include "carla/rpc/VehicleControl.h"
 #include <compiler/enable-ue4-macros.h>
 
