@@ -30,10 +30,12 @@ namespace data {
     explicit ApolloGnssMeasurement(const RawData &&data)
       : Super(data){
 
-      _geo_location(Serializer::DeserializeRawData(data).geo_location);
-      _location(Serializer::DeserializeRawData(data).location);
-      _rotation(Serializer::DeserializeRawData(data).rotation);
-
+      geom::GeoLocation geo_location = Serializer::DeserializeRawData(data).geo_location;
+      geom::Location location = Serializer::DeserializeRawData(data).location;
+      geom::Rotation rotation = Serializer::DeserializeRawData(data).rotation;
+      _geo_location = geo_location;
+      _location = location;
+      _rotation = rotation;
     }
 
   public:
