@@ -21,6 +21,8 @@
 #include <carla/sensor/data/RadarMeasurement.h>
 #include <carla/sensor/data/DVSEventArray.h>
 
+#include <carla/sensor/data/ApolloGnssMeasurement.h>
+
 #include <carla/sensor/data/RadarData.h>
 
 #include <boost/python/suite/indexing/vector_indexing_suite.hpp>
@@ -107,6 +109,16 @@ namespace data {
         << ", accelerometer=" << meas.GetAccelerometer()
         << ", gyroscope=" << meas.GetGyroscope()
         << ", compass=" << std::to_string(meas.GetCompass())
+        << ')';
+    return out;
+  }
+
+  std::ostream &operator<<(std::ostream &out, const ApolloGnssMeasurement &meas) {
+    out << "ApolloGnssMeasurement(frame=" << std::to_string(meas.GetFrame())
+        << ", timestamp=" << std::to_string(meas.GetTimestamp())
+        << ", geo_location=" << meas.GetGeoLocation()
+        << ", location=" << meas.GetLocation()
+        << ", rotation=" << meas.GetRotation()
         << ')';
     return out;
   }
@@ -487,6 +499,13 @@ void export_sensor_data() {
     .add_property("accelerometer", &csd::IMUMeasurement::GetAccelerometer)
     .add_property("gyroscope", &csd::IMUMeasurement::GetGyroscope)
     .add_property("compass", &csd::IMUMeasurement::GetCompass)
+    .def(self_ns::str(self_ns::self))
+  ;
+
+  class_<csd::ApolloGnssMeasurement, bases<cs::SensorData>, boost::noncopyable, boost::shared_ptr<csd::ApolloGnssMeasurement>>("ApolloGnssMeasurement", no_init)
+    .add_property("geo_location", &csd::ApolloGnssMeasurement::GetGeoLocation)
+    .add_property("location", &csd::ApolloGnssMeasurement::GetLocation)
+    .add_property("rotation", &csd::ApolloGnssMeasurement::GetRotation)
     .def(self_ns::str(self_ns::self))
   ;
 
