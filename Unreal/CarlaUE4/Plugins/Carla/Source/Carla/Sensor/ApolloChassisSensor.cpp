@@ -56,7 +56,7 @@ void AApolloChassisSensor::PostPhysTick(UWorld *World, ELevelTick TickType, floa
 
     const auto &Episode = GetEpisode();
     
-    FCarlaActor actor = Episode.FindCarlaActor(GetOwner());
+    FCarlaActor *actor = Episode.FindCarlaActor(GetOwner());
     FVehicleControl control;
     actor->GetVehicleControl(control);
     
