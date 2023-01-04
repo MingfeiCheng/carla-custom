@@ -19,9 +19,8 @@ namespace data {
   public:
 
     explicit ApolloPerceptionMeasurement(RawData &&data) 
-    : Array<rpc::Actor>(std::move(data)) {}
+    : Array<rpc::Actor>(0u, std::move(data)) {}
   };
-
 } // namespace data
 } // namespace sensor
 } // namespace carla
