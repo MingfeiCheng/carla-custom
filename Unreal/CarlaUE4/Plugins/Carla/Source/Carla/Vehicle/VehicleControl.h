@@ -7,6 +7,7 @@
 #pragma once
 
 #include "VehicleControl.generated.h"
+#include "carla/MsgPack.h"
 
 USTRUCT(BlueprintType)
 struct CARLA_API FVehicleControl
@@ -33,4 +34,6 @@ struct CARLA_API FVehicleControl
 
   UPROPERTY(Category = "Vehicle Control", EditAnywhere, BlueprintReadWrite, meta = (EditCondition = bManualGearShift))
   int32 Gear = 0;
+
+  MSGPACK_DEFINE_ARRAY(Throttle, Steer, Brake, bHandBrake, bReverse, bManualGearShift, Gear)
 };
