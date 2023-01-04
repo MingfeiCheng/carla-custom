@@ -30,6 +30,7 @@
 #include "carla/sensor/s11n/ApolloGnssSerializer.h"
 #include "carla/sensor/s11n/ApolloChassisSerializer.h"
 #include "carla/sensor/s11n/ApolloPerceptionSerializer.h"
+#include "carla/sensor/s11n/ApolloTransformSerializer.h"
 
 // 2. Add a forward-declaration of the sensor here.
 class ACollisionSensor;
@@ -52,6 +53,7 @@ class FWorldObserver;
 class AApolloGnssSensor;
 class AApolloChassisSensor;
 class AApolloPerceptionSensor;
+class AApolloTransformSensor;
 
 namespace carla {
 namespace sensor {
@@ -82,7 +84,8 @@ namespace sensor {
     std::pair<FWorldObserver *, s11n::EpisodeStateSerializer>,
     std::pair<AApolloGnssSensor *, s11n::ApolloGnssSerializer>,
     std::pair<AApolloChassisSensor *, s11n::ApolloChassisSerializer>,
-    std::pair<AApolloPerceptionSensor *, s11n::ApolloPerceptionSerializer>
+    std::pair<AApolloPerceptionSensor *, s11n::ApolloPerceptionSerializer>,
+    std::pair<AApolloTransformSensor *, s11n::ApolloTransformSerializer>
   >;
 
 } // namespace sensor
@@ -113,5 +116,6 @@ namespace sensor {
 #include "Carla/Sensor/ApolloGnssSensor.h"
 #include "Carla/Sensor/ApolloChassisSensor.h"
 #include "Carla/Sensor/ApolloPerceptionSensor.h"
+#include "Carla/Sensor/ApolloTransformSensor.h"
 
 #endif // LIBCARLA_SENSOR_REGISTRY_WITH_SENSOR_INCLUDES
