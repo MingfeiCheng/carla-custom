@@ -53,7 +53,7 @@ void AApolloGnssSensor::PostPhysTick(UWorld *World, ELevelTick TickType, float D
     ActorLocation = LargeMap->LocalToGlobalLocation(ActorLocation);
   }
   
-  carla::geom::Rotation Rotation = carla::geom::Rotation(ActorRotation.Pitch, ActorRotation.Yaw, ActorRotation.Roll);
+  carla::geom::Rotation Rotation = carla::geom::Rotation(ActorRotation) // carla::geom::Rotation(ActorRotation.Pitch, ActorRotation.Yaw, ActorRotation.Roll);
   carla::geom::Location Location = ActorLocation;
   carla::geom::GeoLocation CurrentLocation = CurrentGeoReference.Transform(Location);
 
