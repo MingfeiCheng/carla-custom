@@ -9,6 +9,8 @@
 #include "Carla/Game/CarlaEpisode.h"
 #include "Carla/Game/CarlaStatics.h"
 #include "Carla/MapGen/LargeMapManager.h"
+#include "Carla/Actor/ActorBlueprintFunctionLibrary.h"
+#include "Carla/Sensor/WorldObserver.h"
 
 #include <compiler/disable-ue4-macros.h>
 #include "carla/geom/Vector3D.h"
@@ -33,20 +35,26 @@ void AApolloGnssSensor::Set(const FActorDescription &ActorDescription)
   UActorBlueprintFunctionLibrary::SetGnss(ActorDescription, this);
 }
 
+void AApolloGnssSensor::SetOwner(AActor *Owner)
+{
+  Super::SetOwner(Owner);
+}
+
 void AApolloGnssSensor::PostPhysTick(UWorld *World, ELevelTick TickType, float DeltaSeconds)
 {
   TRACE_CPUPROFILER_EVENT_SCOPE(AApolloGnssSensor::PostPhysTick);
 
   FVector ActorLocation = GetActorLocation();
-  FVector ActorRotation = GetActorRotation();
+  FRotator ActorRotation = GetActorRotation();
 
   ALargeMapManager * LargeMap = UCarlaStatics::GetLargeMapManager(GetWorld());
   if (LargeMap)
   {
     ActorLocation = LargeMap->LocalToGlobalLocation(ActorLocation);
   }
+  
+  carla::geom::Rotation Rotation = carla::geom::Rotation(ActorRotation.Pitch, ActorRotation.Yaw, ActorRotation.Roll);
   carla::geom::Location Location = ActorLocation;
-  carla::geom::Rotation Rotation = ActorRotation;
   carla::geom::GeoLocation CurrentLocation = CurrentGeoReference.Transform(Location);
 
   // Compute the noise for the sensor

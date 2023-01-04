@@ -34,6 +34,8 @@ public:
 
   void Set(const FActorDescription &ActorDescription);
 
+  void SetOwner(AActor *Owner) override;
+
   // virtual void PrePhysTick(float DeltaSeconds) override;
   virtual void PostPhysTick(UWorld *World, ELevelTick TickType, float DeltaSeconds) override;
 
