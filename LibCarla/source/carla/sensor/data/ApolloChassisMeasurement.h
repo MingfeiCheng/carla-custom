@@ -28,7 +28,14 @@ namespace data {
     explicit ApolloChassisMeasurement(const RawData &&data)
       : Super(data){
 
-      FVehicleControl control = Serializer::DeserializeRawData(data);
+      FVehicleControl control;
+      control.Throttle = Serializer::DeserializeRawData(data).throttle;
+      control.Steer = Serializer::DeserializeRawData(data).steer;
+      control.Brake = Serializer::DeserializeRawData(data).brake;
+      control.bHandBrake = Serializer::DeserializeRawData(data).hand_brake;
+      control.bReverse = Serializer::DeserializeRawData(data).reverse;
+      control.bManualGearShift = Serializer::DeserializeRawData(data).manual_gear_shif;
+      control.Gear = Serializer::DeserializeRawData(data).gear;
       _control = control;
     }
 

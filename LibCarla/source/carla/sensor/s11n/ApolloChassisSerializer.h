@@ -24,19 +24,36 @@ namespace s11n {
   class ApolloChassisSerializer {
   public:
 
-    static FVehicleControl DeserializeRawData(const RawData &message) {
-      return MsgPack::UnPack<FVehicleControl>(message.begin(), message.size());
-    }
+    struct Data {
+      float throttle;
+      float steer;
+      float brake;
+      bool hand_brake;
+      bool reverse;
+      bool manual_gear_shif;
+      int gear;
+
+      MSGPACK_DEFINE_ARRAY(throttle, steer, brake, hand_brake, reverse, manual_gear_shif, gear)
+    };
 
     template <typename SensorT>
     static Buffer Serialize(
-      const SensorT &,
-      const FVehicleControl &control) {
-      return MsgPack::Pack(control);
+      const SensorT &sensor,
+      const FVehicleControl &control);
+    
+    static Data DeserializeRawData(const RawData &message) {
+      return MsgPack::UnPack<Data>(message.begin(), message.size());
     }
 
     static SharedPtr<SensorData> Deserialize(RawData &&data);
   };
+
+  template <typename SensorT>
+  inline Buffer ApolloChassisSerializer::Serialize(
+      const SensorT &,
+      const FVehicleControl &control) {
+    return MsgPack::Pack(Data{control.Throttle, control.Steer, control.Brake, control.bHandBrake, control.bReverse, control.bManualGearShift, control.Gear});
+  }
 
 
 } // namespace s11n
