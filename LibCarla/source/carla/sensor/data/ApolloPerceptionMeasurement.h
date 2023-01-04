@@ -6,7 +6,8 @@
 #pragma once
 
 #include "carla/rpc/Actor.h"
-#include "carla/sensor/SensorData.h"
+#include "carla/sensor/data/Array.h"
+//#include "carla/sensor/SensorData.h"
 
 #include "carla/sensor/s11n/ApolloPerceptionSerializer.h"
 
@@ -17,8 +18,8 @@ namespace data {
   class ApolloPerceptionMeasurement : public Array<rpc::Actor> {
   public:
 
-    explicit ApolloPerceptionMeasurement(RawData &&data)
-      : Array<rpc::Actor>(std::move(data)) {}
+    explicit ApolloPerceptionMeasurement(RawData &&data) 
+    : Array<rpc::Actor>(std::move(data)) {}
   };
 
 } // namespace data
