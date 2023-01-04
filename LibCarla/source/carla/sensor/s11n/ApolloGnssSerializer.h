@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "carla/Buffer.h"
 #include "carla/Memory.h"
 #include "carla/geom/GeoLocation.h"
 #include "carla/rpc/ActorId.h"

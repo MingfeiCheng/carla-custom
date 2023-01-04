@@ -22,6 +22,7 @@
 #include <carla/sensor/data/DVSEventArray.h>
 
 #include <carla/sensor/data/ApolloGnssMeasurement.h>
+#include <carla/sensor/data/ApolloChassisMeasurement.h>
 
 #include <carla/sensor/data/RadarData.h>
 
@@ -119,6 +120,14 @@ namespace data {
         << ", geo_location=" << meas.GetGeoLocation()
         << ", location=" << meas.GetLocation()
         << ", rotation=" << meas.GetRotation()
+        << ')';
+    return out;
+  }
+
+  std::ostream &operator<<(std::ostream &out, const ApolloChassisMeasurement &meas) {
+    out << "ApolloChassisMeasurement(frame=" << std::to_string(meas.GetFrame())
+        << ", timestamp=" << std::to_string(meas.GetTimestamp())
+        << ", control=" << meas.GetControl()
         << ')';
     return out;
   }
@@ -506,6 +515,11 @@ void export_sensor_data() {
     .add_property("geo_location", &csd::ApolloGnssMeasurement::GetGeoLocation)
     .add_property("location", &csd::ApolloGnssMeasurement::GetLocation)
     .add_property("rotation", &csd::ApolloGnssMeasurement::GetRotation)
+    .def(self_ns::str(self_ns::self))
+  ;
+
+  class_<csd::ApolloChassisMeasurement, bases<cs::SensorData>, boost::noncopyable, boost::shared_ptr<csd::ApolloChassisMeasurement>>("ApolloChassisMeasurement", no_init)
+    .add_property("control", &csd::ApolloChassisMeasurement::GetControl)
     .def(self_ns::str(self_ns::self))
   ;
 
