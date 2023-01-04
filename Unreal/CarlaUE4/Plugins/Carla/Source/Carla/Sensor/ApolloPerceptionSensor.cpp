@@ -1,70 +1,111 @@
-// Copyright (c) 2019 Computer Vision Center (CVC) at the Universitat Autonoma
-// de Barcelona (UAB).
-//
-// This work is licensed under the terms of the MIT license.
-// For a copy, see <https://opensource.org/licenses/MIT>.
+// // Copyright (c) 2019 Computer Vision Center (CVC) at the Universitat Autonoma
+// // de Barcelona (UAB).
+// //
+// // This work is licensed under the terms of the MIT license.
+// // For a copy, see <https://opensource.org/licenses/MIT>.
 
-#include <exception>
-#include <fstream>
+// #include <exception>
+// #include <fstream>
 
-#include "Carla.h"
-#include "Carla/Sensor/ApolloChassisSensor.h"
-#include "Carla/Game/CarlaEpisode.h"
-#include "Carla/Game/CarlaStatics.h"
-#include "Carla/MapGen/LargeMapManager.h"
-#include "Carla/Actor/ActorBlueprintFunctionLibrary.h"
-#include "Carla/Sensor/WorldObserver.h"
+// #include "Carla.h"
+// #include "Carla/Sensor/ApolloPerceptionSensor.h"
+// #include "Carla/Game/CarlaEpisode.h"
+// #include "Carla/Game/CarlaStatics.h"
+// #include "Carla/MapGen/LargeMapManager.h"
+// #include "Carla/Actor/ActorBlueprintFunctionLibrary.h"
+// #include "Carla/Sensor/WorldObserver.h"
 
-#include <compiler/disable-ue4-macros.h>
-#include "carla/client/Vehicle.h"
-#include "carla/rpc/VehicleControl.h"
-#include <compiler/enable-ue4-macros.h>
+// #include <compiler/disable-ue4-macros.h>
+// #include "carla/rpc/VehicleControl.h"
+// #include <compiler/enable-ue4-macros.h>
 
-AApolloChassisSensor::AApolloChassisSensor(const FObjectInitializer &ObjectInitializer)
-  : Super(ObjectInitializer)
-{
-  PrimaryActorTick.bCanEverTick = true;
-}
+// ASafeDistanceSensor::ASafeDistanceSensor(const FObjectInitializer &ObjectInitializer)
+//   : Super(ObjectInitializer)
+// {
+//   Box = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxOverlap"));
+//   Box->SetupAttachment(RootComponent);
+//   Box->SetHiddenInGame(true); // Disable for debugging.
+//   Box->SetCollisionProfileName(FName("OverlapAll"));
 
-FActorDefinition AApolloChassisSensor::GetSensorDefinition()
-{
-  return UActorBlueprintFunctionLibrary::MakeGenericSensorDefinition(TEXT("apollo"), TEXT("chassis"));
-}
+//   PrimaryActorTick.bCanEverTick = true;
+// }
 
-void AApolloChassisSensor::SetOwner(AActor *Owner)
-{
-  Super::SetOwner(Owner);
-}
+// FActorDefinition ASafeDistanceSensor::GetSensorDefinition()
+// {
+//   auto Definition = UActorBlueprintFunctionLibrary::MakeGenericSensorDefinition(
+//       TEXT("other"),
+//       TEXT("safe_distance"));
 
-void AApolloChassisSensor::PostPhysTick(UWorld *World, ELevelTick TickType, float DeltaSeconds)
-{
-  TRACE_CPUPROFILER_EVENT_SCOPE(AApolloChassisSensor::PostPhysTick);
+//   FActorVariation Front;
+//   Front.Id = TEXT("safe_distance_front");
+//   Front.Type = EActorAttributeType::Float;
+//   Front.RecommendedValues = { TEXT("1.0") };
+//   Front.bRestrictToRecommended = false;
 
-  if (GetParent() == nullptr) {
-    throw_exception(std::runtime_error(GetDisplayId() + ": not attached to actor"));
-    return;
-  }
+//   FActorVariation Back;
+//   Back.Id = TEXT("safe_distance_back");
+//   Back.Type = EActorAttributeType::Float;
+//   Back.RecommendedValues = { TEXT("0.5") };
+//   Back.bRestrictToRecommended = false;
 
-  const auto carla_ego_vehicle = boost::dynamic_pointer_cast<carla::client::Vehicle>(GetParent());
-  if (carla_ego_vehicle == nullptr) {
-    _logger->error("Apollo Chassis Sensor only support vehicles as ego.");
-  }
+//   FActorVariation Lateral;
+//   Lateral.Id = TEXT("safe_distance_lateral");
+//   Lateral.Type = EActorAttributeType::Float;
+//   Lateral.RecommendedValues = { TEXT("0.5") };
+//   Lateral.bRestrictToRecommended = false;
 
-  carla::rpc::VehicleControl CurrentVehicleControl = carla_ego_vehicle.GetControl()
+//   Definition.Variations.Append({ Front, Back, Lateral });
 
-  {
-    TRACE_CPUPROFILER_EVENT_SCOPE_STR("AApolloChassisSensor Stream Send");
-    auto Stream = GetDataStream(*this);
-    Stream.Send(
-      *this, 
-      CurrentVehicleControl);
-  }
-}
+//   return Definition;
+// }
 
-void AApolloChassisSensor::BeginPlay()
-{
-  Super::BeginPlay();
+// void ASafeDistanceSensor::Set(const FActorDescription &Description)
+// {
+//   Super::Set(Description);
 
-  const UCarlaEpisode* episode = UCarlaStatics::GetCurrentEpisode(GetWorld());
-  CurrentGeoReference = episode->GetGeoReference();
-}
+//   float Front = UActorBlueprintFunctionLibrary::RetrieveActorAttributeToFloat(
+//       "safe_distance_front",
+//       Description.Variations,
+//       1.0f);
+//   float Back = UActorBlueprintFunctionLibrary::RetrieveActorAttributeToFloat(
+//       "safe_distance_back",
+//       Description.Variations,
+//       0.5f);
+//   float Lateral = UActorBlueprintFunctionLibrary::RetrieveActorAttributeToFloat(
+//       "safe_distance_lateral",
+//       Description.Variations,
+//       0.5f);
+
+//   constexpr float M_TO_CM = 100.0f; // Unit conversion.
+
+//   float LocationX = M_TO_CM * (Front - Back) / 2.0f;
+//   float ExtentX = M_TO_CM * (Front + Back) / 2.0f;
+//   float ExtentY = M_TO_CM * Lateral;
+
+//   Box->SetRelativeLocation(FVector{LocationX, 0.0f, 0.0f});
+//   Box->SetBoxExtent(FVector{ExtentX, ExtentY, 0.0f});
+// }
+
+// void ASafeDistanceSensor::SetOwner(AActor *Owner)
+// {
+//   Super::SetOwner(Owner);
+
+//   auto BoundingBox = UBoundingBoxCalculator::GetActorBoundingBox(Owner);
+
+//   Box->SetBoxExtent(BoundingBox.Extent + Box->GetUnscaledBoxExtent());
+// }
+
+// void ASafeDistanceSensor::Tick(float DeltaSeconds)
+// {
+//   Super::Tick(DeltaSeconds);
+
+//   TSet<AActor *> DetectedActors;
+//   Box->GetOverlappingActors(DetectedActors, ACarlaWheeledVehicle::StaticClass());
+//   DetectedActors.Remove(GetOwner());
+
+//   if (DetectedActors.Num() > 0)
+//   {
+//     auto Stream = GetDataStream(*this);
+//     Stream.Send(*this, GetEpisode(), DetectedActors);
+//   }
+// }

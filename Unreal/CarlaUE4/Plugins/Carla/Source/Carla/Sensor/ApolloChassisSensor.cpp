@@ -54,9 +54,9 @@ void AApolloChassisSensor::PostPhysTick(UWorld *World, ELevelTick TickType, floa
   {
     TRACE_CPUPROFILER_EVENT_SCOPE_STR("AApolloChassisSensor Stream Send");
 
-    const auto &Episode = GetEpisode()
-    ActorId actor_id = Episode.FindActor(GetOwner()).GetActorId();
-    rpc::VehicleControl control = Episode.Lock()->GetActorSnapshot(actor_id).state.vehicle_data.control; //Send point?
+    // const auto &Episode = GetEpisode();
+    carla::rpc::ActorId actor_id = GetEpisode().FindActor(GetOwner()).GetActorId();
+    carla::rpc::VehicleControl control = GetEpisode().Lock()->GetActorSnapshot(actor_id).state.vehicle_data.control; //Send point?
 
     auto Stream = GetDataStream(*this);
     Stream.Send(
