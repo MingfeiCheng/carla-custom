@@ -28,8 +28,8 @@ namespace data {
     explicit ApolloChassisMeasurement(const RawData &&data)
       : Super(data){
 
-      rpc::VehicleControl contorl = Serializer::DeserializeRawData(data);
-      _control = control;
+      rpc::VehicleControl contorl_data = Serializer::DeserializeRawData(data);
+      _control = contorl_data;
     }
 
   public:
