@@ -17,7 +17,7 @@ namespace data {
   class ApolloPerceptionMeasurement : public Array<rpc::Actor> {
   public:
 
-    explicit SafeDistanceEvent(RawData &&data)
+    explicit ApolloPerceptionMeasurement(RawData &&data)
       : Array<rpc::Actor>(std::move(data)) {}
   };
 
