@@ -23,6 +23,7 @@
 
 #include <carla/sensor/data/ApolloGnssMeasurement.h>
 #include <carla/sensor/data/ApolloChassisMeasurement.h>
+#include <carla/sensor/data/ApolloPerceptionMeasurement.h>
 
 #include <carla/sensor/data/RadarData.h>
 
@@ -521,6 +522,13 @@ void export_sensor_data() {
   class_<csd::ApolloChassisMeasurement, bases<cs::SensorData>, boost::noncopyable, boost::shared_ptr<csd::ApolloChassisMeasurement>>("ApolloChassisMeasurement", no_init)
     .add_property("control", &csd::ApolloChassisMeasurement::GetControl)
     .def(self_ns::str(self_ns::self))
+  ;
+
+  class_<csd::ApolloPerceptionMeasurement, bases<cs::SensorData>, boost::noncopyable, boost::shared_ptr<csd::ApolloPerceptionMeasurement>>("ApolloPerceptionMeasurement", no_init)
+    .def("__len__", &csd::ApolloPerceptionMeasurement::size)
+    .def("__iter__", iterator<csd::ApolloPerceptionMeasurement>())
+    .def("__getitem__", +[](const csd::ApolloPerceptionMeasurement &self, size_t pos) -> cr::Actor {
+    return self.at(pos);})
   ;
 
   class_<csd::RadarMeasurement, bases<cs::SensorData>, boost::noncopyable, boost::shared_ptr<csd::RadarMeasurement>>("RadarMeasurement", no_init)

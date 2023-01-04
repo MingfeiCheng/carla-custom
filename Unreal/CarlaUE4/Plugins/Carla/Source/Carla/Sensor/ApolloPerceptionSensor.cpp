@@ -1,111 +1,110 @@
-// // Copyright (c) 2019 Computer Vision Center (CVC) at the Universitat Autonoma
-// // de Barcelona (UAB).
-// //
-// // This work is licensed under the terms of the MIT license.
-// // For a copy, see <https://opensource.org/licenses/MIT>.
+// Copyright (c) 2019 Computer Vision Center (CVC) at the Universitat Autonoma
+// de Barcelona (UAB).
+//
+// This work is licensed under the terms of the MIT license.
+// For a copy, see <https://opensource.org/licenses/MIT>.
 
-// #include <exception>
-// #include <fstream>
+#include <exception>
+#include <fstream>
 
-// #include "Carla.h"
-// #include "Carla/Sensor/ApolloPerceptionSensor.h"
-// #include "Carla/Game/CarlaEpisode.h"
-// #include "Carla/Game/CarlaStatics.h"
-// #include "Carla/MapGen/LargeMapManager.h"
-// #include "Carla/Actor/ActorBlueprintFunctionLibrary.h"
-// #include "Carla/Sensor/WorldObserver.h"
+#include "Carla.h"
+#include "Carla/Sensor/ApolloPerceptionSensor.h"
 
-// #include <compiler/disable-ue4-macros.h>
-// #include "carla/rpc/VehicleControl.h"
-// #include <compiler/enable-ue4-macros.h>
+#include "Carla/Game/CarlaEpisode.h"
+#include "Carla/Actor/ActorBlueprintFunctionLibrary.h"
+#include "Carla/Util/BoundingBoxCalculator.h"
+#include "Carla/Vehicle/CarlaWheeledVehicle.h"
 
-// ASafeDistanceSensor::ASafeDistanceSensor(const FObjectInitializer &ObjectInitializer)
-//   : Super(ObjectInitializer)
-// {
-//   Box = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxOverlap"));
-//   Box->SetupAttachment(RootComponent);
-//   Box->SetHiddenInGame(true); // Disable for debugging.
-//   Box->SetCollisionProfileName(FName("OverlapAll"));
+#include <compiler/disable-ue4-macros.h>
+#include <compiler/enable-ue4-macros.h>
 
-//   PrimaryActorTick.bCanEverTick = true;
-// }
+AApolloPerceptionSensor::AApolloPerceptionSensor(const FObjectInitializer &ObjectInitializer)
+  : Super(ObjectInitializer)
+{
+  Box = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxOverlap"));
+  Box->SetupAttachment(RootComponent);
+  Box->SetHiddenInGame(true); // Disable for debugging.
+  Box->SetCollisionProfileName(FName("OverlapAll"));
 
-// FActorDefinition ASafeDistanceSensor::GetSensorDefinition()
-// {
-//   auto Definition = UActorBlueprintFunctionLibrary::MakeGenericSensorDefinition(
-//       TEXT("other"),
-//       TEXT("safe_distance"));
+  PrimaryActorTick.bCanEverTick = true;
+}
 
-//   FActorVariation Front;
-//   Front.Id = TEXT("safe_distance_front");
-//   Front.Type = EActorAttributeType::Float;
-//   Front.RecommendedValues = { TEXT("1.0") };
-//   Front.bRestrictToRecommended = false;
+FActorDefinition AApolloPerceptionSensor::GetSensorDefinition()
+{
+  auto Definition = UActorBlueprintFunctionLibrary::MakeGenericSensorDefinition(
+      TEXT("apollo"),
+      TEXT("perception"));
 
-//   FActorVariation Back;
-//   Back.Id = TEXT("safe_distance_back");
-//   Back.Type = EActorAttributeType::Float;
-//   Back.RecommendedValues = { TEXT("0.5") };
-//   Back.bRestrictToRecommended = false;
+  FActorVariation Front;
+  Front.Id = TEXT("distance_front");
+  Front.Type = EActorAttributeType::Float;
+  Front.RecommendedValues = { TEXT("50.0") };
+  Front.bRestrictToRecommended = false;
 
-//   FActorVariation Lateral;
-//   Lateral.Id = TEXT("safe_distance_lateral");
-//   Lateral.Type = EActorAttributeType::Float;
-//   Lateral.RecommendedValues = { TEXT("0.5") };
-//   Lateral.bRestrictToRecommended = false;
+  FActorVariation Back;
+  Back.Id = TEXT("distance_back");
+  Back.Type = EActorAttributeType::Float;
+  Back.RecommendedValues = { TEXT("50.0") };
+  Back.bRestrictToRecommended = false;
 
-//   Definition.Variations.Append({ Front, Back, Lateral });
+  FActorVariation Lateral;
+  Lateral.Id = TEXT("distance_lateral");
+  Lateral.Type = EActorAttributeType::Float;
+  Lateral.RecommendedValues = { TEXT("50.0") };
+  Lateral.bRestrictToRecommended = false;
 
-//   return Definition;
-// }
+  Definition.Variations.Append({ Front, Back, Lateral });
 
-// void ASafeDistanceSensor::Set(const FActorDescription &Description)
-// {
-//   Super::Set(Description);
+  return Definition;
+}
 
-//   float Front = UActorBlueprintFunctionLibrary::RetrieveActorAttributeToFloat(
-//       "safe_distance_front",
-//       Description.Variations,
-//       1.0f);
-//   float Back = UActorBlueprintFunctionLibrary::RetrieveActorAttributeToFloat(
-//       "safe_distance_back",
-//       Description.Variations,
-//       0.5f);
-//   float Lateral = UActorBlueprintFunctionLibrary::RetrieveActorAttributeToFloat(
-//       "safe_distance_lateral",
-//       Description.Variations,
-//       0.5f);
+void AApolloPerceptionSensor::Set(const FActorDescription &Description)
+{
+  Super::Set(Description);
 
-//   constexpr float M_TO_CM = 100.0f; // Unit conversion.
+  float Front = UActorBlueprintFunctionLibrary::RetrieveActorAttributeToFloat(
+      "distance_front",
+      Description.Variations,
+      50.0f);
+  float Back = UActorBlueprintFunctionLibrary::RetrieveActorAttributeToFloat(
+      "distance_back",
+      Description.Variations,
+      50.0f);
+  float Lateral = UActorBlueprintFunctionLibrary::RetrieveActorAttributeToFloat(
+      "distance_lateral",
+      Description.Variations,
+      50.0f);
 
-//   float LocationX = M_TO_CM * (Front - Back) / 2.0f;
-//   float ExtentX = M_TO_CM * (Front + Back) / 2.0f;
-//   float ExtentY = M_TO_CM * Lateral;
+  constexpr float M_TO_CM = 100.0f; // Unit conversion.
 
-//   Box->SetRelativeLocation(FVector{LocationX, 0.0f, 0.0f});
-//   Box->SetBoxExtent(FVector{ExtentX, ExtentY, 0.0f});
-// }
+  float LocationX = M_TO_CM * (Front - Back) / 2.0f;
+  float ExtentX = M_TO_CM * (Front + Back) / 2.0f;
+  float ExtentY = M_TO_CM * Lateral;
 
-// void ASafeDistanceSensor::SetOwner(AActor *Owner)
-// {
-//   Super::SetOwner(Owner);
+  Box->SetRelativeLocation(FVector{LocationX, 0.0f, 0.0f});
+  Box->SetBoxExtent(FVector{ExtentX, ExtentY, 0.0f});
+}
 
-//   auto BoundingBox = UBoundingBoxCalculator::GetActorBoundingBox(Owner);
+void AApolloPerceptionSensor::SetOwner(AActor *Owner)
+{
+  Super::SetOwner(Owner);
 
-//   Box->SetBoxExtent(BoundingBox.Extent + Box->GetUnscaledBoxExtent());
-// }
+  auto BoundingBox = UBoundingBoxCalculator::GetActorBoundingBox(Owner);
 
-// void ASafeDistanceSensor::Tick(float DeltaSeconds)
-// {
-//   Super::Tick(DeltaSeconds);
+  Box->SetBoxExtent(BoundingBox.Extent + Box->GetUnscaledBoxExtent());
+}
 
-//   TSet<AActor *> DetectedActors;
-//   Box->GetOverlappingActors(DetectedActors, ACarlaWheeledVehicle::StaticClass());
-//   DetectedActors.Remove(GetOwner());
+void AApolloPerceptionSensor::PostPhysTick(UWorld *World, ELevelTick TickType, float DeltaSeconds)
+{
+  Super::Tick(DeltaSeconds);
 
-//   if (DetectedActors.Num() > 0)
-//   {
-//     auto Stream = GetDataStream(*this);
-//     Stream.Send(*this, GetEpisode(), DetectedActors);
-//   }
-// }
+  TSet<AActor *> DetectedActors;
+  Box->GetOverlappingActors(DetectedActors, ACarlaWheeledVehicle::StaticClass());
+  DetectedActors.Remove(GetOwner());
+
+  if (DetectedActors.Num() > 0)
+  {
+    auto Stream = GetDataStream(*this);
+    Stream.Send(*this, GetEpisode(), DetectedActors);
+  }
+}

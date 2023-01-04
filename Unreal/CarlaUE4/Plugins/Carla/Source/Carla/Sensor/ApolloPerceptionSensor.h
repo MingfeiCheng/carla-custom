@@ -1,33 +1,33 @@
-// #pragma once
+#pragma once
 
-// #include "Carla/Sensor/Sensor.h"
+#include "Carla/Sensor/Sensor.h"
 
-// #include "Carla/Actor/ActorDefinition.h"
-// #include "Carla/Actor/ActorDescription.h"
+#include "Carla/Actor/ActorDefinition.h"
+#include "Carla/Actor/ActorDescription.h"
 
-// #include "Components/BoxComponent.h"
+#include "Components/BoxComponent.h"
 
-// #include "ApolloPerceptionSensor.generated.h"
+#include "ApolloPerceptionSensor.generated.h"
 
-// UCLASS()
-// class CARLA_API AApolloPerceptionSensor : public ASensor
-// {
-//   GENERATED_BODY()
+UCLASS()
+class CARLA_API AApolloPerceptionSensor : public ASensor
+{
+  GENERATED_BODY()
 
-// public:
+public:
 
-//   AApolloPerceptionSensor(const FObjectInitializer &ObjectInitializer);
+  AApolloPerceptionSensor(const FObjectInitializer &ObjectInitializer);
 
-//   static FActorDefinition GetSensorDefinition();
+  static FActorDefinition GetSensorDefinition();
 
-//   void Set(const FActorDescription &ActorDescription) override;
+  void Set(const FActorDescription &ActorDescription) override;
 
-//   void SetOwner(AActor *Owner) override;
+  void SetOwner(AActor *Owner) override;
 
-//   virtual void PostPhysTick(UWorld *World, ELevelTick TickType, float DeltaSeconds) override;
+  virtual void PostPhysTick(UWorld *World, ELevelTick TickType, float DeltaSeconds) override;
 
-// private:
+private:
 
-//   UPROPERTY()
-//   UBoxComponent *Box = nullptr;
-// };
+  UPROPERTY()
+  UBoxComponent *Box = nullptr;
+};
