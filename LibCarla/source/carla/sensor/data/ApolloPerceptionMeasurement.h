@@ -5,9 +5,10 @@
 
 #pragma once
 
+#include "carla/client/detail/ActorVariant.h"
 #include "carla/rpc/Actor.h"
 #include "carla/sensor/data/Array.h"
-//#include "carla/sensor/SensorData.h"
+#include "carla/sensor/SensorData.h"
 
 #include "carla/sensor/s11n/ApolloPerceptionSerializer.h"
 
@@ -15,12 +16,20 @@ namespace carla {
 namespace sensor {
 namespace data {
 
-  class ApolloPerceptionMeasurement : public Array<rpc::Actor> {
+  // class ApolloPerceptionMeasurement : public Array<rpc::Actor> {
+  // public:
+
+  //   explicit ApolloPerceptionMeasurement(RawData &&data) 
+  //   : Array<rpc::Actor>(0u, std::move(data)) {}
+  // };
+
+  class ApolloPerceptionMeasurement : public Array<client::detail::ActorVariant> {
   public:
 
     explicit ApolloPerceptionMeasurement(RawData &&data) 
-    : Array<rpc::Actor>(0u, std::move(data)) {}
+    : Array<client::detail::ActorVariant>(0u, std::move(data)) {}
   };
+
 } // namespace data
 } // namespace sensor
 } // namespace carla
