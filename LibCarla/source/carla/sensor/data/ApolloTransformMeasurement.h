@@ -28,47 +28,47 @@ namespace data {
     explicit ApolloTransformMeasurement(const RawData &&data)
       : Super(data){
 
-      geom::Location location = Serializer::DeserializeRawData(data).location;
+      // geom::Location location = Serializer::DeserializeRawData(data).location;
       float qw = Serializer::DeserializeRawData(data).qw;
-      // float qx = Serializer::DeserializeRawData(data).qx;
-      // float qy = Serializer::DeserializeRawData(data).qy;
-      // float qz = Serializer::DeserializeRawData(data).qz;
-      _location = location;
+      float qx = Serializer::DeserializeRawData(data).qx;
+      float qy = Serializer::DeserializeRawData(data).qy;
+      float qz = Serializer::DeserializeRawData(data).qz;
+      // _location = location;
       _qw = qw;
-      // _qx = qx;
-      // _qy = qy;
-      // _qz = qz;
+      _qx = qx;
+      _qy = qy;
+      _qz = qz;
     }
 
   public:
 
-    geom::Location GetLocation() const {
-      return _location;
-    }
+    // geom::Location GetLocation() const {
+    //   return _location;
+    // }
 
     float GetQw() const {
       return _qw;
     }
 
-    // float GetQx() const {
-    //   return _qx;
-    // }
+    float GetQx() const {
+      return _qx;
+    }
 
-    // float GetQy() const {
-    //   return _qy;
-    // }
+    float GetQy() const {
+      return _qy;
+    }
 
-    // float GetQz() const {
-    //   return _qz;
-    // }
+    float GetQz() const {
+      return _qz;
+    }
 
   private:
 
-    geom::Location _location;
+    // geom::Location _location;
     float _qw;
-    // float _qx;
-    // float _qy;
-    // float _qz;
+    float _qx;
+    float _qy;
+    float _qz;
 
   };
 

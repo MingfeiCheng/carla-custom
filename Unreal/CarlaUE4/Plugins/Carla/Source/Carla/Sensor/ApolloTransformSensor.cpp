@@ -50,8 +50,10 @@ void AApolloTransformSensor::PostPhysTick(UWorld *World, ELevelTick TickType, fl
     auto Stream = GetDataStream(*this);
     Stream.Send(
       *this, 
-      Location,
-      qw);
+      qw,
+      qx,
+      qy,
+      qz);
   }
 }
 
