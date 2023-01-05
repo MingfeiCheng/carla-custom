@@ -134,6 +134,15 @@ namespace data {
     return out;
   }
 
+  std::ostream &operator<<(std::ostream &out, const ApolloTransformMeasurement &meas) {
+    out << "ApolloTransformMeasurement(frame=" << std::to_string(meas.GetFrame())
+        << ", timestamp=" << std::to_string(meas.GetTimestamp())
+        << ", location=" << meas.GetLocation()
+        << ", rotation=" << meas.GetRotation()
+        << ')';
+    return out;
+  }
+
   std::ostream &operator<<(std::ostream &out, const RadarMeasurement &meas) {
     out << "RadarMeasurement(frame=" << std::to_string(meas.GetFrame())
         << ", timestamp=" << std::to_string(meas.GetTimestamp())
