@@ -36,10 +36,10 @@ namespace s11n {
     static Buffer Serialize(
       const SensorT &sensor,
       const geom::Location &location,
-      const float &qw,
-      const float &qx,
-      const float &qy,
-      const float &qz);
+      const float qw,
+      const float qx,
+      const float qy,
+      const float qz);
 
     static Data DeserializeRawData(const RawData &message) {
       return MsgPack::UnPack<Data>(message.begin(), message.size());
@@ -52,10 +52,10 @@ namespace s11n {
   inline Buffer ApolloTransformSerializer::Serialize(
       const SensorT &,
       const geom::Location &location,
-      const float &qw,
-      const float &qx,
-      const float &qy,
-      const float &qz) {
+      const float qw,
+      const float qx,
+      const float qy,
+      const float qz) {
     return MsgPack::Pack(Data{location, qw, qx, qy, qz});
   }
 

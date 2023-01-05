@@ -532,14 +532,14 @@ void export_sensor_data() {
     return self.at(pos);})
   ;
 
-  // class_<csd::ApolloTransformMeasurement, bases<cs::SensorData>, boost::noncopyable, boost::shared_ptr<csd::ApolloTransformMeasurement>>("ApolloTransformMeasurement", no_init)
-  //   .add_property("location", &csd::ApolloTransformMeasurement::GetLocation)
-  //   .add_property("qw", &csd::ApolloTransformMeasurement::GetQw)
-  //   .add_property("qx", &csd::ApolloTransformMeasurement::GetQx)
-  //   .add_property("qy", &csd::ApolloTransformMeasurement::GetQy)
-  //   .add_property("qz", &csd::ApolloTransformMeasurement::GetQz)
-  //   .def(self_ns::str(self_ns::self))
-  // ;
+  class_<csd::ApolloTransformMeasurement, bases<cs::SensorData>, boost::noncopyable, boost::shared_ptr<csd::ApolloTransformMeasurement>>("ApolloTransformMeasurement", no_init)
+    .add_property("location", &csd::ApolloTransformMeasurement::GetLocation)
+    .add_property("qw", &csd::ApolloTransformMeasurement::GetQw)
+    .add_property("qx", &csd::ApolloTransformMeasurement::GetQx)
+    .add_property("qy", &csd::ApolloTransformMeasurement::GetQy)
+    .add_property("qz", &csd::ApolloTransformMeasurement::GetQz)
+    .def(self_ns::str(self_ns::self))
+  ;
 
   class_<csd::RadarMeasurement, bases<cs::SensorData>, boost::noncopyable, boost::shared_ptr<csd::RadarMeasurement>>("RadarMeasurement", no_init)
     .add_property("raw_data", &GetRawDataAsBuffer<csd::RadarMeasurement>)
