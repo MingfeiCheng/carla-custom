@@ -38,7 +38,7 @@ void AApolloTransformSensor::PostPhysTick(UWorld *World, ELevelTick TickType, fl
   FVector ActorLocation = GetActorLocation();
   FRotator ActorRotation = GetActorRotation();
 
-  carla::geom::Location Location = carla::geom::Location(ActorLocation.x, -ActorLocation.y, ActorLocation.z);
+  carla::geom::Location Location = carla::geom::Location(ActorLocation.X, -ActorLocation.Y, ActorLocation.Z);
   const FQuat RotationQuat = FRotator(-ActorRotation.Pitch, -ActorRotation.Yaw, ActorRotation.Roll).Quaternion();
   const float qw = 0.0f; //RotationQuat.W;
   const float qx = 0.0f; //RotationQuat.X;
