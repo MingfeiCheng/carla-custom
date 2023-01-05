@@ -37,7 +37,7 @@ void AApolloStateSensor::PostPhysTick(UWorld *World, ELevelTick TickType, float 
 {
   TRACE_CPUPROFILER_EVENT_SCOPE(AApolloStateSensor::PostPhysTick);
   
-  rpc::Actor actorState = GetEpisode().SerializeActor(GetOwner());
+  carla::rpc::Actor actorState = GetEpisode().SerializeActor(GetOwner());
   
   {
     TRACE_CPUPROFILER_EVENT_SCOPE_STR("AApolloStateSensor Stream Send");
@@ -46,7 +46,7 @@ void AApolloStateSensor::PostPhysTick(UWorld *World, ELevelTick TickType, float 
   }
 }
 
-void AApolloTransformSensor::BeginPlay()
+void AApolloStateSensor::BeginPlay()
 {
   Super::BeginPlay();
 }
