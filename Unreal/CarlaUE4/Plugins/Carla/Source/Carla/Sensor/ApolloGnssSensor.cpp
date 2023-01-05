@@ -69,7 +69,7 @@ void AApolloGnssSensor::PostPhysTick(UWorld *World, ELevelTick TickType, float D
   carla::geom::Location ApolloLocation = carla::geom::Location(ActorLocation.X, -ActorLocation.Y, ActorLocation.Z);
   carla::geom::Rotation ApolloRotation = carla::geom::Rotation(-ActorRotation.Pitch, -(ActorRotation.Yaw + 90), ActorRotation.Roll);
 
-  const FQuat ApolloRotationQuat = FRotator(ApolloRotation.Pitch, ApolloRotation.Yaw, ApolloRotation.Roll).Quaternion();
+  const FQuat ApolloRotationQuat = FRotator(ApolloRotation.pitch, ApolloRotation.yaw, ApolloRotation.roll).Quaternion();
   const float qw = ApolloRotationQuat.W;
   const float qx = ApolloRotationQuat.X;
   const float qy = ApolloRotationQuat.Y;
