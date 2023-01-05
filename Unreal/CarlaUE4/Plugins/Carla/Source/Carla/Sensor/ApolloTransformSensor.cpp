@@ -40,10 +40,10 @@ void AApolloTransformSensor::PostPhysTick(UWorld *World, ELevelTick TickType, fl
 
   carla::geom::Location Location = carla::geom::Location(ActorLocation.x, -ActorLocation.y, ActorLocation.z);
   const FQuat RotationQuat = FRotator(-ActorRotation.Pitch, -ActorRotation.Yaw, ActorRotation.Roll).Quaternion();
-  const float qw = RotationQuat.W;
-  const float qx = RotationQuat.X;
-  const float qy = RotationQuat.Y;
-  const float qz = RotationQuat.Z;
+  const float qw = 0.0f; //RotationQuat.W;
+  const float qx = 0.0f; //RotationQuat.X;
+  const float qy = 0.0f; //RotationQuat.Y;
+  const float qz = 0.0f; //RotationQuat.Z;
 
   {
     TRACE_CPUPROFILER_EVENT_SCOPE_STR("AApolloTransformSensor Stream Send");
