@@ -51,10 +51,7 @@ void AApolloTransformSensor::PostPhysTick(UWorld *World, ELevelTick TickType, fl
     Stream.Send(
       *this, 
       Location,
-      qw,
-      qx,
-      qy,
-      qz);
+      qw);
   }
 }
 

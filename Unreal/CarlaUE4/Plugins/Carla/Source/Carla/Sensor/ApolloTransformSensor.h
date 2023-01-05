@@ -41,8 +41,4 @@ protected:
 
   virtual void BeginPlay() override;
 
-private:
-
-  carla::geom::GeoLocation CurrentGeoReference;
-
 };

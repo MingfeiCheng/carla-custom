@@ -26,20 +26,14 @@ namespace s11n {
     struct Data {
       geom::Location location;
       float qw;
-      float qx;
-      float qy;
-      float qz;
-      MSGPACK_DEFINE_ARRAY(location, qw, qx, qy, qz)
+      MSGPACK_DEFINE_ARRAY(location, qw)
     };
 
     template <typename SensorT>
     static Buffer Serialize(
       const SensorT &sensor,
       const geom::Location &location,
-      const float qw,
-      const float qx,
-      const float qy,
-      const float qz);
+      const float qw);
 
     static Data DeserializeRawData(const RawData &message) {
       return MsgPack::UnPack<Data>(message.begin(), message.size());
@@ -52,11 +46,8 @@ namespace s11n {
   inline Buffer ApolloTransformSerializer::Serialize(
       const SensorT &,
       const geom::Location &location,
-      const float qw,
-      const float qx,
-      const float qy,
-      const float qz) {
-    return MsgPack::Pack(Data{location, qw, qx, qy, qz});
+      const float qw) {
+    return MsgPack::Pack(Data{location, qw});
   }
 
 } // namespace s11n
