@@ -12,8 +12,6 @@
 
 #include "Carla/Game/CarlaEpisode.h"
 #include "Carla/Actor/ActorBlueprintFunctionLibrary.h"
-#include "Carla/Util/BoundingBoxCalculator.h"
-#include "Carla/Vehicle/CarlaWheeledVehicle.h"
 
 #include <compiler/disable-ue4-macros.h>
 #include "carla/rpc/Actor.h"

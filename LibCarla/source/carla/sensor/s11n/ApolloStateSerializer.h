@@ -21,7 +21,7 @@ namespace sensor {
 
 namespace s11n {
 
-  class ApolloPerceptionSerializer {
+  class ApolloStateSerializer {
   public:
 
     static rpc::Actor DeserializeRawData(const RawData &message) {
