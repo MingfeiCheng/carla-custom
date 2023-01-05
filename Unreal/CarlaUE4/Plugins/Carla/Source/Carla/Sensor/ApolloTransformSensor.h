@@ -12,7 +12,7 @@
 #include "Carla/Actor/ActorDescription.h"
 
 #include <compiler/disable-ue4-macros.h>
-#include "carla/geom/GeoLocation.h"
+#include "carla/geom/Vector3D.h"
 #include <compiler/enable-ue4-macros.h>
 
 #include <array>

@@ -7,7 +7,6 @@
 
 #include "carla/geom/Location.h"
 #include "carla/sensor/SensorData.h"
-#include "Math/DVector.h"
 
 #include "carla/sensor/s11n/ApolloTransformSerializer.h"
 
@@ -30,9 +29,15 @@ namespace data {
       : Super(data){
 
       geom::Location location = Serializer::DeserializeRawData(data).location;
-      FQuat rotation = Serializer::DeserializeRawData(data).rotation;
+      float qw = Serializer::DeserializeRawData(data).qw;
+      float qx = Serializer::DeserializeRawData(data).qx;
+      float qy = Serializer::DeserializeRawData(data).qy;
+      float qz = Serializer::DeserializeRawData(data).qz;
       _location = location;
-      _rotation = rotation;
+      _qw = qw;
+      _qx = qx;
+      _qy = qy;
+      _qz = qz;
     }
 
   public:
@@ -41,14 +46,29 @@ namespace data {
       return _location;
     }
 
-    FQuat GetRotation() const {
-      return _rotation;
+    float GetQw() const {
+      return _qw;
+    }
+
+    float GetQx() const {
+      return _qx;
+    }
+
+    float GetQy() const {
+      return _qy;
+    }
+
+    float GetQz() const {
+      return _qz;
     }
 
   private:
 
     geom::Location _location;
-    FQuat _rotation;
+    float _qw;
+    float _qx;
+    float _qy;
+    float _qz;
 
   };
 

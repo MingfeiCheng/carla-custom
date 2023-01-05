@@ -5,14 +5,13 @@
 // For a copy, see <https://opensource.org/licenses/MIT>.
 
 #include "Carla.h"
+
 #include "Carla/Sensor/ApolloTransformSensor.h"
 #include "Carla/Game/CarlaEpisode.h"
 #include "Carla/Game/CarlaStatics.h"
 #include "Carla/Actor/ActorBlueprintFunctionLibrary.h"
-#include "Math/Quat.h"
 
 #include <compiler/disable-ue4-macros.h>
-#include "carla/geom/Vector3D.h"
 #include "carla/geom/Math.h"
 #include <compiler/enable-ue4-macros.h>
 
@@ -48,7 +47,10 @@ void AApolloTransformSensor::PostPhysTick(UWorld *World, ELevelTick TickType, fl
     Stream.Send(
       *this, 
       Location,
-      RotationQuat);
+      RotationQuat.W,
+      RotationQuat.X,
+      RotationQuat.Y,
+      RotationQuat.Z);
   }
 }
 

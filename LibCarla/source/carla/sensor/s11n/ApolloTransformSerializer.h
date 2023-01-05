@@ -6,7 +6,6 @@
 
 #pragma once
 
-#include "Math/Quat.h"
 #include "carla/Buffer.h"
 #include "carla/Memory.h"
 #include "carla/sensor/RawData.h"
@@ -26,15 +25,21 @@ namespace s11n {
 
     struct Data {
       geom::Location location;
-      FQuat rotation;
-      MSGPACK_DEFINE_ARRAY(location, rotation)
+      float qw;
+      float qx;
+      float qy;
+      float qz;
+      MSGPACK_DEFINE_ARRAY(location, qw, qx, qy, qz)
     };
 
     template <typename SensorT>
     static Buffer Serialize(
       const SensorT &sensor,
       const geom::Location &location,
-      const FQuat &rotation);
+      const float &qw,
+      const float &qx,
+      const float &qy,
+      const float &qz);
 
     static Data DeserializeRawData(const RawData &message) {
       return MsgPack::UnPack<Data>(message.begin(), message.size());
@@ -47,8 +52,11 @@ namespace s11n {
   inline Buffer ApolloTransformSerializer::Serialize(
       const SensorT &,
       const geom::Location &location,
-      const FQuat &rotation) {
-    return MsgPack::Pack(Data{location, rotation});
+      const float &qw,
+      const float &qx,
+      const float &qy,
+      const float &qz) {
+    return MsgPack::Pack(Data{location, qw, qx, qy, qz});
   }
 
 } // namespace s11n
