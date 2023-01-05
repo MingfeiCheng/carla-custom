@@ -151,6 +151,14 @@ namespace data {
     return out;
   }
 
+  std::ostream &operator<<(std::ostream &out, const ApolloStateMeasurement &meas) {
+    out << "ApolloStateMeasurement(frame=" << std::to_string(meas.GetFrame())
+        << ", timestamp=" << std::to_string(meas.GetTimestamp())
+        << ", actor=" << meas.GetActorState()
+        << ')';
+    return out;
+  }
+
   std::ostream &operator<<(std::ostream &out, const RadarMeasurement &meas) {
     out << "RadarMeasurement(frame=" << std::to_string(meas.GetFrame())
         << ", timestamp=" << std::to_string(meas.GetTimestamp())
@@ -534,10 +542,10 @@ void export_sensor_data() {
     .add_property("geo_location", &csd::ApolloGnssMeasurement::GetGeoLocation)
     .add_property("location", &csd::ApolloGnssMeasurement::GetLocation)
     .add_property("rotation", &csd::ApolloGnssMeasurement::GetRotation)
-    .add_property("qw", &csd::ApolloTransformMeasurement::GetQw)
-    .add_property("qx", &csd::ApolloTransformMeasurement::GetQx)
-    .add_property("qy", &csd::ApolloTransformMeasurement::GetQy)
-    .add_property("qz", &csd::ApolloTransformMeasurement::GetQz)
+    .add_property("qw", &csd::ApolloGnssMeasurement::GetQw)
+    .add_property("qx", &csd::ApolloGnssMeasurement::GetQx)
+    .add_property("qy", &csd::ApolloGnssMeasurement::GetQy)
+    .add_property("qz", &csd::ApolloGnssMeasurement::GetQz)
     .def(self_ns::str(self_ns::self))
   ;
 
@@ -563,7 +571,8 @@ void export_sensor_data() {
   ;
 
   class_<csd::ApolloStateMeasurement, bases<cs::SensorData>, boost::noncopyable, boost::shared_ptr<csd::ApolloStateMeasurement>>("ApolloStateMeasurement", no_init)
-    .def("get_state", &csd::ApolloStateMeasurement::GetActorState)
+    .add_property("actor", &csd::ApolloStateMeasurement::GetActorState)
+    .def(self_ns::str(self_ns::self))
   ;
 
   class_<csd::RadarMeasurement, bases<cs::SensorData>, boost::noncopyable, boost::shared_ptr<csd::RadarMeasurement>>("RadarMeasurement", no_init)

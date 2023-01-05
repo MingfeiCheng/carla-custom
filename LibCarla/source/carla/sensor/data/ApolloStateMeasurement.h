@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "carla/Debug.h"
+#include "carla/client/detail/ActorVariant.h"
 #include "carla/rpc/Actor.h"
 #include "carla/sensor/SensorData.h"
 
@@ -28,25 +30,22 @@ namespace data {
     explicit ApolloStateMeasurement(const RawData &&data)
       : Super(data){
 
-      rpc::Actor actor_state = Serializer::DeserializeRawData(data);
+      client::detail::ActorVariant actor_state = Serializer::DeserializeRawData(data);
       _actor_state = actor_state;
     }
 
   public:
 
-    rpc::Actor GetActorState() const {
-      return _actor_state;
+    SharedPtr<client::Actor> GetActorState() const {
+      return _actor_state.Get(GetEpisode());
     }
 
     // rpc::ActorId GetActorId() const {
     //   return _actor_id;
     // }
-    
-    
 
   private:
-    rpc::Actor _actor_state;
-
+    client::detail::ActorVariant _actor_state;
   };
 
 } // namespace data
