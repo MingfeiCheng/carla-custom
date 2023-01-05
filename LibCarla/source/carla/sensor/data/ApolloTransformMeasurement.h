@@ -6,6 +6,7 @@
 #pragma once
 
 #include "carla/geom/Location.h"
+#include "carla/geom/Rotation.h"
 #include "carla/sensor/SensorData.h"
 
 #include "carla/sensor/s11n/ApolloTransformSerializer.h"
@@ -28,47 +29,27 @@ namespace data {
     explicit ApolloTransformMeasurement(const RawData &&data)
       : Super(data){
 
-      // geom::Location location = Serializer::DeserializeRawData(data).location;
-      float qw = Serializer::DeserializeRawData(data).qw;
-      float qx = Serializer::DeserializeRawData(data).qx;
-      float qy = Serializer::DeserializeRawData(data).qy;
-      float qz = Serializer::DeserializeRawData(data).qz;
-      // _location = location;
-      _qw = qw;
-      _qx = qx;
-      _qy = qy;
-      _qz = qz;
+      geom::Location location = Serializer::DeserializeRawData(data).location;
+      geom::Rotation rotation = Serializer::DeserializeRawData(data).rotation;
+      _location = location;
+      _rotation = rotation;
     }
 
   public:
 
-    // geom::Location GetLocation() const {
-    //   return _location;
-    // }
-
-    float GetQw() const {
-      return _qw;
+    geom::Location GetLocation() const {
+      return _location;
     }
 
-    float GetQx() const {
-      return _qx;
-    }
-
-    float GetQy() const {
-      return _qy;
-    }
-
-    float GetQz() const {
-      return _qz;
+    geom::Rotation GetRotation() const {
+      return _rotation;
     }
 
   private:
 
-    // geom::Location _location;
-    float _qw;
-    float _qx;
-    float _qy;
-    float _qz;
+    geom::Location _location;
+    geom::Rotation _rotation;
+    
 
   };
 

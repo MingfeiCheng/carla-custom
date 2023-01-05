@@ -13,6 +13,8 @@
 
 #include <compiler/disable-ue4-macros.h>
 #include "carla/geom/Math.h"
+#include "carla/geom/Location.h"
+#include "carla/geom/Rotation.h"
 #include <compiler/enable-ue4-macros.h>
 
 AApolloTransformSensor::AApolloTransformSensor(const FObjectInitializer &ObjectInitializer)
@@ -38,22 +40,23 @@ void AApolloTransformSensor::PostPhysTick(UWorld *World, ELevelTick TickType, fl
   FVector ActorLocation = GetActorLocation();
   FRotator ActorRotation = GetActorRotation();
 
-  carla::geom::Location Location = carla::geom::Location(ActorLocation.X, -ActorLocation.Y, ActorLocation.Z);
-  const FQuat RotationQuat = FRotator(-ActorRotation.Pitch, -ActorRotation.Yaw, ActorRotation.Roll).Quaternion();
-  const float qw = 0.0f; //RotationQuat.W;
-  const float qx = 0.0f; //RotationQuat.X;
-  const float qy = 0.0f; //RotationQuat.Y;
-  const float qz = 0.0f; //RotationQuat.Z;
+  carla::geom::Rotation Rotation = carla::geom::Rotation(ActorRotation.Pitch, ActorRotation.Yaw, ActorRotation.Roll);
+  carla::geom::Location Location = ActorLocation;
+
+  // carla::geom::Location Location = carla::geom::Location(ActorLocation.X, -ActorLocation.Y, ActorLocation.Z);
+  // const FQuat RotationQuat = FRotator(-ActorRotation.Pitch, -ActorRotation.Yaw, ActorRotation.Roll).Quaternion();
+  // const float qw = 0.0f; //RotationQuat.W;
+  // const float qx = 0.0f; //RotationQuat.X;
+  // const float qy = 0.0f; //RotationQuat.Y;
+  // const float qz = 0.0f; //RotationQuat.Z;
 
   {
     TRACE_CPUPROFILER_EVENT_SCOPE_STR("AApolloTransformSensor Stream Send");
     auto Stream = GetDataStream(*this);
     Stream.Send(
       *this, 
-      qw,
-      qx,
-      qy,
-      qz);
+      Location,
+      Rotation);
   }
 }
 
