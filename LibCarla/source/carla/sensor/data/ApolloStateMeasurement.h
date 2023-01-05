@@ -28,11 +28,7 @@ namespace data {
     friend Serializer;
 
     explicit ApolloStateMeasurement(const RawData &&data)
-      : Super(data){
-
-      client::detail::ActorVariant actor_state = Serializer::DeserializeRawData(data);
-      _actor_state = actor_state;
-    }
+      : Super(data), _actor_state(Serializer::DeserializeRawData(data)) {}
 
   public:
 
