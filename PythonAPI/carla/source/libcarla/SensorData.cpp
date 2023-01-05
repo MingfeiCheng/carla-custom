@@ -25,6 +25,7 @@
 #include <carla/sensor/data/ApolloChassisMeasurement.h>
 #include <carla/sensor/data/ApolloPerceptionMeasurement.h>
 #include <carla/sensor/data/ApolloTransformMeasurement.h>
+#include <carla/sensor/data/ApolloStateMeasurement.h>
 
 #include <carla/sensor/data/RadarData.h>
 
@@ -559,6 +560,10 @@ void export_sensor_data() {
     .add_property("qy", &csd::ApolloTransformMeasurement::GetQy)
     .add_property("qz", &csd::ApolloTransformMeasurement::GetQz)
     .def(self_ns::str(self_ns::self))
+  ;
+
+  class_<csd::ApolloStateMeasurement, bases<cs::SensorData>, boost::noncopyable, boost::shared_ptr<csd::ApolloStateMeasurement>>("ApolloStateMeasurement", no_init)
+    .def("get_state", &csd::ApolloStateMeasurement::GetActorState)
   ;
 
   class_<csd::RadarMeasurement, bases<cs::SensorData>, boost::noncopyable, boost::shared_ptr<csd::RadarMeasurement>>("RadarMeasurement", no_init)

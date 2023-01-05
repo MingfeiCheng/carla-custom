@@ -1,0 +1,54 @@
+// Copyright (c) 2019 Intel Labs.
+//
+// This work is licensed under the terms of the MIT license.
+// For a copy, see <https://opensource.org/licenses/MIT>.
+
+#pragma once
+
+#include "carla/rpc/Actor.h"
+#include "carla/sensor/SensorData.h"
+
+#include "carla/sensor/s11n/ApolloStateSerializer.h"
+
+namespace carla {
+namespace sensor {
+namespace data {
+
+  /// A change of Apollo State Measurement.
+  class ApolloStateMeasurement : public SensorData {
+
+    using Super = SensorData;
+
+  protected:
+
+    using Serializer = s11n::ApolloStateSerializer;
+
+    friend Serializer;
+
+    explicit ApolloStateMeasurement(const RawData &&data)
+      : Super(data){
+
+      rpc::Actor actor_state = Serializer::DeserializeRawData(data);
+      _actor_state = actor_state;
+    }
+
+  public:
+
+    rpc::Actor GetActorState() const {
+      return _actor_state;
+    }
+
+    // rpc::ActorId GetActorId() const {
+    //   return _actor_id;
+    // }
+    
+    
+
+  private:
+    rpc::Actor _actor_state;
+
+  };
+
+} // namespace data
+} // namespace sensor
+} // namespace carla
