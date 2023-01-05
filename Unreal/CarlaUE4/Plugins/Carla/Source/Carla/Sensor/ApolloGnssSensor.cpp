@@ -53,8 +53,7 @@ void AApolloGnssSensor::PostPhysTick(UWorld *World, ELevelTick TickType, float D
     ActorLocation = LargeMap->LocalToGlobalLocation(ActorLocation);
   }
   
-  carla::geom::Rotation Rotation = carla::geom::Rotation(ActorRotation.Pitch, ActorRotation.Yaw, ActorRotation.Roll);
-  carla::geom::Location Location = ActorLocation;
+  carla::geom::Location Location = ActorLocation; //carla::geom::Location(ActorLocation.X, -ActorLocation.Y, ActorLocation.Z);
   carla::geom::GeoLocation CurrentLocation = CurrentGeoReference.Transform(Location);
 
   // Compute the noise for the sensor
@@ -67,14 +66,29 @@ void AApolloGnssSensor::PostPhysTick(UWorld *World, ELevelTick TickType, float D
   double Longitude = CurrentLocation.longitude + LongitudeBias + LonError;
   double Altitude = CurrentLocation.altitude + AltitudeBias + AltError;
 
+  carla::geom::Location ApolloLocation = carla::geom::Location(ActorLocation.X, -ActorLocation.Y, ActorLocation.Z);
+  carla::geom::Rotation ApolloRotation = carla::geom::Rotation(-ActorRotation.Pitch, -(ActorRotation.Yaw + 90), ActorRotation.Roll);
+
+  const FQuat ApolloRotationQuat = FRotator(ApolloRotation.Pitch, ApolloRotation.Yaw, ApolloRotation.Roll).Quaternion();
+  const float qw = ApolloRotationQuat.W;
+  const float qx = ApolloRotationQuat.X;
+  const float qy = ApolloRotationQuat.Y;
+  const float qz = ApolloRotationQuat.Z;
+
+  c
+
   {
     TRACE_CPUPROFILER_EVENT_SCOPE_STR("AApolloGnssSensor Stream Send");
     auto Stream = GetDataStream(*this);
     Stream.Send(
       *this, 
       carla::geom::GeoLocation{Latitude, Longitude, Altitude},
-      Location,
-      Rotation);
+      ApolloLocation,
+      ApolloRotation,
+      qw,
+      qx,
+      qy,
+      qz);
   }
 }
 

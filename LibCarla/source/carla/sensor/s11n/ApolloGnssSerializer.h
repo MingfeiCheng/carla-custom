@@ -29,7 +29,11 @@ namespace s11n {
       geom::GeoLocation geo_location;
       geom::Location location;
       geom::Rotation rotation;
-      MSGPACK_DEFINE_ARRAY(geo_location, location, rotation)
+      float qw;
+      float qx;
+      float qy;
+      float qz;
+      MSGPACK_DEFINE_ARRAY(geo_location, location, rotation, qw, qx, qy, qz)
     };
 
     template <typename SensorT>
@@ -37,7 +41,11 @@ namespace s11n {
       const SensorT &sensor,
       const geom::GeoLocation &geo_location,
       const geom::Location &location,
-      const geom::Rotation &rotation);
+      const geom::Rotation &rotation,
+      const float qw,
+      const float qx,
+      const float qy,
+      const float qz);
 
     static Data DeserializeRawData(const RawData &message) {
       return MsgPack::UnPack<Data>(message.begin(), message.size());
@@ -51,8 +59,12 @@ namespace s11n {
       const SensorT &,
       const geom::GeoLocation &geo_location,
       const geom::Location &location,
-      const geom::Rotation &rotation) {
-    return MsgPack::Pack(Data{geo_location, location, rotation});
+      const geom::Rotation &rotation,
+      const float qw,
+      const float qx,
+      const float qy,
+      const float qz) {
+    return MsgPack::Pack(Data{geo_location, location, rotation, qw, qx, qy, qz});
   }
 
 } // namespace s11n

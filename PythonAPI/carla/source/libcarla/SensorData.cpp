@@ -122,6 +122,10 @@ namespace data {
         << ", geo_location=" << meas.GetGeoLocation()
         << ", location=" << meas.GetLocation()
         << ", rotation=" << meas.GetRotation()
+        << ", qw=" << std::to_string(meas.GetQw())
+        << ", qx=" << std::to_string(meas.GetQx())
+        << ", qy=" << std::to_string(meas.GetQy())
+        << ", qz=" << std::to_string(meas.GetQz())
         << ')';
     return out;
   }
@@ -529,6 +533,10 @@ void export_sensor_data() {
     .add_property("geo_location", &csd::ApolloGnssMeasurement::GetGeoLocation)
     .add_property("location", &csd::ApolloGnssMeasurement::GetLocation)
     .add_property("rotation", &csd::ApolloGnssMeasurement::GetRotation)
+    .add_property("qw", &csd::ApolloTransformMeasurement::GetQw)
+    .add_property("qx", &csd::ApolloTransformMeasurement::GetQx)
+    .add_property("qy", &csd::ApolloTransformMeasurement::GetQy)
+    .add_property("qz", &csd::ApolloTransformMeasurement::GetQz)
     .def(self_ns::str(self_ns::self))
   ;
 

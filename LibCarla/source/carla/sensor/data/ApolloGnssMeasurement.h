@@ -33,9 +33,18 @@ namespace data {
       geom::GeoLocation geo_location = Serializer::DeserializeRawData(data).geo_location;
       geom::Location location = Serializer::DeserializeRawData(data).location;
       geom::Rotation rotation = Serializer::DeserializeRawData(data).rotation;
+      float qw = Serializer::DeserializeRawData(data).qw;
+      float qx = Serializer::DeserializeRawData(data).qx;
+      float qy = Serializer::DeserializeRawData(data).qy;
+      float qz = Serializer::DeserializeRawData(data).qz;
+
       _geo_location = geo_location;
       _location = location;
       _rotation = rotation;
+      _qw = qw;
+      _qx = qx;
+      _qy = qy;
+      _qz = qz;
     }
 
   public:
@@ -64,11 +73,32 @@ namespace data {
       return _rotation;
     }
 
+    float GetQw() const {
+      return _qw;
+    }
+
+    float GetQx() const {
+      return _qx;
+    }
+
+    float GetQy() const {
+      return _qy;
+    }
+
+    float GetQz() const {
+      return _qz;
+    }
+
+
   private:
 
     geom::GeoLocation _geo_location;
     geom::Location _location;
     geom::Rotation _rotation;
+    float _qw;
+    float _qx;
+    float _qy;
+    float _qz;
 
   };
 
