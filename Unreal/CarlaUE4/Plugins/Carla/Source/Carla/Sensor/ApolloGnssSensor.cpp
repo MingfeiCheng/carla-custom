@@ -75,8 +75,6 @@ void AApolloGnssSensor::PostPhysTick(UWorld *World, ELevelTick TickType, float D
   const float qy = ApolloRotationQuat.Y;
   const float qz = ApolloRotationQuat.Z;
 
-  c
-
   {
     TRACE_CPUPROFILER_EVENT_SCOPE_STR("AApolloGnssSensor Stream Send");
     auto Stream = GetDataStream(*this);
