@@ -53,8 +53,6 @@ private:
   float LongitudeBias;
   float AltitudeBias;
 
-  FVector PreviousLinearVelocity;
-
   virtual void BeginPlay() override;
   
 };

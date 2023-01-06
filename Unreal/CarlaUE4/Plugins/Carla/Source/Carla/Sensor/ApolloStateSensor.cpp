@@ -14,14 +14,13 @@
 #include "Carla/MapGen/LargeMapManager.h"
 #include "Carla/Actor/ActorBlueprintFunctionLibrary.h"
 #include "Carla/Sensor/WorldObserver.h"
-#include "Carla/Vehicle/CarlaWheeledVehicle.h"
 
 #include <compiler/disable-ue4-macros.h>
-// #include "carla/rpc/Actor.h"
-#include "carla/rpc/VehicleControl.h"
-// #include "carla/client/Actor.h"
 #include "carla/geom/Vector3D.h"
 #include "carla/geom/Math.h"
+#include "carla/geom/GeoLocation.h"
+#include "carla/geom/Location.h"
+#include "carla/geom/Rotation.h"
 #include <compiler/enable-ue4-macros.h>
 
 AApolloStateSensor::AApolloStateSensor(const FObjectInitializer &ObjectInitializer)
@@ -51,15 +50,6 @@ void AApolloStateSensor::PostPhysTick(UWorld *World, ELevelTick TickType, float 
 {
   TRACE_CPUPROFILER_EVENT_SCOPE(AApolloStateSensor::PostPhysTick);
   
-  // const carla::rpc::Actor actor_info = GetEpisode().SerializeActor(GetOwner());
-  // const carla::client::detail::ActorVariant actor_variant = carla::client::detail::ActorVariant(actor_info);
-  // const carla::SharedPtr<carla::client::Actor> actor_ptr = actor_variant.Get(GetEpisode());
-
-
-  // const carla::geom::Location actor_location = actor_ptr.GetLocation();
-  // const carla::geom::Rotation actor_rotation = actor_ptr.GetRotation();
-  
-  // location & rotation
   FVector ActorLocation = GetOwner()->GetActorLocation();
   const FRotator ActorRotation = GetOwner()->GetActorRotation();
 
@@ -93,38 +83,12 @@ void AApolloStateSensor::PostPhysTick(UWorld *World, ELevelTick TickType, float 
   const float qy = ApolloRotationQuat.Y;
   const float qz = ApolloRotationQuat.Z;
 
-  // Control    
-  FCarlaActor *actor = GetEpisode().FindCarlaActor(GetOwner());
-  FVehicleControl control;
-  actor->GetVehicleControl(control);
-  const carla::rpc::VehicleControl ApolloControl = carla::rpc::VehicleControl(control.Throttle, control.Steer, control.Brake, control.bHandBrake, control.bReverse, control.bManualGearShift, control.Gear);
-
-  // Speed, velocity, angular_velocity, acceleration
-  const auto RootComponent = Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
-  FVector AngularVelocity;
-  FVector LinearVelocity;
-  if (RootComponent != nullptr) {
-    //Need converter
-      const FQuat ActorGlobalRotation = RootComponent->GetComponentTransform().GetRotation();
-      const FVector GlobalAngularVelocity = RootComponent->GetPhysicsAngularVelocityInRadians();
-      AngularVelocity = ActorGlobalRotation.UnrotateVector(GlobalAngularVelocity);
-      LinearVelocity = RootComponent->GetPhysicsLinearVelocity();
-  } else {
-      AngularVelocity = FVector::ZeroVector;
-      LinearVelocity = FVector::ZeroVector;
-  }
-
-  const FVector Acceleration = (LinearVelocity - PreviousLinearVelocity) / DeltaSeconds;
-  PreviousLinearVelocity = LinearVelocity;
-  const carla::geom::Vector3D ApolloAcceleration =  carla::geom::Vector3D{Acceleration.X, -Acceleration.Y, Acceleration.Z};
-  const carla::geom::Vector3D ApolloAngularVelocity = carla::geom::Vector3D{AngularVelocity.X, -AngularVelocity.Y, -AngularVelocity.Z};
-  const carla::geom::Vector3D ApolloLinearVelocity = carla::geom::Vector3D{LinearVelocity.X, -LinearVelocity.Y, LinearVelocity.Z};
-  const float ApolloSpeed = ApolloLinearVelocity.Length();
+  rpc::Actor actor_obj = GetEpisode().SerializeActor(GetOwner());
   
   {
     TRACE_CPUPROFILER_EVENT_SCOPE_STR("AApolloStateSensor Stream Send");
     auto Stream = GetDataStream(*this);
-    Stream.Send(*this, ApolloGeoLocation, ApolloLocation, ApolloRotation, qw, qx, qy, qz, ApolloControl, ApolloAcceleration, ApolloAngularVelocity, ApolloLinearVelocity, ApolloSpeed);
+    Stream.Send(*this, actor_obj, ApolloGeoLocation, qw, qx, qy, qz);
   }
 }
 

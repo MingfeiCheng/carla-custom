@@ -5,12 +5,8 @@
 
 #pragma once
 
-#include "carla/Debug.h"
 #include "carla/geom/GeoLocation.h"
-#include "carla/geom/Location.h"
-#include "carla/geom/Rotation.h"
-#include "carla/geom/Vector3D.h"
-
+#include "carla/rpc/Actor.h"
 #include "carla/sensor/SensorData.h"
 
 #include "carla/sensor/s11n/ApolloStateSerializer.h"
@@ -32,32 +28,27 @@ namespace data {
 
     explicit ApolloStateMeasurement(const RawData &&data)
       : Super(data){
-        geom::GeoLocation geo_location = Serializer::DeserializeRawData(data).geo_location;
-        geom::Location location = Serializer::DeserializeRawData(data).location;
-        geom::Rotation rotation = Serializer::DeserializeRawData(data).rotation;
-        float qw = Serializer::DeserializeRawData(data).qw;
-        float qx = Serializer::DeserializeRawData(data).qx;
-        float qy = Serializer::DeserializeRawData(data).qy;
-        float qz = Serializer::DeserializeRawData(data).qz;
-        carla::geom::Vector3D acceleration =  Serializer::DeserializeRawData(data).acceleration;
-        carla::geom::Vector3D angular_velocity = Serializer::DeserializeRawData(data).angular_velocity;
-        carla::geom::Vector3D linear_velocity = Serializer::DeserializeRawData(data).linear_velocity;
-        float speed = Serializer::DeserializeRawData(data).speed;
 
-         _geo_location = geo_location;
-        _location = location;
-        _rotation = rotation;
-        _qw = qw;
-        _qx = qx;
-        _qy = qy;
-        _qz = qz;
-        _acceleration = acceleration;
-        _angular_velocity = angular_velocity;
-        _linear_velocity = linear_velocity;
-        _speed = speed;        
-      }
+      rpc::Actor actor = Serializer::DeserializeRawData(data).actor;
+      geom::GeoLocation geo_location = Serializer::DeserializeRawData(data).geo_location;
+      float qw = Serializer::DeserializeRawData(data).qw;
+      float qx = Serializer::DeserializeRawData(data).qx;
+      float qy = Serializer::DeserializeRawData(data).qy;
+      float qz = Serializer::DeserializeRawData(data).qz;
+
+      _actor = actor;
+      _geo_location = geo_location;
+      _qw = qw;
+      _qx = qx;
+      _qy = qy;
+      _qz = qz;
+    }
 
   public:
+
+    rpc::Actor GetActor() const {
+      return _actor;
+    }
 
     geom::GeoLocation GetGeoLocation() const {
       return _geo_location;
@@ -73,14 +64,6 @@ namespace data {
 
     double GetAltitude() const {
       return _geo_location.altitude;
-    }
-
-    geom::Location GetLocation() const {
-      return _location;
-    }
-
-    geom::Rotation GetRotation() const {
-      return _rotation;
     }
 
     float GetQw() const {
@@ -99,34 +82,13 @@ namespace data {
       return _qz;
     }
 
-    geom::Vector3D GetAcceleration() const{
-      return _acceleration;
-    }
-
-    geom::Vector3D GetAngularVelocity() const{
-      return _angular_velocity;
-    }
-
-    geom::Vector3D GetLinearVelocity() const{
-      return _linear_velocity;
-    }
-
-    float GetSpeed() const {
-      return _speed;
-    }
-
   private:
+    rpc::Actor _actor;
     geom::GeoLocation _geo_location;
-    geom::Location _location;
-    geom::Rotation _rotation;
     float _qw;
     float _qx;
     float _qy;
     float _qz;
-    geom::Vector3D _acceleration;
-    geom::Vector3D _angular_velocity;
-    geom::Vector3D _linear_velocity;
-    float _speed;
   };
 
 } // namespace data

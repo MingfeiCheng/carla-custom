@@ -13,20 +13,8 @@
 #include "Carla/Game/CarlaEpisode.h"
 #include "Carla/Actor/ActorBlueprintFunctionLibrary.h"
 #include "Carla/Util/BoundingBoxCalculator.h"
-// #include "Carla/Vehicle/CarlaWheeledVehicle.h"
 
 #include <compiler/disable-ue4-macros.h>
-// #include "carla/geom/Location.h"
-// #include "carla/geom/Rotation.h"
-// #include "carla/geom/Vector3D.h"
-// #include "carla/geom/BoundingBox.h"
-// #include "carla/rpc/ActorId.h"
-// #include "carla/rpc/ActorDescription.h"
-// #include "carla/rpc/PerceptionUnit.h"
-// #include "carla/rpc/Actor.h"
-// #include "carla/client/detail/ActorVariant.h"
-// #include "carla/client/Actor.h"
-// #include "carla/client/ActorList.h"
 #include <compiler/enable-ue4-macros.h>
 
 AApolloPerceptionSensor::AApolloPerceptionSensor(const FObjectInitializer &ObjectInitializer)

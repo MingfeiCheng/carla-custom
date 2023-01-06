@@ -235,6 +235,12 @@ namespace data {
   //   return out;
   // }
 
+  std::ostream &operator<<(std::ostream &out, const Actor &actor) {
+    out << "Actor(actor=" << actor
+        << ')';
+    return out;
+  }
+
   std::ostream &operator<<(std::ostream &out, const ApolloPerceptionMeasurement &meas) {
     out << "ApolloPerceptionMeasurement(frame=" << std::to_string(meas.GetFrame())
         << ", timestamp=" << std::to_string(meas.GetTimestamp())
@@ -599,16 +605,15 @@ void export_sensor_data() {
   ;
 
   class_<csd::ApolloStateMeasurement, bases<cs::SensorData>, boost::noncopyable, boost::shared_ptr<csd::ApolloStateMeasurement>>("ApolloStateMeasurement", no_init)
+    .add_property("actor", &csd::ApolloStateMeasurement::GetActor)
+    .add_property("longitude", &csd::ApolloStateMeasurement::GetLongitude)
+    .add_property("latitude", &csd::ApolloStateMeasurement::GetLatitude)
+    .add_property("altitude", &csd::ApolloStateMeasurement::GetAltitude)
     .add_property("geo_location", &csd::ApolloStateMeasurement::GetGeoLocation)
-    .add_property("location", &csd::ApolloStateMeasurement::GetLocation)
-    .add_property("rotation", &csd::ApolloStateMeasurement::GetRotation)
     .add_property("qw", &csd::ApolloStateMeasurement::GetQw)
     .add_property("qx", &csd::ApolloStateMeasurement::GetQx)
     .add_property("qy", &csd::ApolloStateMeasurement::GetQy)
     .add_property("qz", &csd::ApolloStateMeasurement::GetQz)
-    .add_property("acceleration", &csd::ApolloStateMeasurement::GetAcceleration)
-    .add_property("angular_velocity", &csd::ApolloStateMeasurement::GetAngularVelocity)
-    .add_property("linear_velocity", &csd::ApolloStateMeasurement::GetLinearVelocity)
     .def(self_ns::str(self_ns::self))
   ;
 
