@@ -169,7 +169,7 @@ void AApolloPerceptionSensor::PostPhysTick(UWorld *World, ELevelTick TickType, f
       const carla::geom::Vector3D apollo_actor_velocity = carla::geom::Vector3D(actor_velocity.x, -actor_velocity.y, actor_velocity.z);
       const carla::geom::Vector3D apollo_actor_acceleration = carla::geom::Vector3D(actor_acceleration.x, -actor_acceleration.y, actor_acceleration.z);
 
-      const carla::rpc::PerceptionUnit actor_perception_unit = carla::rpc::PerceptionUnit(actor_id, actor_bbox, actor_description, actor_location, actor_rotation, actor_velocity, actor_acceleration);
+      const carla::rpc::PerceptionUnit actor_perception_unit = carla::rpc::PerceptionUnit(actor_id, actor_bbox, actor_type, actor_location, actor_rotation, actor_velocity, actor_acceleration);
 
       EnvObjectIdsSet.Emplace(actor_perception_unit);
       }
