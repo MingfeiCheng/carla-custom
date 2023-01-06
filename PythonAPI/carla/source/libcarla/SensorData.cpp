@@ -154,7 +154,7 @@ namespace data {
   std::ostream &operator<<(std::ostream &out, const ApolloStateMeasurement &meas) {
     out << "ApolloStateMeasurement(frame=" << std::to_string(meas.GetFrame())
         << ", timestamp=" << std::to_string(meas.GetTimestamp())
-        << ", actor=" << meas.GetActor()
+        << ", actor=" << std::to_string(meas.GetActor())
         << ", geo_location=" << meas.GetGeoLocation()
         << ", longitude=" << meas.GetLongitude()
         << ", latitude=" << meas.GetLatitude()
