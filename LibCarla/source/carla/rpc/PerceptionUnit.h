@@ -25,14 +25,14 @@ namespace rpc {
     PerceptionUnit(
         carla::rpc::ActorId id,
         geom::BoundingBox bbox,
-        carla::rpc::ActorDescription description,
+        std::string type,
         geom::Location location,
         geom::Rotation rotation,
         geom::Vector3D velocity,
         geom::Vector3D acceleration)
       : id(id),
         bbox(bbox),
-        description(description),
+        type(type),
         location(location),
         rotation(rotation),
         velocity(velocity),
@@ -40,7 +40,7 @@ namespace rpc {
 
     carla::rpc::ActorId id;
     geom::BoundingBox bbox;
-    carla::rpc::ActorDescription description;
+    std::string type;
     geom::Location location;
     geom::Rotation rotation;
     geom::Vector3D velocity;
@@ -49,7 +49,7 @@ namespace rpc {
     MSGPACK_DEFINE_ARRAY(
         id,
         bbox,
-        description,
+        type,
         location,
         rotation,
         velocity,

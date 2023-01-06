@@ -154,7 +154,7 @@ void AApolloPerceptionSensor::PostPhysTick(UWorld *World, ELevelTick TickType, f
       // bbox
       carla::rpc::ActorId actor_id = actor_info.id;
       carla::geom::BoundingBox actor_bbox = actor_info.bounding_box;
-      carla::rpc::ActorDescription actor_type = actor_info.description;
+      std::string actor_type = actor_info.description.id; //TODO:Check
 
       const carla::client::detail::ActorVariant actor_variant = carla::client::detail::ActorVariant(actor_info);
       const carla::SharedPtr<carla::client::Actor> actor_ptr = actor_variant.Get(episode);
