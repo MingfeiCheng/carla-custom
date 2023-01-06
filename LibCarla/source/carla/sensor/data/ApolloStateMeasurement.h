@@ -6,7 +6,7 @@
 #pragma once
 
 #include "carla/geom/GeoLocation.h"
-#include "carla/rpc/Actor.h"
+#include "carla/client/detail/ActorVariant.h"
 #include "carla/sensor/SensorData.h"
 
 #include "carla/sensor/s11n/ApolloStateSerializer.h"
@@ -27,27 +27,26 @@ namespace data {
     friend Serializer;
 
     explicit ApolloStateMeasurement(const RawData &&data)
-      : Super(data){
+      : Super(data),
+        _self_actor(nullptr),
+        _geo_location(nullptr),
+        _qw(0.0f),
+        _qx(0.0f),
+        _qy(0.0f),
+        _qz(0.0f){
 
-      rpc::Actor actor = Serializer::DeserializeRawData(data).actor;
-      geom::GeoLocation geo_location = Serializer::DeserializeRawData(data).geo_location;
-      float qw = Serializer::DeserializeRawData(data).qw;
-      float qx = Serializer::DeserializeRawData(data).qx;
-      float qy = Serializer::DeserializeRawData(data).qy;
-      float qz = Serializer::DeserializeRawData(data).qz;
-
-      _actor = actor;
-      _geo_location = geo_location;
-      _qw = qw;
-      _qx = qx;
-      _qy = qy;
-      _qz = qz;
+      _actor = Serializer::DeserializeRawData(data).actor;
+      _geo_location = Serializer::DeserializeRawData(data).geo_location;
+      _qw = Serializer::DeserializeRawData(data).qw;
+      _qx = Serializer::DeserializeRawData(data).qx;
+      _qy = Serializer::DeserializeRawData(data).qy;
+      _qz = Serializer::DeserializeRawData(data).qz;
     }
 
   public:
 
-    rpc::Actor GetActor() const {
-      return _actor;
+    SharedPtr<client::Actor> GetActor() const {
+      return _actor.Get(GetEpisode());
     }
 
     geom::GeoLocation GetGeoLocation() const {
@@ -83,7 +82,7 @@ namespace data {
     }
 
   private:
-    rpc::Actor _actor;
+    client::detail::ActorVariant _actor;
     geom::GeoLocation _geo_location;
     float _qw;
     float _qx;

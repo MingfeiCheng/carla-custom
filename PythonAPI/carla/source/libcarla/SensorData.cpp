@@ -154,7 +154,7 @@ namespace data {
   std::ostream &operator<<(std::ostream &out, const ApolloStateMeasurement &meas) {
     out << "ApolloStateMeasurement(frame=" << std::to_string(meas.GetFrame())
         << ", timestamp=" << std::to_string(meas.GetTimestamp())
-        << ", actor=" << std::to_string(meas.GetActor())
+        << ", actor=" << meas.GetActor()
         << ", geo_location=" << meas.GetGeoLocation()
         << ", longitude=" << meas.GetLongitude()
         << ", latitude=" << meas.GetLatitude()
@@ -232,12 +232,6 @@ namespace data {
   //       << ", acceleration=" << unit.acceleration << ')';
   //   return out;
   // }
-
-  std::ostream &operator<<(std::ostream &out, const carla::rpc::Actor &actor) {
-    out << "Actor(actor=" << actor
-        << ')';
-    return out;
-  }
 
   std::ostream &operator<<(std::ostream &out, const ApolloPerceptionMeasurement &meas) {
     out << "ApolloPerceptionMeasurement(frame=" << std::to_string(meas.GetFrame())
