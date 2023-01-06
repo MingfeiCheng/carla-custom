@@ -28,7 +28,6 @@ namespace s11n {
     template <typename SensorT, typename EpisodeT, typename PerceptionUnitListT>
     static Buffer Serialize(
         const SensorT &,
-        const EpisodeT &episode,
         const PerceptionUnitListT &detected_actors) {
       const uint32_t size_in_bytes = sizeof(rpc::PerceptionUnit) * detected_actors.Num();
       Buffer buffer{size_in_bytes};

@@ -203,15 +203,6 @@ namespace data {
     return out;
   }
 
-  std::ostream &operator<<(std::ostream &out, const RadarDetection &det) {
-    out << "RadarDetection(velocity=" << std::to_string(det.velocity)
-        << ", azimuth=" << std::to_string(det.azimuth)
-        << ", altitude=" << std::to_string(det.altitude)
-        << ", depth=" << std::to_string(det.depth)
-        << ')';
-    return out;
-  }
-
   std::ostream &operator<<(std::ostream &out, const LidarDetection &det) {
     out << "LidarDetection(x=" << std::to_string(det.point.x)
         << ", y=" << std::to_string(det.point.y)
@@ -236,7 +227,7 @@ namespace data {
   std::ostream &operator<<(std::ostream &out, const PerceptionUnit &unit) {
     out << "PerceptionUnit(id=" << std::to_string(unit.id)
         << ", bbox=" << unit.bbox
-        << ", type=" << unit.description
+        << ", type=" <<std::to_string(unit.description)
         << ", location=" << unit.location
         << ", rotation=" << unit.rotation
         << ", velocity=" << unit.velocity

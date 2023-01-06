@@ -125,7 +125,7 @@ namespace s11n {
       geom::Vector3D &angular_velocity,
       geom::Vector3D &linear_velocity,
       float speed) {
-    return MsgPack::Pack(Data{geo_location, location, rotation, qw, qx, qy, qz, control, acceleration, angular_velocity, linear_velocity});
+    return MsgPack::Pack(Data{geo_location, location, rotation, qw, qx, qy, qz, control, acceleration, angular_velocity, linear_velocity, speed});
   }
 
 } // namespace s11n
