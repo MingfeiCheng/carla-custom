@@ -24,6 +24,7 @@
 #include "carla/rpc/ActorDescription.h"
 #include "carla/rpc/PerceptionUnit.h"
 #include "carla/rpc/Actor.h"
+#include "carla/client/detail/ActorVariant.h"
 // #include "carla/client/Actor.h"
 #include <compiler/enable-ue4-macros.h>
 
@@ -105,7 +106,7 @@ void AApolloPerceptionSensor::SetOwner(AActor *Owner)
 
 void AApolloPerceptionSensor::PostPhysTick(UWorld *World, ELevelTick TickType, float DeltaSeconds)
 {
-  Super::PostPhysTick(DeltaSeconds);
+  // Super::PostPhysTick(DeltaSeconds);
 
   TSet<AActor *> DetectedActors;
   Box->GetOverlappingActors(DetectedActors, ACarlaWheeledVehicle::StaticClass());
@@ -151,7 +152,8 @@ void AApolloPerceptionSensor::PostPhysTick(UWorld *World, ELevelTick TickType, f
       // const carla::geom::Vector3D apollo_linear_velocity = carla::geom::Vector3D{actor_linear_velocity.X, -actor_linear_velocity.Y, actor_linear_velocity.Z};
 
       // FCarlaActor carla_actor = GetEpisode().FindCarlaActor(actor);
-      const carla::rpc::Actor actor_info = GetEpisode().SerializeActor(actor);
+      const auto episode = GetEpisode();
+      const carla::rpc::Actor actor_info = episode.SerializeActor(actor);
       // bbox
       carla::rpc::ActorId actor_id = actor_info.id;
       carla::geom::BoundingBox actor_bbox = actor_info.bounding_box;
@@ -174,16 +176,17 @@ void AApolloPerceptionSensor::PostPhysTick(UWorld *World, ELevelTick TickType, f
       const carla::rpc::PerceptionUnit actor_perception_unit = carla::rpc::PerceptionUnit(actor_id, actor_bbox, actor_type, actor_location, actor_rotation, actor_velocity, actor_acceleration);
 
       EnvObjectIdsSet.Emplace(actor_perception_unit);
-      }
+    }
   
     {
       auto Stream = GetDataStream(*this);
       Stream.Send(*this, EnvObjectIdsSet);
     }
   }
+}
 
   void AApolloStateSensor::BeginPlay()
   {
     Super::BeginPlay();
   }
-}
+

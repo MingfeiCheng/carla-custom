@@ -60,8 +60,8 @@ void AApolloStateSensor::PostPhysTick(UWorld *World, ELevelTick TickType, float 
   // const carla::geom::Rotation actor_rotation = actor_ptr.GetRotation();
   
   // location & rotation
-  const FVector ActorLocation = GetOwner().GetActorLocation();
-  const FRotator ActorRotation = GetOwner().GetActorRotation();
+  FVector ActorLocation = GetOwner()->GetActorLocation();
+  const FRotator ActorRotation = GetOwner()->GetActorRotation();
 
   //add gps & quant
   ALargeMapManager * LargeMap = UCarlaStatics::GetLargeMapManager(GetWorld());
@@ -100,7 +100,7 @@ void AApolloStateSensor::PostPhysTick(UWorld *World, ELevelTick TickType, float 
   const carla::rpc::VehicleControl ApolloControl = carla::rpc::VehicleControl(control.Throttle, control.Steer, control.Brake, control.bHandBrake, control.bReverse, control.bManualGearShift, control.Gear);
 
   // Speed, velocity, angular_velocity, acceleration
-  const auto RootComponent = Cast<UPrimitiveComponent>(GetOwner().GetRootComponent());
+  const auto RootComponent = Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
   FVector AngularVelocity;
   FVector LinearVelocity;
   if (RootComponent != nullptr) {
