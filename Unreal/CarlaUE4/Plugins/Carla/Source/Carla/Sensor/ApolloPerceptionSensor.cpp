@@ -121,7 +121,7 @@ void AApolloPerceptionSensor::PostPhysTick(UWorld *World, ELevelTick TickType, f
   }
 }
 
-  void AApolloStateSensor::BeginPlay()
+  void AApolloPerceptionSensor::BeginPlay()
   {
     Super::BeginPlay();
   }

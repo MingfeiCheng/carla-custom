@@ -17,7 +17,7 @@ namespace carla {
 namespace sensor {
 namespace data {
 
-  class ApolloPerceptionMeasurement : public Array<rpc::Actor> {
+  class ApolloPerceptionMeasurement : public Array<client::Actor> {
   public:
 
     explicit ApolloPerceptionMeasurement(RawData &&data) 
