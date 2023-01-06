@@ -224,10 +224,10 @@ namespace data {
   }
 
 
-  std::ostream &operator<<(std::ostream &out, const PerceptionUnit &unit) {
+  std::ostream &operator<<(std::ostream &out, const carla::rpc::PerceptionUnit &unit) {
     out << "PerceptionUnit(id=" << std::to_string(unit.id)
         << ", bbox=" << unit.bbox
-        << ", type=" <<std::to_string(unit.description)
+        << ", type=" << std::to_string(unit.description)
         << ", location=" << unit.location
         << ", rotation=" << unit.rotation
         << ", velocity=" << unit.velocity
