@@ -21,6 +21,7 @@
 #include "carla/geom/GeoLocation.h"
 #include "carla/geom/Location.h"
 #include "carla/geom/Rotation.h"
+#include "carla/rpc/Actor.h"
 #include <compiler/enable-ue4-macros.h>
 
 AApolloStateSensor::AApolloStateSensor(const FObjectInitializer &ObjectInitializer)
@@ -83,7 +84,7 @@ void AApolloStateSensor::PostPhysTick(UWorld *World, ELevelTick TickType, float 
   const float qy = ApolloRotationQuat.Y;
   const float qz = ApolloRotationQuat.Z;
 
-  rpc::Actor actor_obj = GetEpisode().SerializeActor(GetOwner());
+  carla::rpc::Actor actor_obj = GetEpisode().SerializeActor(GetOwner());
   
   {
     TRACE_CPUPROFILER_EVENT_SCOPE_STR("AApolloStateSensor Stream Send");
