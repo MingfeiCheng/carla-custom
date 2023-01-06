@@ -12,9 +12,11 @@
 #include "Carla/Actor/PropParameters.h"
 #include "Carla/Actor/VehicleParameters.h"
 #include "Carla/Sensor/GnssSensor.h"
-#include "Carla/Sensor/ApolloGnssSensor.h"
 #include "Carla/Sensor/Radar.h"
 #include "Carla/Sensor/InertialMeasurementUnit.h"
+
+#include "Carla/Sensor/ApolloGnssSensor.h"
+#include "Carla/Sensor/ApolloStateSensor.h"
 
 #include "Kismet/BlueprintFunctionLibrary.h"
 
@@ -225,6 +227,8 @@ public:
   static void SetGnss(const FActorDescription &Description, AGnssSensor *Gnss);
 
   static void SetApolloGnss(const FActorDescription &Description, AApolloGnssSensor *ApolloGnss);
+
+  static void SetApolloState(const FActorDescription &Description, AApolloStateSensor *ApolloState);
 
   static void SetIMU(const FActorDescription &Description, AInertialMeasurementUnit *IMU);
 
