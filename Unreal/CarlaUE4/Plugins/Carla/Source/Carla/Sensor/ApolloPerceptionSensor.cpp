@@ -24,7 +24,7 @@
 #include "carla/rpc/ActorDescription.h"
 #include "carla/rpc/PerceptionUnit.h"
 #include "carla/rpc/Actor.h"
-#include "carla/client/Actor.h"
+// #include "carla/client/Actor.h"
 #include <compiler/enable-ue4-macros.h>
 
 AApolloPerceptionSensor::AApolloPerceptionSensor(const FObjectInitializer &ObjectInitializer)
@@ -158,7 +158,8 @@ void AApolloPerceptionSensor::PostPhysTick(UWorld *World, ELevelTick TickType, f
       std::string actor_type = actor_info.description.id; //TODO:Check
 
       const carla::client::detail::ActorVariant actor_variant = carla::client::detail::ActorVariant(actor_info);
-      const carla::SharedPtr<carla::client::Actor> actor_ptr = actor_variant.Get(episode);
+      // const carla::SharedPtr<carla::client::Actor> actor_ptr = actor_variant.Get(episode);
+      const auto actor_ptr = actor_variant.Get(episode);
 
       // location, rotation, velocity, acceleration
       const carla::geom::Location actor_location = actor_ptr.GetLocation();
