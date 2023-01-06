@@ -17,9 +17,9 @@
 #include "Carla/Vehicle/CarlaWheeledVehicle.h"
 
 #include <compiler/disable-ue4-macros.h>
-#include "carla/rpc/Actor.h"
+// #include "carla/rpc/Actor.h"
 #include "carla/rpc/VehicleControl.h"
-#include "carla/client/Actor.h"
+// #include "carla/client/Actor.h"
 #include "carla/geom/Vector3D.h"
 #include "carla/geom/Math.h"
 #include <compiler/enable-ue4-macros.h>
