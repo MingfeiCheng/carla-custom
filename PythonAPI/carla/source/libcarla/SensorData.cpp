@@ -224,16 +224,16 @@ namespace data {
   }
 
 
-  std::ostream &operator<<(std::ostream &out, const carla::rpc::PerceptionUnit &unit) {
-    out << "PerceptionUnit(id=" << std::to_string(unit.id)
-        << ", bbox=" << unit.bbox
-        << ", type=" << unit.type
-        << ", location=" << unit.location
-        << ", rotation=" << unit.rotation
-        << ", velocity=" << unit.velocity
-        << ", acceleration=" << unit.acceleration << ')';
-    return out;
-  }
+  // std::ostream &operator<<(std::ostream &out, const carla::rpc::PerceptionUnit &unit) {
+  //   out << "PerceptionUnit(id=" << std::to_string(unit.id)
+  //       << ", bbox=" << unit.bbox
+  //       << ", type=" << unit.type
+  //       << ", location=" << unit.location
+  //       << ", rotation=" << unit.rotation
+  //       << ", velocity=" << unit.velocity
+  //       << ", acceleration=" << unit.acceleration << ')';
+  //   return out;
+  // }
 
   std::ostream &operator<<(std::ostream &out, const ApolloPerceptionMeasurement &meas) {
     out << "ApolloPerceptionMeasurement(frame=" << std::to_string(meas.GetFrame())
@@ -439,7 +439,6 @@ void export_sensor_data() {
   namespace cs = carla::sensor;
   namespace csd = carla::sensor::data;
   namespace css = carla::sensor::s11n;
-  namespace ccd = carla::client::detail;
 
   // Fake image returned from optical flow to color conversion
   // fakes the regular image object. Only used for visual purposes
@@ -586,7 +585,7 @@ void export_sensor_data() {
   class_<csd::ApolloPerceptionMeasurement, bases<cs::SensorData>, boost::noncopyable, boost::shared_ptr<csd::ApolloPerceptionMeasurement>>("ApolloPerceptionMeasurement", no_init)
     .def("__len__", &csd::ApolloPerceptionMeasurement::size)
     .def("__iter__", iterator<csd::ApolloPerceptionMeasurement>())
-    .def("__getitem__", +[](const csd::ApolloPerceptionMeasurement &self, size_t pos) -> cr::PerceptionUnit {
+    .def("__getitem__", +[](const csd::ApolloPerceptionMeasurement &self, size_t pos) -> cc::Actor {
     return self.at(pos);})
   ;
 
