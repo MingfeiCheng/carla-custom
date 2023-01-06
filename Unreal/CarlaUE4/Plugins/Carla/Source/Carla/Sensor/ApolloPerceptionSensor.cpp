@@ -24,6 +24,9 @@
 // #include "carla/rpc/ActorDescription.h"
 // #include "carla/rpc/PerceptionUnit.h"
 // #include "carla/rpc/Actor.h"
+#include "carla/client/detail/ActorVariant.h"
+#include "carla/client/Actor.h"
+#include "carla/client/ActorList.h"
 #include <compiler/enable-ue4-macros.h>
 
 AApolloPerceptionSensor::AApolloPerceptionSensor(const FObjectInitializer &ObjectInitializer)

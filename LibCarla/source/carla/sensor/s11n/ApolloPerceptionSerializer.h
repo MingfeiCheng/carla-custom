@@ -13,6 +13,7 @@
 #include "carla/sensor/RawData.h"
 #include "carla/client/detail/ActorVariant.h"
 #include "carla/client/Actor.h"
+#include "carla/client/ActorList.h"
 #include "carla/geom/BoundingBox.h"
 #include "carla/geom/Vector3D.h"
 #include "carla/geom/Location.h"
@@ -48,10 +49,10 @@ namespace s11n {
         const carla::client::detail::ActorVariant actor_variant = carla::client::detail::ActorVariant(actor_info);
         const carla::SharedPtr<carla::client::Actor> actor_ptr = actor_variant.Get(episode);
 
-        const carla::geom::Location actor_location = actor_ptr.GetLocation();
-        const carla::geom::Rotation actor_rotation = actor_ptr.GetRotation();
-        const carla::geom::Vector3D actor_velocity = actor_ptr.GetVelocity();
-        const carla::geom::Vector3D actor_acceleration = actor_ptr.GetAcceleration();
+        const carla::geom::Location actor_location = actor_ptr->GetLocation();
+        const carla::geom::Rotation actor_rotation = actor_ptr->GetRotation();
+        const carla::geom::Vector3D actor_velocity = actor_ptr->GetVelocity();
+        const carla::geom::Vector3D actor_acceleration = actor_ptr->GetAcceleration();
 
         const carla::geom::Location apollo_actor_location = carla::geom::Location(actor_location.x, -actor_location.y, actor_location.z);
         const carla::geom::Vector3D apollo_actor_velocity = carla::geom::Vector3D(actor_velocity.x, -actor_velocity.y, actor_velocity.z);
