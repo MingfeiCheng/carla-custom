@@ -233,7 +233,7 @@ namespace data {
   //   return out;
   // }
 
-  std::ostream &operator<<(std::ostream &out, const Actor &actor) {
+  std::ostream &operator<<(std::ostream &out, const carla::rpc::Actor &actor) {
     out << "Actor(actor=" << actor
         << ')';
     return out;
