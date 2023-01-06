@@ -17,6 +17,7 @@
 
 #include <compiler/disable-ue4-macros.h>
 #include "carla/rpc/Actor.h"
+#include "caral/rpc/VehicleControl.h"
 #include "carla/client/Actor.h"
 #include "carla/geom/Vector3D.h"
 #include "carla/geom/Math.h"
