@@ -49,8 +49,9 @@ namespace s11n {
         const carla::client::detail::ActorVariant actor_variant = carla::client::detail::ActorVariant(actor_info);
         const carla::SharedPtr<carla::client::Actor> actor_ptr = actor_variant.Get(episode);
 
-        const carla::geom::Location actor_location = actor_ptr->GetLocation();
-        const carla::geom::Rotation actor_rotation = actor_ptr->GetRotation();
+        const carla::geom::Transform actor_transform = actor_ptr->GetTransform()
+        const carla::geom::Location actor_location = actor_transform.location;
+        const carla::geom::Rotation actor_rotation = actor_transform.rotation;
         const carla::geom::Vector3D actor_velocity = actor_ptr->GetVelocity();
         const carla::geom::Vector3D actor_acceleration = actor_ptr->GetAcceleration();
 
