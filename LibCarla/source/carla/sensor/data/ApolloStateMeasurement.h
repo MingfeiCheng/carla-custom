@@ -42,7 +42,7 @@ namespace data {
         carla::geom::Vector3D acceleration =  Serializer::DeserializeRawData(data).acceleration;
         carla::geom::Vector3D angular_velocity = Serializer::DeserializeRawData(data).angular_velocity;
         carla::geom::Vector3D linear_velocity = Serializer::DeserializeRawData(data).linear_velocity;
-        float ApolloSpeed = Serializer::DeserializeRawData(data).speed;
+        float speed = Serializer::DeserializeRawData(data).speed;
 
          _geo_location = geo_location;
         _location = location;

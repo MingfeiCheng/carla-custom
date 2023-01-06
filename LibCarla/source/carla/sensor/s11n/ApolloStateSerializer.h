@@ -55,6 +55,7 @@
 #include "carla/Memory.h"
 #include "carla/geom/GeoLocation.h"
 #include "carla/rpc/ActorId.h"
+#include "carla/rpc/VehicleControl.h"
 #include "carla/sensor/RawData.h"
 
 #include <cstdint>
@@ -67,7 +68,7 @@ namespace sensor {
 
 namespace s11n {
 
-  class ApolloGnssSerializer {
+  class ApolloStateSerializer {
   public:
 
     struct Data {
@@ -110,7 +111,7 @@ namespace s11n {
   };
 
   template <typename SensorT>
-  inline Buffer ApolloGnssSerializer::Serialize(
+  inline Buffer ApolloStateSerializer::Serialize(
       const SensorT &,
       const geom::GeoLocation &geo_location,
       const geom::Location &location,
