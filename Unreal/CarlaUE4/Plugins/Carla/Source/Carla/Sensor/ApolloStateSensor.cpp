@@ -154,7 +154,5 @@ void AApolloStateSensor::BeginPlay()
 
   const UCarlaEpisode* episode = UCarlaStatics::GetCurrentEpisode(GetWorld());
   CurrentGeoReference = episode->GetGeoReference();
-  PreviousLinearVelocity = FVector::ZeroVector;
-
 }
 

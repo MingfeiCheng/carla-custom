@@ -22,7 +22,7 @@ namespace sensor {
 
 namespace s11n {
 
-  class ApolloPerceptionSerializer {
+  class ApolloStateSerializer {
   public:
 
     struct Data {
