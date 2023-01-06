@@ -17,11 +17,11 @@ namespace carla {
 namespace sensor {
 namespace data {
 
-  class ApolloPerceptionMeasurement : public Array<rpc::client::Actor> {
+  class ApolloPerceptionMeasurement : public Array<client::Actor> {
   public:
 
     explicit ApolloPerceptionMeasurement(RawData &&data) 
-    : Array<rpc::client::Actor>(0u, std::move(data)) {}
+    : Array<client::Actor>(0u, std::move(data)) {}
   };
 
   // class ApolloPerceptionMeasurement : public Array<rpc::PerceptionUnit> {
