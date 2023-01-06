@@ -33,7 +33,7 @@ namespace s11n {
   class ApolloPerceptionSerializer {
   public:
 
-    template <typename SensorT, typename EpisodeT, typename PerceptionUnitListT>
+    template <typename SensorT, typename EpisodeT, typename ActorListT>
     static Buffer Serialize(
         const SensorT &,
         const EpisodeT &episode,
