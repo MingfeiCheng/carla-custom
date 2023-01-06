@@ -154,7 +154,17 @@ namespace data {
   std::ostream &operator<<(std::ostream &out, const ApolloStateMeasurement &meas) {
     out << "ApolloStateMeasurement(frame=" << std::to_string(meas.GetFrame())
         << ", timestamp=" << std::to_string(meas.GetTimestamp())
-        << ", actor=" << meas.GetActorState()
+        << ", geo_location=" << meas.GetGeoLocation()
+        << ", location=" << meas.GetLocation()
+        << ", rotation=" << meas.GetRotation()
+        << ", qw=" << std::to_string(meas.GetQw())
+        << ", qx=" << std::to_string(meas.GetQx())
+        << ", qy=" << std::to_string(meas.GetQy())
+        << ", qz=" << std::to_string(meas.GetQz())
+        << ", acceleration=" << meas.GetAcceleration()
+        << ", angular_velocity=" << meas.GetAngularVelocity()
+        << ", linear_velocity=" << meas.GetLinearVelocity()
+        << ", speed=" << std::to_string(meas.GetSpeed())
         << ')';
     return out;
   }
@@ -184,6 +194,14 @@ namespace data {
     return out;
   }
 
+  std::ostream &operator<<(std::ostream &out, const RadarDetection &det) {
+    out << "RadarDetection(velocity=" << std::to_string(det.velocity)
+        << ", azimuth=" << std::to_string(det.azimuth)
+        << ", altitude=" << std::to_string(det.altitude)
+        << ", depth=" << std::to_string(det.depth)
+        << ')';
+    return out;
+  }
 
   std::ostream &operator<<(std::ostream &out, const RadarDetection &det) {
     out << "RadarDetection(velocity=" << std::to_string(det.velocity)
@@ -210,6 +228,25 @@ namespace data {
         << ", cos_inc_angle=" << std::to_string(det.cos_inc_angle)
         << ", object_idx=" << std::to_string(det.object_idx)
         << ", object_tag=" << std::to_string(det.object_tag)
+        << ')';
+    return out;
+  }
+
+
+  std::ostream &operator<<(std::ostream &out, const PerceptionUnit &unit) {
+    out << "PerceptionUnit(id=" << std::to_string(unit.id)
+        << ", bbox=" << unit.bbox
+        << ", type=" << unit.description
+        << ", location=" << unit.location
+        << ", rotation=" << unit.rotation
+        << ", velocity=" << unit.velocity
+        << ", acceleration=" << unit.acceleration << ')';
+    return out;
+  }
+
+  std::ostream &operator<<(std::ostream &out, const ApolloPerceptionMeasurement &meas) {
+    out << "ApolloPerceptionMeasurement(frame=" << std::to_string(meas.GetFrame())
+        << ", timestamp=" << std::to_string(meas.GetTimestamp())
         << ')';
     return out;
   }
@@ -558,7 +595,7 @@ void export_sensor_data() {
   class_<csd::ApolloPerceptionMeasurement, bases<cs::SensorData>, boost::noncopyable, boost::shared_ptr<csd::ApolloPerceptionMeasurement>>("ApolloPerceptionMeasurement", no_init)
     .def("__len__", &csd::ApolloPerceptionMeasurement::size)
     .def("__iter__", iterator<csd::ApolloPerceptionMeasurement>())
-    .def("__getitem__", +[](const csd::ApolloPerceptionMeasurement &self, size_t pos) -> ccd::ActorVariant {
+    .def("__getitem__", +[](const csd::ApolloPerceptionMeasurement &self, size_t pos) -> cr::PerceptionUnit {
     return self.at(pos);})
   ;
 
@@ -572,7 +609,16 @@ void export_sensor_data() {
   ;
 
   class_<csd::ApolloStateMeasurement, bases<cs::SensorData>, boost::noncopyable, boost::shared_ptr<csd::ApolloStateMeasurement>>("ApolloStateMeasurement", no_init)
-    .add_property("actor", &csd::ApolloStateMeasurement::GetActorState)
+    .add_property("geo_location", &csd::ApolloStateMeasurement::GetGeoLocation)
+    .add_property("location", &csd::ApolloStateMeasurement::GetLocation)
+    .add_property("rotation", &csd::ApolloStateMeasurement::GetRotation)
+    .add_property("qw", &csd::ApolloStateMeasurement::GetQw)
+    .add_property("qx", &csd::ApolloStateMeasurement::GetQx)
+    .add_property("qy", &csd::ApolloStateMeasurement::GetQy)
+    .add_property("qz", &csd::ApolloStateMeasurement::GetQz)
+    .add_property("acceleration", &csd::ApolloStateMeasurement::GetAcceleration)
+    .add_property("angular_velocity", &csd::ApolloStateMeasurement::GetAngularVelocity)
+    .add_property("linear_velocity", &csd::ApolloStateMeasurement::GetLinearVelocity)
     .def(self_ns::str(self_ns::self))
   ;
 

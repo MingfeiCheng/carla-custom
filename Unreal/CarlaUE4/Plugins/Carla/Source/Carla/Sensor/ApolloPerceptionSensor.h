@@ -30,4 +30,6 @@ private:
 
   UPROPERTY()
   UBoxComponent *Box = nullptr;
+  
+  virtual void BeginPlay() override;
 };
