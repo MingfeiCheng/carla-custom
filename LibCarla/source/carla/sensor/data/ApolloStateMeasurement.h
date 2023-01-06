@@ -28,8 +28,8 @@ namespace data {
 
     explicit ApolloStateMeasurement(const RawData &&data)
       : Super(data),
-        _self_actor(nullptr),
-        _geo_location(nullptr),
+        _actor(nullptr),
+        _geo_location(),
         _qw(0.0f),
         _qx(0.0f),
         _qy(0.0f),
