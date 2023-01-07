@@ -118,9 +118,9 @@ void AApolloPerceptionSensor::PostPhysTick(UWorld *World, ELevelTick TickType, f
 
       for(AActor *actor : DetectedActors){
         FCarlaActor *carla_actor = episode.FindCarlaActor(actor);        
-        const carla::rpc::ActorId apollo_id = carla_actor.GetActorId();
+        const carla::rpc::ActorId apollo_id = carla_actor->GetActorId();
          // add logic 
-        FCarlaActor::ActorType type = carla_actor.GetActorType();
+        FCarlaActor::ActorType type = carla_actor->GetActorType();
         std::string apollo_type = "unknown";
         if (AType::Vehicle == type){
           apollo_type = "dynamic.vehicle";
@@ -133,10 +133,10 @@ void AApolloPerceptionSensor::PostPhysTick(UWorld *World, ELevelTick TickType, f
         }
         const carla::geom::BoundingBox apollo_bbox = UBoundingBoxCalculator::GetActorBoundingBox(actor);
         // carla
-        FVector velocity = carla_actor.GetActorVelocity();
-        FVector angular_velocity = carla_actor.GetActorAngularVelocity();
+        FVector velocity = carla_actor->GetActorVelocity();
+        FVector angular_velocity = carla_actor->GetActorAngularVelocity();
         const carla::geom::Vector3D acceleration = FWorldObserver_GetAcceleration(carla_actor, velocity, DeltaSeconds);
-        const FTransform transform = carla_actor.GetActorGlobalTransform();
+        const FTransform transform = carla_actor->GetActorGlobalTransform();
         const FVector location = transform.GetLocation();
         const FRotator rotation = transform.GetRotation().Rotator();       
 
