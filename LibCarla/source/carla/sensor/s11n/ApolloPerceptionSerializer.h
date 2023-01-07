@@ -10,6 +10,7 @@
 #include "carla/Memory.h"
 #include "carla/rpc/Actor.h"
 #include "carla/sensor/RawData.h"
+#include "carla/client/Actor.h"
 #include "carla/client/detail/Simulator.h"
 #include "carla/sensor/data/ApolloObstacle.h"
 

@@ -15,7 +15,6 @@
 #include "carla/geom/Vector3D.h"
 #include "carla/geom/Transform.h"
 #include "carla/geom/BoundingBox.h"
-#include "carla/client/detail/EpisodeProxy.h"
 
 namespace carla {
 namespace sensor {
@@ -53,7 +52,7 @@ struct ApolloObstacle {
       type = actor.description.id; //TODO:Check
       bbox = actor.bounding_box;
 
-      const client::detail::ActorVariant actor_variant = client::detail::ActorVariant(actor);
+      const detail::ActorVariant actor_variant = detail::ActorVariant(actor);
       const SharedPtr<client::Actor> actor_client = actor_variant.Get(episode);
 
       const geom::Transform actor_transform = actor_client->GetTransform();
