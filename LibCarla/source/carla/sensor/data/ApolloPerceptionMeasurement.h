@@ -113,18 +113,23 @@ namespace data {
           actors.push_back(actor_variant.Get(GetEpisode()));
         }
 
+        _actors = actors;
+
       }
 
   public:
 
     std::vector<SharedPtr<client::Actor>> GetActors() const {
-      return actors;
+      return _actors;
     }
 
     SharedPtr<client::Actor> GetActor(size_t pos) const {
-      return actors[pos];
+      return _actors[pos];
     }
   };
+
+  private:
+    std::vector<SharedPtr<client::Actor>> _actors;
 
 } // namespace data
 } // namespace sensor
