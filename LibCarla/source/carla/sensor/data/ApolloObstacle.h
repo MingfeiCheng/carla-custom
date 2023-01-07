@@ -8,8 +8,6 @@
 
 #include "carla/Debug.h"
 #include "carla/rpc/ActorId.h"
-#include "carla/client/Actor.h"
-#include "carla/client/detail/ActorVariant.h"
 #include "carla/geom/Location.h"
 #include "carla/geom/Rotation.h"
 #include "carla/geom/Vector3D.h"
