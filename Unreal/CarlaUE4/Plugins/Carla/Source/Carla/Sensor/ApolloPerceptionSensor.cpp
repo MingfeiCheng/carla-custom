@@ -134,9 +134,9 @@ void AApolloPerceptionSensor::PostPhysTick(UWorld *World, ELevelTick TickType, f
         const carla::geom::BoundingBox apollo_bbox = UBoundingBoxCalculator::GetActorBoundingBox(Actor);
         // carla
         const carla::geom::Vector3D acceleration = FWorldObserver_GetAcceleration(carla_actor, velocity, DeltaSeconds);
-        const FTransform transform = carla_actor.GetActorGlobalLocation();
+        const FTransform transform = carla_actor.GetActorGlobalTransform();
         const FVector location = transform.GetLocation();
-        const FVector rotation = transform.GetRotation();       
+        const FRotator rotation = transform.GetRotation();       
         FVector velocity = carla_actor.GetActorVelocity();
         FVector angular_velocity = carla_actor.GetActorAngularVelocity();
 
@@ -144,7 +144,7 @@ void AApolloPerceptionSensor::PostPhysTick(UWorld *World, ELevelTick TickType, f
         const carla::geom::Location apollo_location = carla::geom::Location(location.X, -location.Y, location.Z);
         const carla::geom::Rotation apollo_rotation = carla::geom::Rotation(rotation.Pitch, rotation.Yaw, rotation.Roll);
         const carla::geom::Vector3D apollo_velocity = carla::geom::Vector3D(velocity.X, -velocity.Y, velocity.Z);
-        const carla::geom::Vector3D apollo_acceleration = carla::geom::Vector3D(acceleration.X, -acceleration.Y, acceleration.Z);
+        const carla::geom::Vector3D apollo_acceleration = carla::geom::Vector3D(acceleration.x, -acceleration.y, acceleration.z);
         const carla::geom::Vector3D apollo_angular_velocity = carla::geom::Vector3D(angular_velocity.X, angular_velocity.Y, angular_velocity.Z);
 
         apollo_obstacles.push_back(::carla::sensor::data::ApolloObstacle(apollo_id, 
