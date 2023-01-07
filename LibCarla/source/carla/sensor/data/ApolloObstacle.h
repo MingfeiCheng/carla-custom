@@ -46,7 +46,7 @@ struct ApolloObstacle {
         acceleration(std::move(arg.acceleration)) {}
 
     /// Constructor
-    ApolloObstacle(const Episode &episode, const rpc::Actor &actor) {
+    ApolloObstacle(const EpisodeProxy &episode, const rpc::Actor &actor) {
 
       id = actor.id;
       type = actor.description.id; //TODO:Check
