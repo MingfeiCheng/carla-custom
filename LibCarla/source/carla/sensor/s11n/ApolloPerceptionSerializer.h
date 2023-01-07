@@ -27,9 +27,9 @@ namespace s11n {
   class ApolloPerceptionSerializer {
   public:
 
-    template <typename Sensor, typename data::ApolloObstacleArray>
+    template <typename SensorT>
     static Buffer Serialize(
-        const Sensor &,
+        const SensorT &,
         const data::ApolloObstacleArray &obstacles) {
       const uint32_t size_in_bytes = sizeof(data::ApolloObstacle) * obstacles.size();
       Buffer buffer{size_in_bytes};
