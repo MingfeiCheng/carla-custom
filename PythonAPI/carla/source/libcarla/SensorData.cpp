@@ -583,7 +583,7 @@ void export_sensor_data() {
   class_<csd::ApolloPerceptionMeasurement, bases<cs::SensorData>, boost::noncopyable, boost::shared_ptr<csd::ApolloPerceptionMeasurement>>("ApolloPerceptionMeasurement", no_init)
     .def("__len__", &csd::ApolloPerceptionMeasurement::size)
     .def("__iter__", iterator<csd::ApolloPerceptionMeasurement>())
-    .def("__getitem__", +[](const csd::ApolloPerceptionMeasurement &self, size_t pos) -> carla::SharedPtr<cc>::Actor {
+    .def("__getitem__", +[](const csd::ApolloPerceptionMeasurement &self, size_t pos) -> carla::SharedPtr<cc::Actor> {
     return self.GetActor(pos);})
   ;
 
