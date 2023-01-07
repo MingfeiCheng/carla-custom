@@ -30,11 +30,11 @@ namespace s11n {
     template <typename Sensor>
     static Buffer Serialize(
         const Sensor &sensor,
-        const ApolloObstacleArray &obstacles) {
+        const data::ApolloObstacleArray &obstacles) {
       const uint32_t size_in_bytes = sizeof(data::ApolloObstacle) * obstacles.size();
       Buffer buffer{size_in_bytes};
       unsigned char *it = buffer.data();
-      for (auto *obstacle : obstacles) {
+      for (auto obstacle : obstacles) {
         // const FCarlaActor carla_actor = episode.FindCarlaActor(actor);
         std::memcpy(it, &obstacle, sizeof(data::ApolloObstacle));
         it += sizeof(data::ApolloObstacle);
