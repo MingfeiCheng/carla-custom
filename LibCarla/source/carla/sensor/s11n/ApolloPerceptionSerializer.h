@@ -21,11 +21,10 @@ namespace sensor {
 
 namespace s11n {
 
-  using ApolloObstacleArray = std::vector<data::ApolloObstacle>;
-  
+
   class ApolloPerceptionSerializer {
   public:
-    
+    using ApolloObstacleArray = std::vector<data::ApolloObstacle>;
     template <typename Sensor>
     static Buffer Serialize(const Sensor &sensor, const ApolloObstacleArray &obstacles, Buffer &&output);
     static SharedPtr<SensorData> Deserialize(RawData &&data);
@@ -73,7 +72,7 @@ namespace s11n {
   };
 
   template <typename Sensor>
-  inline Buffer ApolloObstacleArraySerializer::Serialize(const Sensor &sensor, const ApolloObstacleArray &obstacles, Buffer &&output) {
+  inline Buffer ApolloPerceptionSerializer::Serialize(const Sensor &sensor, const ApolloObstacleArray &obstacles, Buffer &&output) {
 
     /// Reset the output buffer
     output.reset((obstacles.size() * sizeof(data::ApolloObstacle)));
