@@ -28,22 +28,26 @@ namespace s11n {
   public:
     using ApolloObstacleArray = std::vector<data::ApolloObstacle>;
 
-    template <typename SensorT>
-    static Buffer Serialize(
-        const SensorT &,
-        const ApolloObstacleArray &obstacles) {
-      size_t obstacles_length = obstacles.size();
-      const uint32_t size_in_bytes = sizeof(data::ApolloObstacle) * obstacles_length;
-      Buffer buffer{size_in_bytes};
-      unsigned char *it = buffer.data();
-      for (auto obstacle : obstacles) {
-        // const FCarlaActor carla_actor = episode.FindCarlaActor(actor);
-        std::memcpy(it, &obstacle, sizeof(data::ApolloObstacle));
-        it += sizeof(data::ApolloObstacle);
-      }
-      return buffer;
-      // use CarlaEpisode->SerializeActor(AActor* Actor)
-    }
+    template <typename Sensor>
+    static Buffer Serialize(const Sensor &sensor, const ApolloObstacleArray &obstacles, Buffer &&output);
+    static SharedPtr<SensorData> Deserialize(RawData &&data);
+
+    // template <typename SensorT>
+    // static Buffer Serialize(
+    //     const SensorT &,
+    //     const ApolloObstacleArray &obstacles) {
+    //   size_t obstacles_length = obstacles.size();
+    //   const uint32_t size_in_bytes = sizeof(data::ApolloObstacle) * obstacles_length;
+    //   Buffer buffer{size_in_bytes};
+    //   unsigned char *it = buffer.data();
+    //   for (auto obstacle : obstacles) {
+    //     // const FCarlaActor carla_actor = episode.FindCarlaActor(actor);
+    //     std::memcpy(it, &obstacle, sizeof(data::ApolloObstacle));
+    //     it += sizeof(data::ApolloObstacle);
+    //   }
+    //   return buffer;
+    //   // use CarlaEpisode->SerializeActor(AActor* Actor)
+    // }
 
     // template <typename SensorT, typename EpisodeT, typename ActorListT>
     // static Buffer Serialize(
@@ -68,9 +72,24 @@ namespace s11n {
     // static data::ApolloObstacle DeserializeRawData(const RawData &message){
     //   return MsgPack::UnPack<data::ApolloObstacle>(message.begin(), message.size());
     // }
-
-    static SharedPtr<SensorData> Deserialize(RawData &&data);
   };
+
+  template <typename Sensor>
+  inline Buffer ApolloObstacleArraySerializer::Serialize(const Sensor &sensor, const ApolloObstacleArray &obstacles, Buffer &&output) {
+
+    /// Reset the output buffer
+    output.reset((obstacles.size() * sizeof(data::ApolloObstacle)));
+
+    /// Pointer to data in buffer
+    unsigned char *it = output.data();
+
+    /// Copy the events into the output buffer
+    for (auto e : obstacles) {
+      std::memcpy(it, reinterpret_cast<const void *>(&e), sizeof(data::ApolloObstacle));
+      it += sizeof(data::ApolloObstacle);
+    }
+    return std::move(output);
+  }
 
 } // namespace s11n
 } // namespace sensor
