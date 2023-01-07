@@ -31,7 +31,8 @@ namespace s11n {
     static Buffer Serialize(
         const SensorT &,
         const data::ApolloObstacleArray &obstacles) {
-      const uint32_t size_in_bytes = sizeof(data::ApolloObstacle) * obstacles.size();
+      size_t obstacles_length = obstacles.size();
+      const uint32_t size_in_bytes = sizeof(data::ApolloObstacle) * obstacles_length;
       Buffer buffer{size_in_bytes};
       unsigned char *it = buffer.data();
       for (auto obstacle : obstacles) {
