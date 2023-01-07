@@ -41,6 +41,10 @@ namespace s11n {
       // use CarlaEpisode->SerializeActor(AActor* Actor)
     }
 
+    static rpc::Actor DeserializeRawData(const RawData &message){
+      return MsgPack::UnPack<rpc::Actor>(message.begin(), message.size());
+    }
+
     static SharedPtr<SensorData> Deserialize(RawData &&data);
   };
 

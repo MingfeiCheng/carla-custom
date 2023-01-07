@@ -16,11 +16,54 @@ namespace sensor {
 namespace data {
 
   class ApolloPerceptionMeasurement : public Array<rpc::Actor> {
+
+  protected:
+    using Serializer = s11n::ApolloPerceptionSerializer;
+
+    friend Serializer;
+
+    explicit ApolloPerceptionMeasurement(RawData &&data) {
+      Array<rpc::Actor> actors_rpc = Array<rpc::Actor>(0u, std::move(data));
+
+      actors.clear();
+      for (pos = 0; pos < actors_rpc.size(); pos++) {
+        const actor_variant = client::detail::ActorVariant(Serializer.DeserializeRawData(actors_rpc.at(pos)));
+        SharedPtr<client::Actor> actor_client = actor_variant.Get(GetEpisode());
+        actors.push_back(actor_client);
+      }
+
+      // const uint32_t size_in_bytes = sizeof(SharedPtr<client::Actor>) * actors_rpc.size();
+      // Buffer buffer{size_in_bytes};
+      // unsigned char *it = buffer.data();
+      // for (pos = 0; pos < actors_rpc.size(); pos++) {
+      //   const actor_variant = client::detail::ActorVariant(Serializer.DeserializeRawData(actors_rpc.at(pos)));
+      //   SharedPtr<client::Actor> actor_client = actor_variant.Get(GetEpisode())
+      //   std::memcpy(it, &actor_client, sizeof(SharedPtr<client::Actor>));
+      //   it += sizeof(SharedPtr<client::Actor>);
+      // }
+      // return buffer;
+
+      // for (pos = 0; pos < actors_rpc.size(); pos++){
+        
+      //   actors.
+      // }
+    }
+
   public:
 
-    explicit ApolloPerceptionMeasurement(RawData &&data) 
-    : Array<rpc::Actor>(0u, std::move(data)) {}
+    std::vector<SharedPtr<carla::client::Actor>> GetActors() const {
+      return actors;
+    }
+
+    SharedPtr<carla::client::Actor> GetActor(size_t pos) const {
+      return actors[pos];
+    }
+
   };
+
+  private:
+    
+    std::vector<SharedPtr<carla::client::Actor>> actors;
 
 } // namespace data
 } // namespace sensor

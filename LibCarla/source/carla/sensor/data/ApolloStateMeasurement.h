@@ -35,7 +35,7 @@ namespace data {
         _qy(0.0f),
         _qz(0.0f){
 
-      _actor = Serializer::DeserializeRawData(data).actor;
+      _actor = client::detail::ActorVariant(Serializer::DeserializeRawData(data).actor);
       _geo_location = Serializer::DeserializeRawData(data).geo_location;
       _qw = Serializer::DeserializeRawData(data).qw;
       _qx = Serializer::DeserializeRawData(data).qx;
