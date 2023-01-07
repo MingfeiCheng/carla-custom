@@ -126,9 +126,6 @@ namespace data {
     }
   };
 
-  private:
-    std::vector<SharedPtr<client::Actor>> actors;
-
 } // namespace data
 } // namespace sensor
 } // namespace carla
