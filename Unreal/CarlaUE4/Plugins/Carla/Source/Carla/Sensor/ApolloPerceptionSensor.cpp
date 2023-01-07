@@ -117,7 +117,7 @@ void AApolloPerceptionSensor::PostPhysTick(UWorld *World, ELevelTick TickType, f
       ObstacleArray apollo_obstacles;
 
       for(AActor *actor : DetectedActors){
-        FCarlaActor carla_actor = episode.FindCarlaActor(actor);        
+        FCarlaActor *carla_actor = episode.FindCarlaActor(actor);        
         const carla::rpc::ActorId apollo_id = carla_actor.GetActorId();
          // add logic 
         FCarlaActor::ActorType type = carla_actor.GetActorType();
@@ -131,14 +131,14 @@ void AApolloPerceptionSensor::PostPhysTick(UWorld *World, ELevelTick TickType, f
         }else if (AType::Walker == type){
           apollo_type = "dynamic.walker";
         }
-        const carla::geom::BoundingBox apollo_bbox = UBoundingBoxCalculator::GetActorBoundingBox(Actor);
+        const carla::geom::BoundingBox apollo_bbox = UBoundingBoxCalculator::GetActorBoundingBox(actor);
         // carla
+        FVector velocity = carla_actor.GetActorVelocity();
+        FVector angular_velocity = carla_actor.GetActorAngularVelocity();
         const carla::geom::Vector3D acceleration = FWorldObserver_GetAcceleration(carla_actor, velocity, DeltaSeconds);
         const FTransform transform = carla_actor.GetActorGlobalTransform();
         const FVector location = transform.GetLocation();
-        const FRotator rotation = transform.GetRotation();       
-        FVector velocity = carla_actor.GetActorVelocity();
-        FVector angular_velocity = carla_actor.GetActorAngularVelocity();
+        const FRotator rotation = transform.GetRotation().Rotator();       
 
         // apollo
         const carla::geom::Location apollo_location = carla::geom::Location(location.X, -location.Y, location.Z);
@@ -147,7 +147,7 @@ void AApolloPerceptionSensor::PostPhysTick(UWorld *World, ELevelTick TickType, f
         const carla::geom::Vector3D apollo_acceleration = carla::geom::Vector3D(acceleration.x, -acceleration.y, acceleration.z);
         const carla::geom::Vector3D apollo_angular_velocity = carla::geom::Vector3D(angular_velocity.X, angular_velocity.Y, angular_velocity.Z);
 
-        apollo_obstacles.push_back(::carla::sensor::data::ApolloObstacle(apollo_id, 
+        apollo_obstacles.push_back(carla::sensor::data::ApolloObstacle(apollo_id, 
                                                                          apollo_type,
                                                                          apollo_bbox,
                                                                          apollo_rotation,
