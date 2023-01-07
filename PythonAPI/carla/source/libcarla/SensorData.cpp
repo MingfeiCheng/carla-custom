@@ -194,16 +194,29 @@ namespace data {
 
   std::ostream &operator<<(std::ostream &out, const ApolloObstacle &obstacle) {
     out << "ApolloObstacle(id=" << std::to_string(obstacle.id)
-        << ", type=" << std::to_string(obstacle.type)
-        << ", bbox=" << std::to_string(obstacle.bbox)
-        << ", rotation=" << std::to_string(obstacle.rotation)
-        << ", location=" << std::to_string(obstacle.location)
-        << ", velocity=" << std::to_string(obstacle.velocity)
-        << ", angular_velocity=" << std::to_string(obstacle.angular_velocity)
-        << ", acceleration=" << std::to_string(obstacle.acceleration) 
+        << ", type=" << obstacle.type
+        << ", bbox=" << obstacle.bbox
+        << ", rotation=" << obstacle.rotation
+        << ", location=" << obstacle.location
+        << ", velocity=" << obstacle.velocity
+        << ", angular_velocity=" << obstacle.angular_velocity
+        << ", acceleration=" << obstacle.acceleration
         << ')';
     return out;
   }
+
+  // std::ostream &operator<<(std::ostream &out, const ApolloObstacle &obstacle) {
+  //   out << "ApolloObstacle(id=" << std::to_string(obstacle.id)
+  //       << ", type=" << std::to_string(obstacle.type)
+  //       << ", bbox=" << std::to_string(obstacle.bbox)
+  //       << ", rotation=" << std::to_string(obstacle.rotation)
+  //       << ", location=" << std::to_string(obstacle.location)
+  //       << ", velocity=" << std::to_string(obstacle.velocity)
+  //       << ", angular_velocity=" << std::to_string(obstacle.angular_velocity)
+  //       << ", acceleration=" << std::to_string(obstacle.acceleration) 
+  //       << ')';
+  //   return out;
+  // }
 
   std::ostream &operator<<(std::ostream &out, const ApolloObstacleArray &obstacles) {
     out << "ApolloObstacleArray(frame=" << std::to_string(obstacles.GetFrame())
