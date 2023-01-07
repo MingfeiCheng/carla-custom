@@ -11,8 +11,10 @@
 #include "Carla/Sensor/ApolloPerceptionSensor.h"
 
 #include "Carla/Game/CarlaEpisode.h"
+#include "Carla/Game/CarlaStatics.h"
 #include "Carla/Actor/ActorBlueprintFunctionLibrary.h"
 #include "Carla/Util/BoundingBoxCalculator.h"
+#include "Carla/Actor/CarlaActor.h"
 
 #include <compiler/disable-ue4-macros.h>
 #include <carla/geom/Location.h>
@@ -100,6 +102,7 @@ void AApolloPerceptionSensor::SetOwner(AActor *Owner)
 void AApolloPerceptionSensor::PostPhysTick(UWorld *World, ELevelTick TickType, float DeltaSeconds)
 {
   // Super::PostPhysTick(DeltaSeconds);
+  TRACE_CPUPROFILER_EVENT_SCOPE(AApolloPerceptionSensor::PostPhysTick);
 
   TSet<AActor *> DetectedActors;
   Box->GetOverlappingActors(DetectedActors, ACarlaWheeledVehicle::StaticClass());
@@ -107,7 +110,9 @@ void AApolloPerceptionSensor::PostPhysTick(UWorld *World, ELevelTick TickType, f
 
   if (DetectedActors.Num() > 0){
     {
-      const auto episode = GetEpisode();
+      TRACE_CPUPROFILER_EVENT_SCOPE_STR("AApolloPerceptionSensor Stream Send");
+      const auto &episode = GetEpisode();
+
       FActorRegistry registry = episode.GetActorRegistry();
       ObstacleArray apollo_obstacles;
 
