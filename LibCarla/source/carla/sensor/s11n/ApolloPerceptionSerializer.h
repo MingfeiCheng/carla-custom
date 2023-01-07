@@ -10,6 +10,7 @@
 #include "carla/Memory.h"
 #include "carla/rpc/Actor.h"
 #include "carla/sensor/RawData.h"
+#include "carla/sensor/data/ApolloObstacle.h"
 
 #include <cstdint>
 #include <cstring>
@@ -29,21 +30,23 @@ namespace s11n {
         const SensorT &,
         const EpisodeT &episode,
         const ActorListT &detected_actors) {
-      const uint32_t size_in_bytes = sizeof(rpc::Actor) * detected_actors.Num();
+      const uint32_t size_in_bytes = sizeof(data::ApolloObstacle) * detected_actors.Num();
       Buffer buffer{size_in_bytes};
       unsigned char *it = buffer.data();
       for (auto *actor : detected_actors) {
-        const rpc::Actor actor_info = episode.SerializeActor(actor);
-        std::memcpy(it, &actor_info, sizeof(rpc::Actor));
-        it += sizeof(rpc::Actor);
+        const FCarlaActor carla_actor = episode.FindCarlaActor(actor);
+        const rpc::Actor actor = episode.SerializeActor(actor);
+        const data::ApolloObstacle obstacle = data::ApolloObstacle(episode, actor);
+        std::memcpy(it, &obstacle, sizeof(data::ApolloObstacle));
+        it += sizeof(data::ApolloObstacle);
       }
       return buffer;
       // use CarlaEpisode->SerializeActor(AActor* Actor)
     }
 
-    static rpc::Actor DeserializeRawData(const RawData &message){
-      return MsgPack::UnPack<rpc::Actor>(message.begin(), message.size());
-    }
+    // static data::ApolloObstacle DeserializeRawData(const RawData &message){
+    //   return MsgPack::UnPack<data::ApolloObstacle>(message.begin(), message.size());
+    // }
 
     static SharedPtr<SensorData> Deserialize(RawData &&data);
   };

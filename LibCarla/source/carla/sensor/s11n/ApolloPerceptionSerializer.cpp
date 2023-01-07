@@ -7,14 +7,14 @@
 #include "carla/sensor/s11n/ApolloPerceptionSerializer.h"
 
 //TODO: change data format
-#include "carla/sensor/data/ApolloPerceptionMeasurement.h"
+#include "carla/sensor/data/ApolloObstacleArray.h"
 
 namespace carla {
 namespace sensor {
 namespace s11n {
 
   SharedPtr<SensorData> ApolloPerceptionSerializer::Deserialize(RawData &&data) {
-    return SharedPtr<SensorData>(new data::ApolloPerceptionMeasurement(std::move(data)));
+    return SharedPtr<data::ApolloObstacleArray>(new data::ApolloObstacleArray(std::move(data)));
   }
 
 } // namespace s11n

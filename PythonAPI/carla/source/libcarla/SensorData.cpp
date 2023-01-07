@@ -23,7 +23,7 @@
 
 #include <carla/sensor/data/ApolloGnssMeasurement.h>
 #include <carla/sensor/data/ApolloChassisMeasurement.h>
-#include <carla/sensor/data/ApolloPerceptionMeasurement.h>
+#include <carla/sensor/data/ApolloObstacleArray.h>
 #include <carla/sensor/data/ApolloTransformMeasurement.h>
 #include <carla/sensor/data/ApolloStateMeasurement.h>
 
@@ -192,6 +192,26 @@ namespace data {
     return out;
   }
 
+  std::ostream &operator<<(std::ostream &out, const ApolloObstacle &obstacle) {
+    out << "ApolloObstacle(id=" << std::to_string(event.id)
+        << ", type=" << std::to_string(event.type)
+        << ", bbox=" << std::to_string(event.bbox)
+        << ", rotation=" << std::to_string(event.rotation)
+        << ", location=" << std::to_string(event.location)
+        << ", velocity=" << std::to_string(event.velocity)
+        << ", acceleration=" << std::to_string(event.acceleration) 
+        << ')';
+    return out;
+  }
+
+  std::ostream &operator<<(std::ostream &out, const ApolloObstacleArray &obstacles) {
+    out << "ApolloObstacleArray(frame=" << std::to_string(obstacles.GetFrame())
+        << ", timestamp=" << std::to_string(obstacles.GetTimestamp())
+        << ", number_of_obstacles=" << std::to_string(obstacles.size())
+        << ')';
+    return out;
+  }
+
   std::ostream &operator<<(std::ostream &out, const RadarDetection &det) {
     out << "RadarDetection(velocity=" << std::to_string(det.velocity)
         << ", azimuth=" << std::to_string(det.azimuth)
@@ -217,25 +237,6 @@ namespace data {
         << ", cos_inc_angle=" << std::to_string(det.cos_inc_angle)
         << ", object_idx=" << std::to_string(det.object_idx)
         << ", object_tag=" << std::to_string(det.object_tag)
-        << ')';
-    return out;
-  }
-
-
-  // std::ostream &operator<<(std::ostream &out, const carla::rpc::PerceptionUnit &unit) {
-  //   out << "PerceptionUnit(id=" << std::to_string(unit.id)
-  //       << ", bbox=" << unit.bbox
-  //       << ", type=" << unit.type
-  //       << ", location=" << unit.location
-  //       << ", rotation=" << unit.rotation
-  //       << ", velocity=" << unit.velocity
-  //       << ", acceleration=" << unit.acceleration << ')';
-  //   return out;
-  // }
-
-  std::ostream &operator<<(std::ostream &out, const ApolloPerceptionMeasurement &meas) {
-    out << "ApolloPerceptionMeasurement(frame=" << std::to_string(meas.GetFrame())
-        << ", timestamp=" << std::to_string(meas.GetTimestamp())
         << ')';
     return out;
   }
@@ -580,14 +581,6 @@ void export_sensor_data() {
     .def(self_ns::str(self_ns::self))
   ;
 
-  class_<csd::ApolloPerceptionMeasurement, bases<cs::SensorData>, boost::noncopyable, boost::shared_ptr<csd::ApolloPerceptionMeasurement>>("ApolloPerceptionMeasurement", no_init)
-    .def("__len__", &csd::ApolloPerceptionMeasurement::size)
-    .def("__iter__", iterator<csd::ApolloPerceptionMeasurement>())
-    .def("__getitem__", +[](const csd::ApolloPerceptionMeasurement &self, size_t pos) -> carla::SharedPtr<cc::Actor> {
-    return self.GetActor(pos);})
-  ;
-
-  
 
   class_<csd::ApolloTransformMeasurement, bases<cs::SensorData>, boost::noncopyable, boost::shared_ptr<csd::ApolloTransformMeasurement>>("ApolloTransformMeasurement", no_init)
     .add_property("location", &csd::ApolloTransformMeasurement::GetLocation)
@@ -676,4 +669,23 @@ void export_sensor_data() {
     .def("to_array_pol", CALL_RETURNING_LIST(csd::DVSEventArray, ToArrayPol))
     .def(self_ns::str(self_ns::self))
   ;
+
+  class_<csd::ApolloObstacle>("ApolloObstacle")
+    .add_property("id", &csd::ApolloObstacle::id)
+    .add_property("type", &csd::ApolloObstacle::type)
+    .add_property("bbox", &csd::ApolloObstacle::bbox)
+    .add_property("rotation", &csd::ApolloObstacle::rotation)
+    .add_property("location", &csd::ApolloObstacle::location)
+    .add_property("velocity", &csd::ApolloObstacle::velocity)
+    .add_property("acceleration", &csd::ApolloObstacle::acceleration)
+    .def(self_ns::str(self_ns::self))
+  ;
+
+  class_<csd::ApolloObstacleArray, bases<cs::SensorData>, boost::noncopyable, boost::shared_ptr<csd::ApolloObstacleArray>>("ApolloObstacleArray", no_init)
+    .def("__len__", &csd::ApolloObstacleArray::size)
+    .def("__iter__", iterator<csd::ApolloObstacleArray>())
+    .def("__getitem__", +[](const csd::ApolloObstacleArray &self, size_t pos) -> csd::ApolloObstacle {
+    return self.at(pos);})
+  ;
+  // might need to add &  
 }
