@@ -31,7 +31,7 @@ namespace data {
       // actors = std::vector<SharedPtr<client::Actor>>();
 
       std::vector<SharedPtr<client::Actor>> _actors = std::vector<SharedPtr<client::Actor>>();
-      for (auto actor_data : this->begin()) {
+      for (auto actor_data : this->cbegin()) {
         const client::detail::ActorVariant actor_variant = client::detail::ActorVariant(Serializer.DeserializeRawData(actor_data));
         SharedPtr<client::Actor> actor_client = actor_variant.Get(GetEpisode());
         _actors.push_back(actor_client);
