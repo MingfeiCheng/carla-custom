@@ -30,8 +30,8 @@ namespace data {
       // actors_rpc = Array<rpc::Actor>(0u, std::move(data));
       // actors = std::vector<SharedPtr<client::Actor>>();
 
-       std::vector<SharedPtr<client::Actor>> _actors = std::vector<SharedPtr<client::Actor>>();
-      for (auto actor_data : this->data()) {
+      std::vector<SharedPtr<client::Actor>> _actors = std::vector<SharedPtr<client::Actor>>();
+      for (auto actor_data : this->begin()) {
         const client::detail::ActorVariant actor_variant = client::detail::ActorVariant(Serializer.DeserializeRawData(actor_data));
         SharedPtr<client::Actor> actor_client = actor_variant.Get(GetEpisode());
         _actors.push_back(actor_client);
