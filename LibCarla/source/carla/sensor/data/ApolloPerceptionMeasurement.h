@@ -120,7 +120,7 @@ namespace data {
     }
 
     SharedPtr<client::Actor> GetActor(size_t pos) const {
-      const client::detail::ActorVariant actor_variant = client::detail::ActorVariant(this.at(pos));
+      const client::detail::ActorVariant actor_variant = client::detail::ActorVariant(this->at(pos));
       return actor_variant.Get(GetEpisode());
     }
   };
