@@ -105,32 +105,25 @@ namespace data {
     friend Serializer;
 
     explicit ApolloPerceptionMeasurement(RawData &&data)
-      : Super(0u, std::move(data)),
-        _actors(std::vector<SharedPtr<client::Actor>>()) {
-
-        std::vector<SharedPtr<client::Actor>> actors = std::vector<SharedPtr<client::Actor>>();
-        for (const auto &actor_rpc : *this) {
-          const client::detail::ActorVariant actor_variant = client::detail::ActorVariant(actor_rpc);
-          actors.push_back(actor_variant.Get(GetEpisode()));
-        }
-
-        _actors = actors;
-
+      : Super(0u, std::move(data)) {
       }
 
   public:
 
     std::vector<SharedPtr<client::Actor>> GetActors() const {
-      return _actors;
+      std::vector<SharedPtr<client::Actor>> actors = std::vector<SharedPtr<client::Actor>>();
+      for (const auto &actor_rpc : *this) {
+        const client::detail::ActorVariant actor_variant = client::detail::ActorVariant(actor_rpc);
+        actors.push_back(actor_variant.Get(GetEpisode()));
+      }
+      return actors;
     }
 
     SharedPtr<client::Actor> GetActor(size_t pos) const {
-      return _actors[pos];
+      const client::detail::ActorVariant actor_variant = client::detail::ActorVariant(this.at(pos));
+      return actor_variant.Get(GetEpisode());
     }
   };
-
-  private:
-    std::vector<SharedPtr<client::Actor>> _actors;
 
 } // namespace data
 } // namespace sensor
