@@ -28,6 +28,7 @@ AApolloStateSensor::AApolloStateSensor(const FObjectInitializer &ObjectInitializ
   : Super(ObjectInitializer)
 {
   PrimaryActorTick.bCanEverTick = true;
+  RandomEngine = CreateDefaultSubobject<URandomEngine>(TEXT("RandomEngine"));
 }
 
 FActorDefinition AApolloStateSensor::GetSensorDefinition()

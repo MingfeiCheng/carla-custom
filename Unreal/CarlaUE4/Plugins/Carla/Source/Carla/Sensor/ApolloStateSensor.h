@@ -3,8 +3,13 @@
 #include "Carla/Sensor/Sensor.h"
 
 #include "Carla/Actor/ActorDefinition.h"
-#include "carla/geom/GeoLocation.h"
 #include "Carla/Actor/ActorDescription.h"
+
+#include <compiler/disable-ue4-macros.h>
+#include "carla/geom/GeoLocation.h"
+#include <compiler/enable-ue4-macros.h>
+
+#include <array>
 
 #include "ApolloStateSensor.generated.h"
 
@@ -41,6 +46,10 @@ public:
   float GetLongitudeBias() const;
   float GetAltitudeBias() const;
 
+protected:
+
+  virtual void BeginPlay() override;
+
 private:
 
   carla::geom::GeoLocation CurrentGeoReference;
@@ -52,7 +61,5 @@ private:
   float LatitudeBias;
   float LongitudeBias;
   float AltitudeBias;
-
-  virtual void BeginPlay() override;
   
 };

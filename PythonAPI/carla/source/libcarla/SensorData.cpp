@@ -581,14 +581,13 @@ void export_sensor_data() {
   ;
 
   class_<csd::ApolloPerceptionMeasurement, bases<cs::SensorData>, boost::noncopyable, boost::shared_ptr<csd::ApolloPerceptionMeasurement>>("ApolloPerceptionMeasurement", no_init)
-    .def("actors", CALL_RETURNING_LIST(csd::ApolloPerceptionMeasurement, GetActors))
-    .def(self_ns::str(self_ns::self))
+    .def("__len__", &csd::ApolloPerceptionMeasurement::size)
+    .def("__iter__", iterator<csd::ApolloPerceptionMeasurement>())
+    .def("__getitem__", +[](const csd::ApolloPerceptionMeasurement &self, size_t pos) -> SharedPtr<cc>::Actor {
+    return self.GetActor(pos);})
   ;
 
-  // .def("__len__", &csd::ApolloPerceptionMeasurement::size)
-  //   .def("__iter__", iterator<csd::ApolloPerceptionMeasurement>())
-  //   .def("__getitem__", +[](const csd::ApolloPerceptionMeasurement &self, size_t pos) -> cc::Actor {
-  //   return self.GetActor(pos);})
+  
 
   class_<csd::ApolloTransformMeasurement, bases<cs::SensorData>, boost::noncopyable, boost::shared_ptr<csd::ApolloTransformMeasurement>>("ApolloTransformMeasurement", no_init)
     .add_property("location", &csd::ApolloTransformMeasurement::GetLocation)
