@@ -105,7 +105,8 @@ namespace data {
     friend Serializer;
 
     explicit ApolloPerceptionMeasurement(RawData &&data)
-      : Super(0u, std::move(data)) {
+      : Super(0u, std::move(data)),
+        _actors(std::vector<SharedPtr<client::Actor>>()) {
 
         std::vector<SharedPtr<client::Actor>> actors = std::vector<SharedPtr<client::Actor>>();
         for (const auto &actor_rpc : *this) {
