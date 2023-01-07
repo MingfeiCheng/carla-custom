@@ -47,14 +47,14 @@ struct ApolloObstacle {
         acceleration(std::move(arg.acceleration)) {}
 
     /// Constructor
-    ApolloObstacle(const Episode &episode, const rpc::Actor &actor) {
+    ApolloObstacle(const rpc::Actor &actor) {
 
-      id = actor_info.id;
-      type = actor_info.description.id; //TODO:Check
-      bbox = actor_info.bounding_box;
+      id = actor.id;
+      type = actor.description.id; //TODO:Check
+      bbox = actor.bounding_box;
 
       const client::detail::ActorVariant actor_variant = client::detail::ActorVariant(actor);
-      const SharedPtr<client::Actor> actor_client = actor_variant.Get(episode);
+      const SharedPtr<client::Actor> actor_client = actor_variant.Get(GetEpisode());
 
       const geom::Transform actor_transform = actor_client->GetTransform();
       const geom::Location actor_location = actor_transform.location;
