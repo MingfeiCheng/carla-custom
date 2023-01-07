@@ -10,7 +10,6 @@
 #include "carla/rpc/ActorId.h"
 #include "carla/client/Actor.h"
 #include "carla/client/detail/ActorVariant.h"
-#include "carla/client/detail/Simulator.h"
 #include "carla/geom/Location.h"
 #include "carla/geom/Rotation.h"
 #include "carla/geom/Vector3D.h"
@@ -102,12 +101,12 @@ struct ApolloObstacle {
 
     rpc::ActorId id;
     std::string type;
-    geom::Location location;
+    geom::BoundingBox bbox;
     geom::Rotation rotation;
+    geom::Location location;
     geom::Vector3D velocity;
     geom::Vector3D acceleration;
-    geom::BoundingBox bbox;
-
+  
   };
 #pragma pack(pop)
 } // namespace data
