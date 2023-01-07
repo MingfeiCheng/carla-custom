@@ -35,7 +35,7 @@ namespace s11n {
       unsigned char *it = buffer.data();
       for (auto *actor : detected_actors) {
         // const FCarlaActor carla_actor = episode.FindCarlaActor(actor);
-        const rpc::Actor actor_rpc = episode.SerializeActor(actor);
+        const rpc::Actor actor_rpc = episode.SerializeActor(episode, actor);
         const data::ApolloObstacle obstacle = data::ApolloObstacle(actor_rpc);
         std::memcpy(it, &obstacle, sizeof(data::ApolloObstacle));
         it += sizeof(data::ApolloObstacle);
