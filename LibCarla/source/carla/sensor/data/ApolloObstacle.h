@@ -79,8 +79,8 @@ struct ApolloObstacle {
                    id(id),
                    type(type),
                    bbox(bbox),
-                   location(location),
                    rotation(rotation),
+                   location(location),
                    velocity(velocity),
                    angular_velocity(angular_velocity),
                    acceleration(acceleration) {}

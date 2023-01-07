@@ -12,7 +12,7 @@
 #include "carla/sensor/RawData.h"
 #include "carla/client/Actor.h"
 #include "carla/client/detail/Simulator.h"
-#include "carla/sensor/data/ApolloObstacle.h"
+#include "carla/sensor/data/ApolloObstacleArray.h"
 
 #include <cstdint>
 #include <cstring>
