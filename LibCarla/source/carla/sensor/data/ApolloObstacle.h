@@ -33,6 +33,7 @@ struct ApolloObstacle {
         rotation(arg.rotation),
         location(arg.location),
         velocity(arg.velocity),
+        angular_velocity(arg.angular_velocity),
         acceleration(arg.acceleration) {}
 
     /// Moving constructor
@@ -43,29 +44,46 @@ struct ApolloObstacle {
         rotation(std::move(arg.rotation)),
         location(std::move(arg.location)),
         velocity(std::move(arg.velocity)),
+        angular_velocity(std::move(arg.angular_velocity)),
         acceleration(std::move(arg.acceleration)) {}
 
     /// Constructor
-    ApolloObstacle(const client::detail::EpisodeProxy &episode, const rpc::Actor &actor) {
+    // ApolloObstacle(const client::detail::EpisodeProxy &episode, const rpc::Actor &actor) {
 
-      id = actor.id;
-      type = actor.description.id; //TODO:Check
-      bbox = actor.bounding_box;
+    //   id = actor.id;
+    //   type = actor.description.id; //TODO:Check
+    //   bbox = actor.bounding_box;
 
-      const client::detail::ActorVariant actor_variant = client::detail::ActorVariant(actor);
-      const SharedPtr<client::Actor> actor_client = actor_variant.Get(episode);
+    //   const client::detail::ActorVariant actor_variant = client::detail::ActorVariant(actor);
+    //   const SharedPtr<client::Actor> actor_client = actor_variant.Get(episode);
 
-      const geom::Transform actor_transform = actor_client->GetTransform();
-      const geom::Location actor_location = actor_transform.location;
-      const geom::Rotation actor_rotation = actor_transform.rotation;
-      const geom::Vector3D actor_velocity = actor_client->GetVelocity();
-      const geom::Vector3D actor_acceleration = actor_client->GetAcceleration();
+    //   const geom::Transform actor_transform = actor_client->GetTransform();
+    //   const geom::Location actor_location = actor_transform.location;
+    //   const geom::Rotation actor_rotation = actor_transform.rotation;
+    //   const geom::Vector3D actor_velocity = actor_client->GetVelocity();
+    //   const geom::Vector3D actor_acceleration = actor_client->GetAcceleration();
 
-      rotation = actor_rotation;
-      location = geom::Location(actor_location.x, -actor_location.y, actor_location.z);
-      velocity = geom::Vector3D(actor_velocity.x, -actor_velocity.y, actor_velocity.z);
-      acceleration = geom::Vector3D(actor_acceleration.x, -actor_acceleration.y, actor_acceleration.z);
-    }
+    //   rotation = actor_rotation;
+    //   location = geom::Location(actor_location.x, -actor_location.y, actor_location.z);
+    //   velocity = geom::Vector3D(actor_velocity.x, -actor_velocity.y, actor_velocity.z);
+    //   acceleration = geom::Vector3D(actor_acceleration.x, -actor_acceleration.y, actor_acceleration.z);
+    // }
+    ApolloObstacle(rpc::ActorId id, 
+                   std::string type, 
+                   geom::BoundingBox bbox,
+                   geom::Location location,
+                   geom::Rotation rotation,
+                   geom::Vector3D velocity,
+                   geom::Vector3D angular_velocity,
+                   geom::Vector3D acceleration):
+                   id(id),
+                   type(type),
+                   bbox(bbox),
+                   location(location),
+                   rotation(rotation),
+                   velocity(velocity),
+                   angular_velocity(angular_velocity),
+                   acceleration(acceleration) {}
 
     /// Assignement operator
     ApolloObstacle &operator=(const ApolloObstacle &other) {
@@ -75,6 +93,7 @@ struct ApolloObstacle {
       rotation = other.rotation;
       location = other.location;
       velocity = other.velocity;
+      angular_velocity = other.angular_velocity;
       acceleration = other.acceleration;
       return *this;
     }
@@ -87,6 +106,7 @@ struct ApolloObstacle {
       rotation = std::move(other.rotation);
       location = std::move(other.location);
       velocity = std::move(other.velocity);
+      angular_velocity = std::move(other.angular_velocity);
       acceleration = std::move(other.acceleration);
       return *this;
     }
@@ -105,6 +125,7 @@ struct ApolloObstacle {
     geom::Rotation rotation;
     geom::Location location;
     geom::Vector3D velocity;
+    geom::Vector3D angular_velocity;
     geom::Vector3D acceleration;
   
   };

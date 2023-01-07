@@ -193,13 +193,14 @@ namespace data {
   }
 
   std::ostream &operator<<(std::ostream &out, const ApolloObstacle &obstacle) {
-    out << "ApolloObstacle(id=" << std::to_string(event.id)
-        << ", type=" << std::to_string(event.type)
-        << ", bbox=" << std::to_string(event.bbox)
-        << ", rotation=" << std::to_string(event.rotation)
-        << ", location=" << std::to_string(event.location)
-        << ", velocity=" << std::to_string(event.velocity)
-        << ", acceleration=" << std::to_string(event.acceleration) 
+    out << "ApolloObstacle(id=" << std::to_string(obstacle.id)
+        << ", type=" << std::to_string(obstacle.type)
+        << ", bbox=" << std::to_string(obstacle.bbox)
+        << ", rotation=" << std::to_string(obstacle.rotation)
+        << ", location=" << std::to_string(obstacle.location)
+        << ", velocity=" << std::to_string(obstacle.velocity)
+        << ", angular_velocity=" << std::to_string(obstacle.angular_velocity)
+        << ", acceleration=" << std::to_string(obstacle.acceleration) 
         << ')';
     return out;
   }
@@ -677,6 +678,7 @@ void export_sensor_data() {
     .add_property("rotation", &csd::ApolloObstacle::rotation)
     .add_property("location", &csd::ApolloObstacle::location)
     .add_property("velocity", &csd::ApolloObstacle::velocity)
+    .add_property("angular_velocity", &csd::ApolloObstacle::angular_velocity)
     .add_property("acceleration", &csd::ApolloObstacle::acceleration)
     .def(self_ns::str(self_ns::self))
   ;

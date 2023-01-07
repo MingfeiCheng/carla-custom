@@ -27,25 +27,41 @@ namespace s11n {
   class ApolloPerceptionSerializer {
   public:
 
-    template <typename SensorT, typename EpisodeT, typename ActorListT>
+    template <typename Sensor>
     static Buffer Serialize(
-        const SensorT &,
-        const EpisodeT &episode,
-        const ActorListT &detected_actors) {
-      const uint32_t size_in_bytes = sizeof(data::ApolloObstacle) * detected_actors.Num();
+        const Sensor &sensor,
+        const ApolloObstacleArray &obstacles) {
+      const uint32_t size_in_bytes = sizeof(data::ApolloObstacle) * obstacles.size();
       Buffer buffer{size_in_bytes};
       unsigned char *it = buffer.data();
-      for (auto *actor : detected_actors) {
+      for (auto *obstacle : obstacles) {
         // const FCarlaActor carla_actor = episode.FindCarlaActor(actor);
-        const rpc::Actor actor_rpc = episode.SerializeActor(actor);
-        const auto ceps = GetCurrentEpisode();
-        const data::ApolloObstacle obstacle = data::ApolloObstacle(ceps, actor_rpc);
         std::memcpy(it, &obstacle, sizeof(data::ApolloObstacle));
         it += sizeof(data::ApolloObstacle);
       }
       return buffer;
       // use CarlaEpisode->SerializeActor(AActor* Actor)
     }
+
+    // template <typename SensorT, typename EpisodeT, typename ActorListT>
+    // static Buffer Serialize(
+    //     const SensorT &,
+    //     const EpisodeT &episode,
+    //     const ActorListT &detected_actors) {
+    //   const uint32_t size_in_bytes = sizeof(data::ApolloObstacle) * detected_actors.Num();
+    //   Buffer buffer{size_in_bytes};
+    //   unsigned char *it = buffer.data();
+    //   for (auto *actor : detected_actors) {
+    //     // const FCarlaActor carla_actor = episode.FindCarlaActor(actor);
+    //     const rpc::Actor actor_rpc = episode.SerializeActor(actor);
+    //     const auto ceps = GetCurrentEpisode();
+    //     const data::ApolloObstacle obstacle = data::ApolloObstacle(ceps, actor_rpc);
+    //     std::memcpy(it, &obstacle, sizeof(data::ApolloObstacle));
+    //     it += sizeof(data::ApolloObstacle);
+    //   }
+    //   return buffer;
+    //   // use CarlaEpisode->SerializeActor(AActor* Actor)
+    // }
 
     // static data::ApolloObstacle DeserializeRawData(const RawData &message){
     //   return MsgPack::UnPack<data::ApolloObstacle>(message.begin(), message.size());

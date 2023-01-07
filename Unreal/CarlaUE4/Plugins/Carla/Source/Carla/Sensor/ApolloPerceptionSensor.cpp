@@ -15,6 +15,10 @@
 #include "Carla/Util/BoundingBoxCalculator.h"
 
 #include <compiler/disable-ue4-macros.h>
+#include <carla/geom/Location.h>
+#include <carla/geom/Rotation.h>
+#include <carla/geom/Vector3D.h>
+#include <carla/geom/BoundingBox.h>
 #include <compiler/enable-ue4-macros.h>
 
 AApolloPerceptionSensor::AApolloPerceptionSensor(const FObjectInitializer &ObjectInitializer)
@@ -103,10 +107,62 @@ void AApolloPerceptionSensor::PostPhysTick(UWorld *World, ELevelTick TickType, f
 
   if (DetectedActors.Num() > 0){
     {
+      const auto episode = GetEpisode();
+      FActorRegistry registry = episode.GetActorRegistry();
+      ObstacleArray apollo_obstacles;
+
+      for(AActor *actor : DetectedActors){
+        FCarlaActor carla_actor = episode.FindCarlaActor(actor);        
+        const carla::rpc::ActorId apollo_id = carla_actor.GetActorId();
+         // add logic 
+        FCarlaActor::ActorType type = carla_actor.GetActorType();
+        std::string apollo_type = "unknown";
+        if (AType::Vehicle == type){
+          apollo_type = "dynamic.vehicle";
+        }else if (AType::TrafficSign == type){
+          apollo_type = "static.traffic_sign";
+        }else if (AType::TrafficLight == type){
+          apollo_type = "static.traffic_light";
+        }else if (AType::Walker == type){
+          apollo_type = "dynamic.walker";
+        }
+        const carla::geom::BoundingBox apollo_bbox = UBoundingBoxCalculator::GetActorBoundingBox(Actor);
+        // carla
+        const carla::geom::Vector3D acceleration = FWorldObserver_GetAcceleration(carla_actor, velocity, DeltaSeconds);
+        const FTransform transform = carla_actor.GetActorGlobalLocation();
+        const FVector location = transform.GetLocation();
+        const FVector rotation = transform.GetRotation();       
+        FVector velocity = carla_actor.GetActorVelocity();
+        FVector angular_velocity = carla_actor.GetActorAngularVelocity();
+
+        // apollo
+        const carla::geom::Location apollo_location = carla::geom::Location(location.X, -location.Y, location.Z);
+        const carla::geom::Rotation apollo_rotation = carla::geom::Rotation(rotation.Pitch, rotation.Yaw, rotation.Roll);
+        const carla::geom::Vector3D apollo_velocity = carla::geom::Vector3D(velocity.X, -velocity.Y, velocity.Z);
+        const carla::geom::Vector3D apollo_acceleration = carla::geom::Vector3D(acceleration.X, -acceleration.Y, acceleration.Z);
+        const carla::geom::Vector3D apollo_angular_velocity = carla::geom::Vector3D(angular_velocity.X, angular_velocity.Y, angular_velocity.Z);
+
+        apollo_obstacles.push_back(::carla::sensor::data::ApolloObstacle(apollo_id, 
+                                                                         apollo_type,
+                                                                         apollo_bbox,
+                                                                         apollo_rotation,
+                                                                         apollo_location,
+                                                                         apollo_velocity,
+                                                                         apollo_angular_velocity,
+                                                                         apollo_acceleration));
+      }
+
       auto Stream = GetDataStream(*this);
-      Stream.Send(*this, GetEpisode(), DetectedActors);
+      Stream.Send(*this, apollo_obstacles);
     }
   }
+
+  // next pesudo codes
+  // FActorRegistry registry = GetEpisode().GetActorRegistry();
+  // FCarlaActor carla_actor = GetEpisode().FindCarlaActor(actor);
+  // FWorldObserver_GetAcceleration(carla_actor, velocity, DeltaSeconds);
+  //GetActorId(), GetActorType(), GetActorGlobalTransform(), GetActorVelocity(), GetActorAngularVelocity()
+
 }
 
   void AApolloPerceptionSensor::BeginPlay()
