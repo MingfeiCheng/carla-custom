@@ -15,6 +15,7 @@
 #include "Carla/Actor/ActorBlueprintFunctionLibrary.h"
 #include "Carla/Util/BoundingBoxCalculator.h"
 #include "Carla/Actor/CarlaActor.h"
+#include "Carla/Sensor/WorldObserver.h"
 
 #include <compiler/disable-ue4-macros.h>
 #include <carla/geom/Location.h>
