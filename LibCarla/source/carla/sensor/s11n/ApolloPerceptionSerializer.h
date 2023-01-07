@@ -72,7 +72,7 @@ namespace s11n {
   };
 
   template <typename Sensor>
-  inline Buffer ApolloPerceptionSerializer::Serialize(const Sensor &sensor, const ApolloObstacleArray &obstacles, Buffer &&output) {
+  inline Buffer ApolloPerceptionSerializer::Serialize(const Sensor &, const ApolloObstacleArray &obstacles, Buffer &&output) {
 
     /// Reset the output buffer
     output.reset((obstacles.size() * sizeof(data::ApolloObstacle)));
