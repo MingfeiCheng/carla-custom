@@ -106,28 +106,28 @@ namespace data {
 
     explicit ApolloPerceptionMeasurement(RawData &&data)
       : Super(0u, std::move(data)) {
+
         std::vector<SharedPtr<client::Actor>> actors = std::vector<SharedPtr<client::Actor>>();
         for (const auto &actor_rpc : *this) {
           const client::detail::ActorVariant actor_variant = client::detail::ActorVariant(actor_rpc);
           actors.push_back(actor_variant.Get(GetEpisode()));
         }
+
       }
 
   public:
 
     std::vector<SharedPtr<client::Actor>> GetActors() const {
-      std::vector<SharedPtr<client::Actor>> actors = std::vector<SharedPtr<client::Actor>>();
-      for (const auto &actor_rpc : *this) {
-        const client::detail::ActorVariant actor_variant = client::detail::ActorVariant(actor_rpc);
-        actors.push_back(actor_variant.Get(GetEpisode()));
-      }
       return actors;
     }
 
-    // SharedPtr<client::Actor> GetActor(size_t pos) const {
-    //   return _actors[pos];
-    // }
+    SharedPtr<client::Actor> GetActor(size_t pos) const {
+      return actors[pos];
+    }
   };
+
+  private:
+    std::vector<SharedPtr<client::Actor>> actors;
 
 } // namespace data
 } // namespace sensor
