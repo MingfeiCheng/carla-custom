@@ -112,7 +112,7 @@ namespace data {
     std::vector<SharedPtr<client::Actor>> GetActors() const {
       std::vector<SharedPtr<client::Actor>> actors = std::vector<SharedPtr<client::Actor>>();
       for (const auto &actor_rpc : *this) {
-        const client::detail::ActorVariant actor_variant = client::detail::ActorVariant(Serializer.DeserializeRawData(actor_rpc));
+        const client::detail::ActorVariant actor_variant = client::detail::ActorVariant(Serializer::DeserializeRawData(actor_rpc));
         actors.push_back(actor_variant.Get(GetEpisode()));
       }
       return actors;
