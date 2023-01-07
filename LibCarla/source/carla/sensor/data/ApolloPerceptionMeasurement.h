@@ -24,13 +24,15 @@ namespace data {
 
     friend Serializer;
 
-    explicit ApolloPerceptionMeasurement(RawData &&data) {
-      Array<rpc::Actor> actors_rpc = Array<rpc::Actor>(0u, std::move(data));
-
-      actors = std::vector<SharedPtr<client::Actor>>();
+    explicit ApolloPerceptionMeasurement(RawData &&data):
+      actors_rpc(Array<rpc::Actor>(0u, std::move(data)))
+      actors(std::vector<SharedPtr<client::Actor>>()) {
+      
+      // actors_rpc = Array<rpc::Actor>(0u, std::move(data));
+      // actors = std::vector<SharedPtr<client::Actor>>();
       size_t pos;
       for (pos = 0; pos < actors_rpc.size(); pos++) {
-        const actor_variant = client::detail::ActorVariant(Serializer.DeserializeRawData(actors_rpc.at(pos)));
+        const client::detail::ActorVariant actor_variant = client::detail::ActorVariant(Serializer.DeserializeRawData(actors_rpc.at(pos)));
         SharedPtr<client::Actor> actor_client = actor_variant.Get(GetEpisode());
         actors.push_back(actor_client);
       }
@@ -66,7 +68,7 @@ namespace data {
 
   private:
     
-    std::vector<SharedPtr<client::Actor>> actors = std::vector<SharedPtr<client::Actor>>();
+    std::vector<SharedPtr<client::Actor>> actors;
 
 } // namespace data
 } // namespace sensor
