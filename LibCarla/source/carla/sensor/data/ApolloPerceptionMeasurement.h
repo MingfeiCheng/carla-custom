@@ -110,8 +110,8 @@ namespace data {
 
   public:
 
-    std::vector<SharedPtr<client::Actor>> GetActors() const {
-      std::vector<SharedPtr<client::Actor>> actors = std::vector<SharedPtr<client::Actor>>();
+    std::vector<client::Actor> GetActors() const {
+      std::vector<client::Actor> actors = std::vector<client::Actor>();
       for (const auto &actor_rpc : *this) {
         const client::detail::ActorVariant actor_variant = client::detail::ActorVariant(actor_rpc);
         actors.push_back(actor_variant.Get(GetEpisode()));
@@ -119,7 +119,7 @@ namespace data {
       return actors;
     }
 
-    SharedPtr<client::Actor> GetActor(size_t pos) const {
+    client::Actor GetActor(size_t pos) const {
       const client::detail::ActorVariant actor_variant = client::detail::ActorVariant(this->at(pos));
       return actor_variant.Get(GetEpisode());
     }
