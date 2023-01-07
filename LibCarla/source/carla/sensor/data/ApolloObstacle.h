@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <cstdint>
+#include "carla/Debug.h"
 #include "carla/rpc/ActorId.h"
 #include "carla/client/Actor.h"
 #include "carla/client/detail/ActorVariant.h"
