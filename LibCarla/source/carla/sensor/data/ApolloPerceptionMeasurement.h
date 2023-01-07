@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "carla/client/detail/ActorVariant.h"
+#include "carla/client/Actor.h"
 #include "carla/rpc/Actor.h"
 #include "carla/sensor/data/Array.h"
 #include "carla/sensor/SensorData.h"
@@ -25,12 +27,13 @@ namespace data {
     explicit ApolloPerceptionMeasurement(RawData &&data) {
       Array<rpc::Actor> actors_rpc = Array<rpc::Actor>(0u, std::move(data));
 
-      actors.clear();
+      std::vector<SharedPtr<client::Actor>> actors;
       for (pos = 0; pos < actors_rpc.size(); pos++) {
         const actor_variant = client::detail::ActorVariant(Serializer.DeserializeRawData(actors_rpc.at(pos)));
         SharedPtr<client::Actor> actor_client = actor_variant.Get(GetEpisode());
         actors.push_back(actor_client);
       }
+      _actors = actors;
 
       // const uint32_t size_in_bytes = sizeof(SharedPtr<client::Actor>) * actors_rpc.size();
       // Buffer buffer{size_in_bytes};
@@ -51,19 +54,19 @@ namespace data {
 
   public:
 
-    std::vector<SharedPtr<carla::client::Actor>> GetActors() const {
-      return actors;
+    std::vector<SharedPtr<client::Actor>> GetActors() const {
+      return _actors;
     }
 
-    SharedPtr<carla::client::Actor> GetActor(size_t pos) const {
-      return actors[pos];
+    SharedPtr<client::Actor> GetActor(size_t pos) const {
+      return _actors[pos];
     }
 
   };
 
   private:
     
-    std::vector<SharedPtr<carla::client::Actor>> actors;
+    std::vector<SharedPtr<client::Actor>> _actors;
 
 } // namespace data
 } // namespace sensor
