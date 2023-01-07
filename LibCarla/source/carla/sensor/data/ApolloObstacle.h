@@ -15,6 +15,7 @@
 #include "carla/geom/Vector3D.h"
 #include "carla/geom/Transform.h"
 #include "carla/geom/BoundingBox.h"
+#include "carla/client/detail/EpisodeProxy.h"
 
 namespace carla {
 namespace sensor {
@@ -46,7 +47,7 @@ struct ApolloObstacle {
         acceleration(std::move(arg.acceleration)) {}
 
     /// Constructor
-    ApolloObstacle(const EpisodeProxy &episode, const rpc::Actor &actor) {
+    ApolloObstacle(const client::detail::EpisodeProxy &episode, const rpc::Actor &actor) {
 
       id = actor.id;
       type = actor.description.id; //TODO:Check
