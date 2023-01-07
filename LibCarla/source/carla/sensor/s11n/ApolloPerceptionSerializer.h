@@ -21,10 +21,11 @@ namespace sensor {
 
 namespace s11n {
 
+  using ApolloObstacleArray = std::vector<data::ApolloObstacle>;
+  
   class ApolloPerceptionSerializer {
   public:
-    using ApolloObstacleArray = std::vector<data::ApolloObstacle>;
-
+    
     template <typename Sensor>
     static Buffer Serialize(const Sensor &sensor, const ApolloObstacleArray &obstacles, Buffer &&output);
     static SharedPtr<SensorData> Deserialize(RawData &&data);
