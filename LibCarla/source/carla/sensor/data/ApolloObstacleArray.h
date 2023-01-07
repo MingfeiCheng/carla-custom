@@ -2,7 +2,6 @@
 
 #include "carla/sensor/data/Array.h"
 #include "carla/sensor/data/ApolloObstacle.h"
-
 #include "carla/sensor/s11n/ApolloPerceptionSerializer.h"
 
 namespace carla {
@@ -15,9 +14,9 @@ namespace data {
 
   public:
 
-    using Serializer = s11n::ApolloPerceptionSerializer;
+    // using Serializer = s11n::ApolloPerceptionSerializer;
 
-    friend Serializer;
+    // friend Serializer;
 
     explicit ApolloObstacleArray(RawData &&data)
       : Super(0u, std::move(data)) {
