@@ -12,7 +12,7 @@
 #include "carla/sensor/RawData.h"
 #include "carla/client/Actor.h"
 #include "carla/client/detail/Simulator.h"
-#include "carla/sensor/data/ApolloObstacleArray.h"
+#include "carla/sensor/data/ApolloObstacle.h"
 
 #include <cstdint>
 #include <cstring>
@@ -26,11 +26,12 @@ namespace s11n {
 
   class ApolloPerceptionSerializer {
   public:
+    using ApolloObstacleArray = std::vector<data::ApolloObstacle>;
 
     template <typename SensorT>
     static Buffer Serialize(
         const SensorT &,
-        const data::ApolloObstacleArray &obstacles) {
+        const ApolloObstacleArray &obstacles) {
       size_t obstacles_length = obstacles.size();
       const uint32_t size_in_bytes = sizeof(data::ApolloObstacle) * obstacles_length;
       Buffer buffer{size_in_bytes};
