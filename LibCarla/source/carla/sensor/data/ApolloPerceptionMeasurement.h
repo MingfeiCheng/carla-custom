@@ -106,6 +106,7 @@ namespace data {
 
     explicit ApolloPerceptionMeasurement(RawData &&data)
       : Super(0u, std::move(data)) {
+        // how to put in this
       }
 
   public:
