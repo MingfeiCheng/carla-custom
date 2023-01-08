@@ -144,8 +144,7 @@ void AApolloPerceptionSensor::PostPhysTick(UWorld *World, ELevelTick TickType, f
 
         FTransform ActorTransform;
         FVector Velocity(0.0f);
-        carla::geom::Vector3D AngularVelocity(0.0f, 0.0f, 0.0f);
-        carla::geom::Vector3D Acceleration(0.0f, 0.0f, 0.0f);
+        FVector Acceleration(0.0f);
 
         check(ActorView);
 
@@ -168,12 +167,12 @@ void AApolloPerceptionSensor::PostPhysTick(UWorld *World, ELevelTick TickType, f
           // State = FWorldObserver_GetActorState(*View, Registry);
         }
 
-        FVector &PreviousVelocity = ActorView.GetActorInfo()->Velocity;
+        FVector &PreviousVelocity = ActorView->GetActorInfo()->Velocity;
         const FVector Acceleration = (Velocity - PreviousVelocity) / DeltaSeconds;
         PreviousVelocity = Velocity;
         ActorTransform = ActorView->GetActorGlobalTransform();
-        const FVector ActorLocation = transform.GetLocation();
-        const FRotator ActorRotation = transform.GetRotation().Rotator();    
+        const FVector ActorLocation = ActorTransform.GetLocation();
+        const FRotator ActorRotation = ActorTransform.GetRotation().Rotator();    
 
         carla::geom::Vector3D ApolloActorAcceleration = carla::geom::Vector3D(Acceleration.X, -Acceleration.Y, Acceleration.Z);
         carla::geom::Vector3D ApolloActorVelocity = carla::geom::Vector3D(Velocity.X, -Velocity.Y, Velocity.Z);

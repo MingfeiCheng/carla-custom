@@ -67,8 +67,8 @@ struct ApolloObstacle {
     ApolloObstacle(rpc::ActorId id, 
                    std::string type, 
                    geom::BoundingBox bbox,
-                   geom::Location location,
                    geom::Rotation rotation,
+                   geom::Location location,
                    geom::Vector3D velocity,
                    geom::Vector3D acceleration):
                    id(id),
