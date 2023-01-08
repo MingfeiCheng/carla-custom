@@ -80,6 +80,10 @@ namespace data {
       return _obstacles.size();
     }
 
+    ObstacleArray GetObstacles() const {
+      return _obstacles;
+    }
+
   private:
     ObstacleArray _obstacles;
 
