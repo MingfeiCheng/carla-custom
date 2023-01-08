@@ -64,14 +64,14 @@ namespace data {
   protected:
 
     using Serializer = s11n::ApolloPerceptionSerializer;
-    using ApolloObstacleArray = std::vector<data::ApolloObstacle>;
+    using ObstacleArray = std::vector<data::ApolloObstacle>;
 
     friend Serializer;
 
     explicit ApolloObstacleArray(const RawData &&data)
       : Super(data) {
         // how to put in this
-        ApolloObstacleArray obstacles = Serializer::DeserializeRawData(data);
+        ObstacleArray obstacles = Serializer::DeserializeRawData(data);
         _obstacles = obstacles;
       }
 
@@ -81,7 +81,7 @@ namespace data {
     }
 
   private:
-    ApolloObstacleArray _obstacles;
+    ObstacleArray _obstacles;
 
   };
 
