@@ -220,7 +220,7 @@ namespace data {
   std::ostream &operator<<(std::ostream &out, const ApolloObstacleArray &obstacles) {
     out << "ApolloObstacleArray(frame=" << std::to_string(obstacles.GetFrame())
         << ", timestamp=" << std::to_string(obstacles.GetTimestamp())
-        << ", number_of_obstacles=" << std::to_string(obstacles.size())
+        << ", number_of_obstacles=" << std::to_string(obstacles.GetSize())
         << ')';
     return out;
   }
