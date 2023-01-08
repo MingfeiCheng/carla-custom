@@ -25,14 +25,14 @@ namespace s11n {
   class ApolloPerceptionSerializer {
   public:
     using ApolloObstacleArray = std::vector<data::ApolloObstacle>;
-    template <typename Sensor>
-    static Buffer Serialize(const Sensor &sensor, const ApolloObstacleArray &obstacles, Buffer &&output);
+    template <typename SensorT>
+    static Buffer Serialize(const SensorT &sensor, const ApolloObstacleArray &obstacles, Buffer &&output);
 
     // template <typename SensorT>
     // static Buffer Serialize(const SensorT &, 
-    //                         const ApolloObstacleArray &obstacles){
+    //                         const ApolloObstacleArray &obstacles, 
+    //                         Buffer &&output){
 
-    //   carla::Buffer output = carla::Buffer();
     //   /// Reset the output buffer
     //   output.reset((obstacles.size() * sizeof(data::ApolloObstacle)));
 
@@ -92,8 +92,10 @@ namespace s11n {
     // }
   };
 
-  template <typename Sensor>
-  inline Buffer ApolloPerceptionSerializer::Serialize(const Sensor &, const ApolloObstacleArray &obstacles, Buffer &&output) {
+  template <typename SensorT>
+  inline Buffer ApolloPerceptionSerializer::Serialize(const SensorT &,
+                                                      const ApolloObstacleArray &obstacles,
+                                                      Buffer &&output) {
 
     /// Reset the output buffer
     output.reset((obstacles.size() * sizeof(data::ApolloObstacle)));
@@ -102,11 +104,12 @@ namespace s11n {
     unsigned char *it = output.data();
 
     /// Copy the events into the output buffer
-    for (auto e : obstacles) {
-      std::memcpy(it, reinterpret_cast<const void *>(&e), sizeof(data::ApolloObstacle));
+    for (data::ApolloObstacle e : obstacles) {
+      std::memcpy(it, &e, sizeof(data::ApolloObstacle));
       it += sizeof(data::ApolloObstacle);
     }
-    return std::move(output);
+    // return std::move(output);
+    return output;
   }
 
 } // namespace s11n
