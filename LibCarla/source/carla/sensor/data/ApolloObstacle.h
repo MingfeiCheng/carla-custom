@@ -118,7 +118,8 @@ struct ApolloObstacle {
     geom::Location location;
     geom::Vector3D velocity;
     geom::Vector3D acceleration;
-  
+
+    MSGPACK_DEFINE_ARRAY(id, type, bbox, rotation, location, velocity, acceleration)
   };
 #pragma pack(pop)
 } // namespace data
