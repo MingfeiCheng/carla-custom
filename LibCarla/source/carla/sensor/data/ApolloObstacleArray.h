@@ -82,7 +82,7 @@ namespace data {
 
     data::ApolloObstacle GetObstacle(int index) const {
       // const data::ApolloObstacle obstacle = _obstacles[index];
-      return _obstacles[index];
+      return _obstacles[static_cast<ObstacleArray::size_type>(index)];
     }
 
   private:
