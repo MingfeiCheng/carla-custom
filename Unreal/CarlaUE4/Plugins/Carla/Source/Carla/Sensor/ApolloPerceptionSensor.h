@@ -33,8 +33,7 @@ private:
 
   UPROPERTY()
   UBoxComponent *Box = nullptr;
-  // UCarlaEpisode* episode;
-  
-  
+  UCarlaEpisode* Episode = nullptr;
+    
   virtual void BeginPlay() override;
 };

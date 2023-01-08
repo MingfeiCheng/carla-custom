@@ -125,7 +125,7 @@ void AApolloPerceptionSensor::PostPhysTick(UWorld *World, ELevelTick TickType, f
 
       for(auto& It : DetectedActors){
         // const FCarlaActor* View = It.Value.Get();
-        const FCarlaActor* ActorView = GetEpisode().FindCarlaActor(It);
+        const FCarlaActor* ActorView = Episode->FindCarlaActor(It);
         const FActorInfo* ActorInfo = ActorView->GetActorInfo();
 
         const carla::rpc::ActorId ApolloActorId = ActorView->GetActorId();
@@ -248,5 +248,6 @@ void AApolloPerceptionSensor::PostPhysTick(UWorld *World, ELevelTick TickType, f
   void AApolloPerceptionSensor::BeginPlay()
   {
     Super::BeginPlay();
+    Episode = UCarlaStatics::GetCurrentEpisode(GetWorld());
   }
 
