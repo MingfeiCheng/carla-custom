@@ -117,7 +117,7 @@ void AApolloPerceptionSensor::PostPhysTick(UWorld *World, ELevelTick TickType, f
       
       // const FActorRegistry &registry = episode.GetActorRegistry();
       const UCarlaEpisode* Episode = UCarlaStatics::GetCurrentEpisode(GetWorld());
-      const auto &Episode = GetEpisode();
+      // const auto &Episode = GetEpisode();
       ObstacleArray ApolloObstacles;
       constexpr float TO_METERS = 100.0f;
 
