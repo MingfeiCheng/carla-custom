@@ -108,8 +108,8 @@ namespace s11n {
       std::memcpy(it, &e, sizeof(data::ApolloObstacle));
       it += sizeof(data::ApolloObstacle);
     }
-    // return std::move(output);
-    return output;
+    return std::move(output);
+    // return output;
   }
 
 } // namespace s11n
