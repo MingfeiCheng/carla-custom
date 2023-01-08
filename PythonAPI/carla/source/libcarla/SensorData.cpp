@@ -695,10 +695,15 @@ void export_sensor_data() {
   ;
 
   class_<csd::ApolloObstacleArray, bases<cs::SensorData>, boost::noncopyable, boost::shared_ptr<csd::ApolloObstacleArray>>("ApolloObstacleArray", no_init)
-    .def("__len__", &csd::ApolloObstacleArray::size)
-    .def("__iter__", iterator<csd::ApolloObstacleArray>())
-    .def("__getitem__", +[](const csd::ApolloObstacleArray &self, size_t pos) -> csd::ApolloObstacle {
-    return self.at(pos);})
+    .add_property("size", &csd::ApolloObstacleArray::GetSize)
+    .def(self_ns::str(self_ns::self))
   ;
+
+  // class_<csd::ApolloObstacleArray, bases<cs::SensorData>, boost::noncopyable, boost::shared_ptr<csd::ApolloObstacleArray>>("ApolloObstacleArray", no_init)
+  //   .def("__len__", &csd::ApolloObstacleArray::size)
+  //   .def("__iter__", iterator<csd::ApolloObstacleArray>())
+  //   .def("__getitem__", +[](const csd::ApolloObstacleArray &self, size_t pos) -> csd::ApolloObstacle {
+  //   return self.at(pos);})
+  // ;
   // might need to add &  
 }

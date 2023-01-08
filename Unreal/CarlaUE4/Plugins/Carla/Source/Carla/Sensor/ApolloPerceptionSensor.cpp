@@ -116,9 +116,7 @@ void AApolloPerceptionSensor::PostPhysTick(UWorld *World, ELevelTick TickType, f
   DetectedActors.Remove(GetOwner());
 
   if (DetectedActors.Num() > 0){
-    {
-      TRACE_CPUPROFILER_EVENT_SCOPE_STR("AApolloPerceptionSensor Stream Send");
-      
+    {      
       // const FActorRegistry &registry = episode.GetActorRegistry();
       // const UCarlaEpisode* Episode = UCarlaStatics::GetCurrentEpisode(GetWorld());
       // const auto &Episode = GetEpisode();
@@ -232,10 +230,11 @@ void AApolloPerceptionSensor::PostPhysTick(UWorld *World, ELevelTick TickType, f
         // const carla::geom::Vector3D apollo_angular_velocity = carla::geom::Vector3D(angular_velocity.X, angular_velocity.Y, angular_velocity.Z);
 
       }
-
+      TRACE_CPUPROFILER_EVENT_SCOPE_STR("AApolloPerceptionSensor Stream Send");
       auto Stream = GetDataStream(*this);
       auto Buffer = Stream.PopBufferFromPool();
-      Stream.Send(*this, ApolloObstacles, std::move(Buffer));
+      // Stream.Send(*this, ApolloObstacles, std::move(Buffer));
+      Stream.Send(*this, ApolloObstacles);
     }
   }
 
