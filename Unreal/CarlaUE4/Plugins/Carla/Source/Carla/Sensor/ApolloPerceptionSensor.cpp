@@ -8,6 +8,7 @@
 #include <fstream>
 
 #include "Carla.h"
+#include "Carla/Sensor/WorldObserver.h"
 #include "Carla/Sensor/ApolloPerceptionSensor.h"
 
 #include "Carla/Game/CarlaStatics.h"
@@ -16,8 +17,9 @@
 #include "Carla/Util/BoundingBoxCalculator.h"
 #include "Carla/Util/BoundingBox.h"
 #include "Carla/Actor/CarlaActor.h"
-#include "Carla/Sensor/WorldObserver.h"
-#include "Carla/Vehicle/CarlaWheeledVehicle.h"
+// #include "Carla/Vehicle/CarlaWheeledVehicle.h"
+
+#include "CoreGlobals.h"
 
 #include <compiler/disable-ue4-macros.h>
 #include <carla/geom/Location.h>
@@ -116,14 +118,14 @@ void AApolloPerceptionSensor::PostPhysTick(UWorld *World, ELevelTick TickType, f
       TRACE_CPUPROFILER_EVENT_SCOPE_STR("AApolloPerceptionSensor Stream Send");
       
       // const FActorRegistry &registry = episode.GetActorRegistry();
-      const UCarlaEpisode* Episode = UCarlaStatics::GetCurrentEpisode(GetWorld());
+      // const UCarlaEpisode* Episode = UCarlaStatics::GetCurrentEpisode(GetWorld());
       // const auto &Episode = GetEpisode();
       ObstacleArray ApolloObstacles;
       constexpr float TO_METERS = 100.0f;
 
       for(auto& It : DetectedActors){
         // const FCarlaActor* View = It.Value.Get();
-        const FCarlaActor* ActorView = Episode->FindCarlaActor(It);
+        const FCarlaActor* ActorView = GetEpisode().FindCarlaActor(It);
         const FActorInfo* ActorInfo = ActorView->GetActorInfo();
 
         const carla::rpc::ActorId ApolloActorId = ActorView->GetActorId();
