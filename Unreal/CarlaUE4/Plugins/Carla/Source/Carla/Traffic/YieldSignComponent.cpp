@@ -6,6 +6,7 @@
 
 #include "YieldSignComponent.h"
 #include "TrafficLightState.h"
+#include "Carla/Vehicle/CarlaWheeledVehicle.h"
 #include <queue>
 
 #include <compiler/disable-ue4-macros.h>

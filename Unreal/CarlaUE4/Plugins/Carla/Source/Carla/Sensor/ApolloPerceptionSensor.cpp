@@ -17,7 +17,7 @@
 #include "Carla/Util/BoundingBoxCalculator.h"
 #include "Carla/Util/BoundingBox.h"
 #include "Carla/Actor/CarlaActor.h"
-// #include "Carla/Vehicle/CarlaWheeledVehicle.h"
+#include "Carla/Vehicle/CarlaWheeledVehicle.h"
 
 #include "CoreGlobals.h"
 
@@ -26,6 +26,8 @@
 #include <carla/geom/Rotation.h>
 #include <carla/geom/Vector3D.h>
 #include <carla/geom/BoundingBox.h>
+#include <carla/road/element/RoadInfoSpeed.h>
+#include <carla/road/element/RoadInfoSignal.h>
 #include <compiler/enable-ue4-macros.h>
 
 AApolloPerceptionSensor::AApolloPerceptionSensor(const FObjectInitializer &ObjectInitializer)
