@@ -144,7 +144,7 @@ void AApolloPerceptionSensor::PostPhysTick(UWorld *World, ELevelTick TickType, f
 
         FTransform ActorTransform;
         FVector Velocity(0.0f);
-        FVector Acceleration(0.0f);
+        // FVector Acceleration(0.0f);
 
         check(ActorView);
 
