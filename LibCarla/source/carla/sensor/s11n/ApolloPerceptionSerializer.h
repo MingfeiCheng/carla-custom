@@ -97,17 +97,20 @@ namespace s11n {
                                                       const ApolloObstacleArray &obstacles,
                                                       Buffer &&output) {
 
-    /// Reset the output buffer
-    output.reset((obstacles.size() * sizeof(data::ApolloObstacle)));
+    // /// Reset the output buffer
+    // output.reset((obstacles.size() * sizeof(data::ApolloObstacle)));
 
-    /// Pointer to data in buffer
-    unsigned char *it = output.data();
+    // /// Pointer to data in buffer
+    // unsigned char *it = output.data();
 
-    /// Copy the events into the output buffer
-    for (data::ApolloObstacle e : obstacles) {
-      std::memcpy(it, &e, sizeof(data::ApolloObstacle));
-      it += sizeof(data::ApolloObstacle);
-    }
+    // /// Copy the events into the output buffer
+    // for (data::ApolloObstacle e : obstacles) {
+    //   std::memcpy(it, &e, sizeof(data::ApolloObstacle));
+    //   it += sizeof(data::ApolloObstacle);
+    // }
+    // output.copy_from(measurement._detections);
+    // return std::move(output);
+    output.copy_from(obstacles);
     return std::move(output);
     // return output;
   }

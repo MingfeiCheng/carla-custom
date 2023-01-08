@@ -15,7 +15,7 @@ class CARLA_API AApolloPerceptionSensor : public ASensor
 {
   GENERATED_BODY()
   using AType = FCarlaActor::ActorType;
-  using ObstacleArray = std::vector<::carla::sensor::data::ApolloObstacle>;
+  using ObstacleArray = std::vector<carla::sensor::data::ApolloObstacle>;
 
 public:
 
