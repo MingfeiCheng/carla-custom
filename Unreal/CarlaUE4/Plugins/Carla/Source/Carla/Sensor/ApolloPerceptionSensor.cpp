@@ -227,7 +227,8 @@ void AApolloPerceptionSensor::PostPhysTick(UWorld *World, ELevelTick TickType, f
       }
 
       auto Stream = GetDataStream(*this);
-      Stream.Send(*this, ApolloObstacles);
+      auto Buffer = Stream.PopBufferFromPool();
+      Stream.Send(*this, ApolloObstacles, std::move(Buffer));
     }
   }
 
