@@ -199,7 +199,6 @@ namespace data {
         << ", rotation=" << obstacle.rotation
         << ", location=" << obstacle.location
         << ", velocity=" << obstacle.velocity
-        << ", angular_velocity=" << obstacle.angular_velocity
         << ", acceleration=" << obstacle.acceleration
         << ')';
     return out;
@@ -691,7 +690,6 @@ void export_sensor_data() {
     .add_property("rotation", &csd::ApolloObstacle::rotation)
     .add_property("location", &csd::ApolloObstacle::location)
     .add_property("velocity", &csd::ApolloObstacle::velocity)
-    .add_property("angular_velocity", &csd::ApolloObstacle::angular_velocity)
     .add_property("acceleration", &csd::ApolloObstacle::acceleration)
     .def(self_ns::str(self_ns::self))
   ;

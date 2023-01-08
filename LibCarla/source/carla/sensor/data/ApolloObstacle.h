@@ -31,7 +31,6 @@ struct ApolloObstacle {
         rotation(arg.rotation),
         location(arg.location),
         velocity(arg.velocity),
-        angular_velocity(arg.angular_velocity),
         acceleration(arg.acceleration) {}
 
     /// Moving constructor
@@ -42,7 +41,6 @@ struct ApolloObstacle {
         rotation(std::move(arg.rotation)),
         location(std::move(arg.location)),
         velocity(std::move(arg.velocity)),
-        angular_velocity(std::move(arg.angular_velocity)),
         acceleration(std::move(arg.acceleration)) {}
 
     /// Constructor
@@ -72,7 +70,6 @@ struct ApolloObstacle {
                    geom::Location location,
                    geom::Rotation rotation,
                    geom::Vector3D velocity,
-                   geom::Vector3D angular_velocity,
                    geom::Vector3D acceleration):
                    id(id),
                    type(type),
@@ -80,7 +77,6 @@ struct ApolloObstacle {
                    rotation(rotation),
                    location(location),
                    velocity(velocity),
-                   angular_velocity(angular_velocity),
                    acceleration(acceleration) {}
 
     /// Assignement operator
@@ -91,7 +87,6 @@ struct ApolloObstacle {
       rotation = other.rotation;
       location = other.location;
       velocity = other.velocity;
-      angular_velocity = other.angular_velocity;
       acceleration = other.acceleration;
       return *this;
     }
@@ -104,7 +99,6 @@ struct ApolloObstacle {
       rotation = std::move(other.rotation);
       location = std::move(other.location);
       velocity = std::move(other.velocity);
-      angular_velocity = std::move(other.angular_velocity);
       acceleration = std::move(other.acceleration);
       return *this;
     }
@@ -123,7 +117,6 @@ struct ApolloObstacle {
     geom::Rotation rotation;
     geom::Location location;
     geom::Vector3D velocity;
-    geom::Vector3D angular_velocity;
     geom::Vector3D acceleration;
   
   };
