@@ -80,8 +80,9 @@ namespace data {
       return _obstacles.size();
     }
 
-    ObstacleArray GetObstacles() const {
-      return _obstacles;
+    ObstacleArray GetObstacle(int index) const {
+      const data::ApolloObstacle obstacle = _obstacles[index];
+      return obstacle;
     }
 
   private:

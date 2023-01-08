@@ -696,7 +696,7 @@ void export_sensor_data() {
 
   class_<csd::ApolloObstacleArray, bases<cs::SensorData>, boost::noncopyable, boost::shared_ptr<csd::ApolloObstacleArray>>("ApolloObstacleArray", no_init)
     .add_property("size", &csd::ApolloObstacleArray::GetSize)
-    .add_property("obstacles", &csd::ApolloObstacleArray::GetObstacles)
+    .def("get_obstacle", &csd::ApolloObstacleArray::GetObstacle, (arg("index")))
     .def(self_ns::str(self_ns::self))
   ;
 
