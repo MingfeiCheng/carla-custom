@@ -10,13 +10,14 @@
 #include "Carla.h"
 #include "Carla/Sensor/ApolloPerceptionSensor.h"
 
-#include "Carla/Game/CarlaEpisode.h"
 #include "Carla/Game/CarlaStatics.h"
+#include "Carla/Game/CarlaEpisode.h"
 #include "Carla/Actor/ActorBlueprintFunctionLibrary.h"
 #include "Carla/Util/BoundingBoxCalculator.h"
 #include "Carla/Util/BoundingBox.h"
 #include "Carla/Actor/CarlaActor.h"
 #include "Carla/Sensor/WorldObserver.h"
+#include "Carla/Vehicle/CarlaWheeledVehicle.h"
 
 #include <compiler/disable-ue4-macros.h>
 #include <carla/geom/Location.h>
@@ -115,6 +116,7 @@ void AApolloPerceptionSensor::PostPhysTick(UWorld *World, ELevelTick TickType, f
       TRACE_CPUPROFILER_EVENT_SCOPE_STR("AApolloPerceptionSensor Stream Send");
       
       // const FActorRegistry &registry = episode.GetActorRegistry();
+      const UCarlaEpisode* Episode = UCarlaStatics::GetCurrentEpisode(GetWorld());
       const auto &Episode = GetEpisode();
       ObstacleArray ApolloObstacles;
       constexpr float TO_METERS = 100.0f;
@@ -132,13 +134,14 @@ void AApolloPerceptionSensor::PostPhysTick(UWorld *World, ELevelTick TickType, f
         const carla::geom::BoundingBox ApolloActorBBox = carla::geom::BoundingBox(ActorBBoxLocation, ActorBBoxExtent, ActorBBoxRotation);
         FCarlaActor::ActorType ActorType = ActorView->GetActorType();
         std::string ApolloActorType = "unknown";
-        if (AType::Vehicle == ActorType){
+        
+        if (FCarlaActor::ActorType::Vehicle == ActorType){
           ApolloActorType = "dynamic.vehicle";
-        }else if (AType::TrafficSign == ActorType){
+        }else if (FCarlaActor::ActorType::TrafficSign == ActorType){
           ApolloActorType = "static.traffic_sign";
-        }else if (AType::TrafficLight == ActorType){
+        }else if (FCarlaActor::ActorType::TrafficLight == ActorType){
           ApolloActorType = "static.traffic_light";
-        }else if (AType::Walker == ActorType){
+        }else if (FCarlaActor::ActorType::Walker == ActorType){
           ApolloActorType = "dynamic.walker";
         }       
 
