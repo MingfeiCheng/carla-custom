@@ -60,31 +60,31 @@ namespace data {
       return type;
     }
 
-    geom::BoundingBox GetBBox const{
+    geom::BoundingBox GetBBox() const{
       return bbox;
     }
 
-    geom::Location GetLocation const{
+    geom::Location GetLocation() const{
       return location;
     }
 
-    geom::Rotation GetRotation const{
+    geom::Rotation GetRotation() const{
       return rotation;
     }
 
-    geom::Vector3D GetVelocity const{
+    geom::Vector3D GetVelocity() const{
       return velocity;
     }
 
-    float GetSpeed const{
+    float GetSpeed() const{
       return speed;
     }
 
-    geom::Vector3D GetAcceleration const{
+    geom::Vector3D GetAcceleration() const{
       return acceleration;
     }
 
-    geom::Vector3D GetAngularVelocity const{
+    geom::Vector3D GetAngularVelocity() const{
       return angular_velocity;
     }
 
