@@ -33,7 +33,7 @@ namespace data {
 
     explicit ApolloStateMeasurement(const RawData &&data)
       : Super(data){
-      id = client::detail::ActorVariant(Serializer::DeserializeRawData(data).id);
+      id = Serializer::DeserializeRawData(data).id;
       type = Serializer::DeserializeRawData(data).type;
       bbox = Serializer::DeserializeRawData(data).bbox;
       location = Serializer::DeserializeRawData(data).location;
