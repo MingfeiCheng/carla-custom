@@ -46,7 +46,7 @@ namespace s11n {
       float qy;
       float qz;
       rpc::VehicleControl control;
-      MSGPACK_DEFINE_ARRAY(actor, geo_location, qw, qx, qy, qz)
+      MSGPACK_DEFINE_ARRAY(id, type, bbox, location, rotation, velocity, speed, acceleration, angular_velocity, geo_location, qw, qx, qy, qz, control)
     };
 
     template <typename SensorT>
