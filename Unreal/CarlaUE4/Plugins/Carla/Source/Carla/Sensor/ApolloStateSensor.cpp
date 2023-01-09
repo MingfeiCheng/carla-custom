@@ -14,6 +14,8 @@
 #include "Carla/MapGen/LargeMapManager.h"
 #include "Carla/Actor/ActorBlueprintFunctionLibrary.h"
 #include "Carla/Sensor/WorldObserver.h"
+#include "Carla/Actor/CarlaActor.h"
+#include "Carla/Util/BoundingBox.h"
 
 #include <compiler/disable-ue4-macros.h>
 #include <carla/geom/Vector3D.h>
@@ -52,6 +54,12 @@ void AApolloStateSensor::PostPhysTick(UWorld *World, ELevelTick TickType, float 
 {
   TRACE_CPUPROFILER_EVENT_SCOPE(AApolloStateSensor::PostPhysTick);
   
+  // Velocity
+  FTransform ActorTransform;
+  FVector Velocity(0.0f);
+  // FVector Acceleration(0.0f);
+  carla::geom::Vector3D ActorAngularVelocity(0.0f, 0.0f, 0.0f);
+
   constexpr float TO_METERS = 1e-2;
   const UCarlaEpisode* Episode = UCarlaStatics::GetCurrentEpisode(GetWorld());
 
@@ -61,7 +69,7 @@ void AApolloStateSensor::PostPhysTick(UWorld *World, ELevelTick TickType, float 
   const carla::rpc::ActorId ApolloActorId = ActorView->GetActorId();
   std::string ApolloActorType = "apollo";
 
-  FBoundingBox ActorBBox = UBoundingBoxCalculator::GetActorBoundingBox(It);
+  FBoundingBox ActorBBox = UBoundingBoxCalculator::GetActorBoundingBox(GetOwner());
   const carla::geom::Location ActorBBoxLocation = carla::geom::Location(ActorBBox.Origin.X * TO_METERS, ActorBBox.Origin.Y * TO_METERS, ActorBBox.Origin.Z * TO_METERS);
   const carla::geom::Vector3D ActorBBoxExtent = carla::geom::Vector3D(ActorBBox.Extent.X * TO_METERS, ActorBBox.Extent.Y * TO_METERS, ActorBBox.Extent.Z * TO_METERS);
   const carla::geom::Rotation ActorBBoxRotation = carla::geom::Rotation(ActorBBox.Rotation.Pitch, ActorBBox.Rotation.Yaw, ActorBBox.Rotation.Roll);
@@ -103,12 +111,6 @@ void AApolloStateSensor::PostPhysTick(UWorld *World, ELevelTick TickType, float 
   const float ApolloActorQy = ApolloActorRotationQuat.Y;
   const float ApolloActorQz = ApolloActorRotationQuat.Z;
 
-  // Velocity
-  FTransform ActorTransform;
-  FVector Velocity(0.0f);
-  // FVector Acceleration(0.0f);
-  carla::geom::Vector3D ActorAngularVelocity(0.0f, 0.0f, 0.0f);
-
   check(ActorView);
 
   if(ActorView->IsDormant())
@@ -134,9 +136,6 @@ void AApolloStateSensor::PostPhysTick(UWorld *World, ELevelTick TickType, float 
   FVector &PreviousVelocity = ActorView->GetActorInfo()->Velocity;
   const FVector Acceleration = (Velocity - PreviousVelocity) / DeltaSeconds;
   PreviousVelocity = Velocity;
-  ActorTransform = ActorView->GetActorGlobalTransform();
-  const FVector ActorLocation = ActorTransform.GetLocation();
-  const FRotator ActorRotation = ActorTransform.GetRotation().Rotator();    
 
   const carla::geom::Vector3D ApolloActorAcceleration = carla::geom::Vector3D(Acceleration.X, -Acceleration.Y, Acceleration.Z);
   const carla::geom::Vector3D ApolloActorVelocity = carla::geom::Vector3D(Velocity.X, -Velocity.Y, Velocity.Z);
