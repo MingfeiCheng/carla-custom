@@ -26,6 +26,7 @@
 #include <carla/sensor/data/ApolloObstacleArray.h>
 #include <carla/sensor/data/ApolloTransformMeasurement.h>
 #include <carla/sensor/data/ApolloStateMeasurement.h>
+#include <carla/sensor/data/CustomStateMeasurement.h>
 
 #include <carla/sensor/data/RadarData.h>
 
@@ -153,6 +154,31 @@ namespace data {
 
   std::ostream &operator<<(std::ostream &out, const ApolloStateMeasurement &meas) {
     out << "ApolloStateMeasurement(frame=" << std::to_string(meas.GetFrame())
+        << ", timestamp=" << std::to_string(meas.GetTimestamp())
+        << ", id=" << meas.GetId()
+        << ", type=" << meas.GetType()
+        << ", bbox=" << meas.GetBBox()
+        << ", location=" << meas.GetLocation()
+        << ", rotation=" << meas.GetRotation()
+        << ", velocity=" << meas.GetVelocity()
+        << ", speed=" << std::to_string(meas.GetSpeed())
+        << ", acceleration=" << meas.GetAcceleration()
+        << ", angular_velocity=" << meas.GetAngularVelocity()
+        << ", geo_location=" << meas.GetGeoLocation()
+        << ", longitude=" << meas.GetLongitude()
+        << ", latitude=" << meas.GetLatitude()
+        << ", altitude=" << meas.GetAltitude()
+        << ", qw=" << std::to_string(meas.GetQw())
+        << ", qx=" << std::to_string(meas.GetQx())
+        << ", qy=" << std::to_string(meas.GetQy())
+        << ", qz=" << std::to_string(meas.GetQz())
+        << ", control=" << meas.GetControl()
+        << ')';
+    return out;
+  }
+
+  std::ostream &operator<<(std::ostream &out, const CustomStateMeasurement &meas) {
+    out << "CustomStateMeasurement(frame=" << std::to_string(meas.GetFrame())
         << ", timestamp=" << std::to_string(meas.GetTimestamp())
         << ", id=" << meas.GetId()
         << ", type=" << meas.GetType()
@@ -702,6 +728,28 @@ void export_sensor_data() {
   class_<csd::ApolloObstacleArray, bases<cs::SensorData>, boost::noncopyable, boost::shared_ptr<csd::ApolloObstacleArray>>("ApolloObstacleArray", no_init)
     .add_property("size", &csd::ApolloObstacleArray::GetSize)
     .def("get_obstacle", &csd::ApolloObstacleArray::GetObstacle, (arg("index")))
+    .def(self_ns::str(self_ns::self))
+  ;
+
+  class_<csd::CustomStateMeasurement, bases<cs::SensorData>, boost::noncopyable, boost::shared_ptr<csd::CustomStateMeasurement>>("CustomStateMeasurement", no_init)
+    .add_property("id", &csd::CustomStateMeasurement::GetId)
+    .add_property("type", &csd::CustomStateMeasurement::GetType)
+    .add_property("bbox", &csd::CustomStateMeasurement::GetBBox)
+    .add_property("location", &csd::CustomStateMeasurement::GetLocation)
+    .add_property("rotation", &csd::CustomStateMeasurement::GetRotation)
+    .add_property("velocity", &csd::CustomStateMeasurement::GetVelocity)
+    .add_property("speed", &csd::CustomStateMeasurement::GetSpeed)
+    .add_property("acceleration", &csd::CustomStateMeasurement::GetAcceleration)
+    .add_property("angular_velocity", &csd::CustomStateMeasurement::GetAngularVelocity)
+    .add_property("geo_location", &csd::CustomStateMeasurement::GetGeoLocation)
+    .add_property("longitude", &csd::CustomStateMeasurement::GetLongitude)
+    .add_property("latitude", &csd::CustomStateMeasurement::GetLatitude)
+    .add_property("altitude", &csd::CustomStateMeasurement::GetAltitude)
+    .add_property("qw", &csd::CustomStateMeasurement::GetQw)
+    .add_property("qx", &csd::CustomStateMeasurement::GetQx)
+    .add_property("qy", &csd::CustomStateMeasurement::GetQy)
+    .add_property("qz", &csd::CustomStateMeasurement::GetQz)
+    .add_property("control", &csd::CustomStateMeasurement::GetControl)
     .def(self_ns::str(self_ns::self))
   ;
 }

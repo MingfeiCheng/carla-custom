@@ -8,7 +8,7 @@
 #include <fstream>
 
 #include "Carla.h"
-#include "Carla/Sensor/ApolloStateSensor.h"
+#include "Carla/Sensor/CustomStateSensor.h"
 #include "Carla/Game/CarlaStatics.h"
 #include "Carla/Game/CarlaEpisode.h"
 #include "Carla/MapGen/LargeMapManager.h"
@@ -26,33 +26,33 @@
 #include <carla/rpc/Actor.h>
 #include <compiler/enable-ue4-macros.h>
 
-AApolloStateSensor::AApolloStateSensor(const FObjectInitializer &ObjectInitializer)
+ACustomStateSensor::ACustomStateSensor(const FObjectInitializer &ObjectInitializer)
   : Super(ObjectInitializer)
 {
   PrimaryActorTick.bCanEverTick = true;
   RandomEngine = CreateDefaultSubobject<URandomEngine>(TEXT("RandomEngine"));
 }
 
-FActorDefinition AApolloStateSensor::GetSensorDefinition()
+FActorDefinition ACustomStateSensor::GetSensorDefinition()
 {
-  return UActorBlueprintFunctionLibrary::MakeGenericSensorDefinition(TEXT("apollo"), TEXT("state"));
+  return UActorBlueprintFunctionLibrary::MakeGenericSensorDefinition(TEXT("custom"), TEXT("state"));
 }
 
-void AApolloStateSensor::Set(const FActorDescription &ActorDescription)
+void ACustomStateSensor::Set(const FActorDescription &ActorDescription)
 {
   Super::Set(ActorDescription);
   //Change
-  UActorBlueprintFunctionLibrary::SetApolloState(ActorDescription, this);
+  UActorBlueprintFunctionLibrary::SetCustomState(ActorDescription, this);
 }
 
-void AApolloStateSensor::SetOwner(AActor *Owner)
+void ACustomStateSensor::SetOwner(AActor *Owner)
 {
   Super::SetOwner(Owner);
 }
 
-void AApolloStateSensor::PostPhysTick(UWorld *World, ELevelTick TickType, float DeltaSeconds)
+void ACustomStateSensor::PostPhysTick(UWorld *World, ELevelTick TickType, float DeltaSeconds)
 {
-  TRACE_CPUPROFILER_EVENT_SCOPE(AApolloStateSensor::PostPhysTick);
+  TRACE_CPUPROFILER_EVENT_SCOPE(ACustomStateSensor::PostPhysTick);
   
   // Velocity
   FTransform ActorTransform;
@@ -66,16 +66,14 @@ void AApolloStateSensor::PostPhysTick(UWorld *World, ELevelTick TickType, float 
   const FCarlaActor* ActorView = Episode->FindCarlaActor(GetOwner());
   const FActorInfo* ActorInfo = ActorView->GetActorInfo();
 
-  const carla::rpc::ActorId ApolloActorId = ActorView->GetActorId();
-  std::string ApolloActorType = "apollo";
+  const carla::rpc::ActorId CustomActorId = ActorView->GetActorId();
+  std::string CustomActorType = "ego";
 
   FBoundingBox ActorBBox = UBoundingBoxCalculator::GetActorBoundingBox(GetOwner());
-  // relative position. so need to convert
-  const carla::geom::Location ActorBBoxLocation = carla::geom::Location(ActorBBox.Origin.X * TO_METERS, -ActorBBox.Origin.Y * TO_METERS, ActorBBox.Origin.Z * TO_METERS);
+  const carla::geom::Location ActorBBoxLocation = carla::geom::Location(ActorBBox.Origin.X * TO_METERS, ActorBBox.Origin.Y * TO_METERS, ActorBBox.Origin.Z * TO_METERS);
   const carla::geom::Vector3D ActorBBoxExtent = carla::geom::Vector3D(ActorBBox.Extent.X * TO_METERS, ActorBBox.Extent.Y * TO_METERS, ActorBBox.Extent.Z * TO_METERS);
-  // relative rotation mignt always be zero. so dont convert
   const carla::geom::Rotation ActorBBoxRotation = carla::geom::Rotation(ActorBBox.Rotation.Pitch, ActorBBox.Rotation.Yaw, ActorBBox.Rotation.Roll);
-  const carla::geom::BoundingBox ApolloActorBBox = carla::geom::BoundingBox(ActorBBoxLocation, ActorBBoxExtent, ActorBBoxRotation);
+  const carla::geom::BoundingBox CustomActorBBox = carla::geom::BoundingBox(ActorBBoxLocation, ActorBBoxExtent, ActorBBoxRotation);
 
   ActorTransform = ActorView->GetActorGlobalTransform();
   const FVector ActorLocation = ActorTransform.GetLocation();
@@ -101,17 +99,17 @@ void AApolloStateSensor::PostPhysTick(UWorld *World, ELevelTick TickType, float 
   double Longitude = CurrentLocation.longitude + LongitudeBias + LonError;
   double Altitude = CurrentLocation.altitude + AltitudeBias + AltError;
 
-  const carla::geom::GeoLocation ApolloActorGeoLocation = carla::geom::GeoLocation{Latitude, Longitude, Altitude};
+  const carla::geom::GeoLocation CustomActorGeoLocation = carla::geom::GeoLocation{Latitude, Longitude, Altitude};
 
   // Location, Rotation, Latitude, Longitude, Altitude, Quant
-  const carla::geom::Location ApolloActorLocation = carla::geom::Location(ActorLocation.X * TO_METERS, -ActorLocation.Y * TO_METERS, ActorLocation.Z * TO_METERS);
-  const carla::geom::Rotation ApolloActorRotation = carla::geom::Rotation(-ActorRotation.Pitch, -(ActorRotation.Yaw + 90), ActorRotation.Roll);
+  const carla::geom::Location CustomActorLocation = carla::geom::Location(ActorLocation.X * TO_METERS, ActorLocation.Y * TO_METERS, ActorLocation.Z * TO_METERS);
+  const carla::geom::Rotation CustomActorRotation = carla::geom::Rotation(ActorRotation.Pitch, ActorRotation.Yaw, ActorRotation.Roll);
   
-  const FQuat ApolloActorRotationQuat = FRotator(ApolloActorRotation.pitch, ApolloActorRotation.yaw, ApolloActorRotation.roll).Quaternion();
-  const float ApolloActorQw = ApolloActorRotationQuat.W;
-  const float ApolloActorQx = ApolloActorRotationQuat.X;
-  const float ApolloActorQy = ApolloActorRotationQuat.Y;
-  const float ApolloActorQz = ApolloActorRotationQuat.Z;
+  const FQuat CustomActorRotationQuat = FRotator(CustomActorRotation.pitch, CustomActorRotation.yaw, CustomActorRotation.roll).Quaternion();
+  const float CustomActorQw = CustomActorRotationQuat.W;
+  const float CustomActorQx = CustomActorRotationQuat.X;
+  const float CustomActorQy = CustomActorRotationQuat.Y;
+  const float CustomActorQz = CustomActorRotationQuat.Z;
 
   check(ActorView);
 
@@ -121,8 +119,8 @@ void AApolloStateSensor::PostPhysTick(UWorld *World, ELevelTick TickType, float 
     Velocity = TO_METERS * ActorData->Velocity;
     ActorAngularVelocity = carla::geom::Vector3D
                                 {ActorData->AngularVelocity.X,
-                                -ActorData->AngularVelocity.Y,
-                                -ActorData->AngularVelocity.Z};
+                                 ActorData->AngularVelocity.Y,
+                                 ActorData->AngularVelocity.Z};
   }
   else
   {
@@ -132,103 +130,101 @@ void AApolloStateSensor::PostPhysTick(UWorld *World, ELevelTick TickType, float 
         RootComponent != nullptr ?
             RootComponent->GetPhysicsAngularVelocityInDegrees() :
             FVector{0.0f, 0.0f, 0.0f};
-    ActorAngularVelocity = carla::geom::Vector3D(AngularVelocity.X, -AngularVelocity.Y, -AngularVelocity.Z);
+    ActorAngularVelocity = carla::geom::Vector3D(AngularVelocity.X, AngularVelocity.Y, AngularVelocity.Z);
   }
 
   FVector &PreviousVelocity = ActorView->GetActorInfo()->Velocity;
   const FVector Acceleration = (Velocity - PreviousVelocity) / DeltaSeconds;
   PreviousVelocity = Velocity;
-  
-  // do not care z-axis
-  // Add velocity convertion
-  const carla::geom::Vector3D ApolloActorAcceleration = carla::geom::Vector3D(Acceleration.X, -Acceleration.Y, Acceleration.Z);
-  const carla::geom::Vector3D ApolloActorVelocity = carla::geom::Vector3D(Velocity.X, -Velocity.Y, Velocity.Z);
-  const carla::geom::Vector3D ApolloActorAngularVelocity = ActorAngularVelocity;
-  const float ApolloActorSpeed = ApolloActorVelocity.Length();
+
+  const carla::geom::Vector3D CustomActorAcceleration = carla::geom::Vector3D(Acceleration.X, Acceleration.Y, Acceleration.Z);
+  const carla::geom::Vector3D CustomActorVelocity = carla::geom::Vector3D(Velocity.X, Velocity.Y, Velocity.Z);
+  const carla::geom::Vector3D CustomActorAngularVelocity = ActorAngularVelocity;
+  const float CustomActorSpeed = CustomActorVelocity.Length();
 
   // carla::rpc::Actor actor_obj = GetEpisode().SerializeActor(GetOwner());
   auto Vehicle = Cast<ACarlaWheeledVehicle>(ActorView->GetActor());
-  const carla::rpc::VehicleControl ApolloActorControl = carla::rpc::VehicleControl{Vehicle->GetVehicleControl()};
+  const carla::rpc::VehicleControl CustomActorControl = carla::rpc::VehicleControl{Vehicle->GetVehicleControl()};
   
   {
-    TRACE_CPUPROFILER_EVENT_SCOPE_STR("AApolloStateSensor Stream Send");
+    TRACE_CPUPROFILER_EVENT_SCOPE_STR("ACustomStateSensor Stream Send");
     auto Stream = GetDataStream(*this);
-    // Stream.Send(*this, actor_obj, ApolloGeoLocation, qw, qx, qy, qz);
-    Stream.Send(*this, ApolloActorId,
-                       ApolloActorType,
-                       ApolloActorBBox, 
-                       ApolloActorLocation,
-                       ApolloActorRotation,
-                       ApolloActorVelocity,
-                       ApolloActorSpeed,
-                       ApolloActorAcceleration,
-                       ApolloActorAngularVelocity,
-                       ApolloActorGeoLocation,
-                       ApolloActorQw,
-                       ApolloActorQx,
-                       ApolloActorQy,
-                       ApolloActorQz,
-                       ApolloActorControl);
+    // Stream.Send(*this, actor_obj, CustomGeoLocation, qw, qx, qy, qz);
+    Stream.Send(*this, CustomActorId,
+                       CustomActorType,
+                       CustomActorBBox, 
+                       CustomActorLocation,
+                       CustomActorRotation,
+                       CustomActorVelocity,
+                       CustomActorSpeed,
+                       CustomActorAcceleration,
+                       CustomActorAngularVelocity,
+                       CustomActorGeoLocation,
+                       CustomActorQw,
+                       CustomActorQx,
+                       CustomActorQy,
+                       CustomActorQz,
+                       CustomActorControl);
   }
 }
 
-void AApolloStateSensor::SetLatitudeDeviation(float Value)
+void ACustomStateSensor::SetLatitudeDeviation(float Value)
 {
   LatitudeDeviation = Value;
 }
 
-void AApolloStateSensor::SetLongitudeDeviation(float Value)
+void ACustomStateSensor::SetLongitudeDeviation(float Value)
 {
   LongitudeDeviation = Value;
 }
 
-void AApolloStateSensor::SetAltitudeDeviation(float Value)
+void ACustomStateSensor::SetAltitudeDeviation(float Value)
 {
   AltitudeDeviation = Value;
 }
 
-void AApolloStateSensor::SetLatitudeBias(float Value)
+void ACustomStateSensor::SetLatitudeBias(float Value)
 {
   LatitudeBias = Value;
 }
 
-void AApolloStateSensor::SetLongitudeBias(float Value)
+void ACustomStateSensor::SetLongitudeBias(float Value)
 {
   LongitudeBias = Value;
 }
 
-void AApolloStateSensor::SetAltitudeBias(float Value)
+void ACustomStateSensor::SetAltitudeBias(float Value)
 {
   AltitudeBias = Value;
 }
 
-float AApolloStateSensor::GetLatitudeDeviation() const
+float ACustomStateSensor::GetLatitudeDeviation() const
 {
   return LatitudeDeviation;
 }
-float AApolloStateSensor::GetLongitudeDeviation() const
+float ACustomStateSensor::GetLongitudeDeviation() const
 {
   return LongitudeDeviation;
 }
-float AApolloStateSensor::GetAltitudeDeviation() const
+float ACustomStateSensor::GetAltitudeDeviation() const
 {
   return AltitudeDeviation;
 }
 
-float AApolloStateSensor::GetLatitudeBias() const
+float ACustomStateSensor::GetLatitudeBias() const
 {
   return LatitudeBias;
 }
-float AApolloStateSensor::GetLongitudeBias() const
+float ACustomStateSensor::GetLongitudeBias() const
 {
   return LongitudeBias;
 }
-float AApolloStateSensor::GetAltitudeBias() const
+float ACustomStateSensor::GetAltitudeBias() const
 {
   return AltitudeBias;
 }
 
-void AApolloStateSensor::BeginPlay()
+void ACustomStateSensor::BeginPlay()
 {
   Super::BeginPlay();
 

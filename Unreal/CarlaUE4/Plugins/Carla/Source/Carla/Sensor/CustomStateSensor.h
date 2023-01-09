@@ -1,0 +1,65 @@
+#pragma once
+
+#include "Carla/Sensor/Sensor.h"
+
+#include "Carla/Actor/ActorDefinition.h"
+#include "Carla/Actor/ActorDescription.h"
+
+#include <compiler/disable-ue4-macros.h>
+#include "carla/geom/GeoLocation.h"
+#include <compiler/enable-ue4-macros.h>
+
+#include <array>
+
+#include "CustomStateSensor.generated.h"
+
+UCLASS()
+class CARLA_API ACustomStateSensor : public ASensor
+{
+  GENERATED_BODY()
+
+public:
+
+  ACustomStateSensor(const FObjectInitializer &ObjectInitializer);
+
+  static FActorDefinition GetSensorDefinition();
+
+  void Set(const FActorDescription &ActorDescription);
+
+  void SetOwner(AActor *Owner) override;
+
+  virtual void PostPhysTick(UWorld *World, ELevelTick TickType, float DeltaSeconds) override;
+
+  void SetLatitudeDeviation(float Value);
+  void SetLongitudeDeviation(float Value);
+  void SetAltitudeDeviation(float Value);
+
+  void SetLatitudeBias(float Value);
+  void SetLongitudeBias(float Value);
+  void SetAltitudeBias(float Value);
+
+  float GetLatitudeDeviation() const;
+  float GetLongitudeDeviation() const;
+  float GetAltitudeDeviation() const;
+
+  float GetLatitudeBias() const;
+  float GetLongitudeBias() const;
+  float GetAltitudeBias() const;
+
+protected:
+
+  virtual void BeginPlay() override;
+
+private:
+
+  carla::geom::GeoLocation CurrentGeoReference;
+
+  float LatitudeDeviation;
+  float LongitudeDeviation;
+  float AltitudeDeviation;
+
+  float LatitudeBias;
+  float LongitudeBias;
+  float AltitudeBias;
+  
+};
