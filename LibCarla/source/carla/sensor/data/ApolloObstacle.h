@@ -43,27 +43,6 @@ struct ApolloObstacle {
         velocity(std::move(arg.velocity)),
         acceleration(std::move(arg.acceleration)) {}
 
-    /// Constructor
-    // ApolloObstacle(const client::detail::EpisodeProxy &episode, const rpc::Actor &actor) {
-
-    //   id = actor.id;
-    //   type = actor.description.id; //TODO:Check
-    //   bbox = actor.bounding_box;
-
-    //   const client::detail::ActorVariant actor_variant = client::detail::ActorVariant(actor);
-    //   const SharedPtr<client::Actor> actor_client = actor_variant.Get(episode);
-
-    //   const geom::Transform actor_transform = actor_client->GetTransform();
-    //   const geom::Location actor_location = actor_transform.location;
-    //   const geom::Rotation actor_rotation = actor_transform.rotation;
-    //   const geom::Vector3D actor_velocity = actor_client->GetVelocity();
-    //   const geom::Vector3D actor_acceleration = actor_client->GetAcceleration();
-
-    //   rotation = actor_rotation;
-    //   location = geom::Location(actor_location.x, -actor_location.y, actor_location.z);
-    //   velocity = geom::Vector3D(actor_velocity.x, -actor_velocity.y, actor_velocity.z);
-    //   acceleration = geom::Vector3D(actor_acceleration.x, -actor_acceleration.y, actor_acceleration.z);
-    // }
     ApolloObstacle(rpc::ActorId id, 
                    std::string type, 
                    geom::BoundingBox bbox,

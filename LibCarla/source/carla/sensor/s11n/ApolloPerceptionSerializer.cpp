@@ -6,7 +6,6 @@
 
 #include "carla/sensor/s11n/ApolloPerceptionSerializer.h"
 
-//TODO: change data format
 #include "carla/sensor/data/ApolloObstacleArray.h"
 
 namespace carla {

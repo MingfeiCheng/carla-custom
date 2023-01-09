@@ -52,16 +52,32 @@ void AApolloStateSensor::PostPhysTick(UWorld *World, ELevelTick TickType, float 
 {
   TRACE_CPUPROFILER_EVENT_SCOPE(AApolloStateSensor::PostPhysTick);
   
-  FVector ActorLocation = GetOwner()->GetActorLocation();
-  const FRotator ActorRotation = GetOwner()->GetActorRotation();
+  constexpr float TO_METERS = 1e-2;
+  const UCarlaEpisode* Episode = UCarlaStatics::GetCurrentEpisode(GetWorld());
 
-  //add gps & quant
-  ALargeMapManager * LargeMap = UCarlaStatics::GetLargeMapManager(GetWorld());
-  if (LargeMap)
-  {
-    ActorLocation = LargeMap->LocalToGlobalLocation(ActorLocation);
-  }
-  
+  const FCarlaActor* ActorView = Episode->FindCarlaActor(GetOwner());
+  const FActorInfo* ActorInfo = ActorView->GetActorInfo();
+
+  const carla::rpc::ActorId ApolloActorId = ActorView->GetActorId();
+  std::string ApolloActorType = "apollo";
+
+  FBoundingBox ActorBBox = UBoundingBoxCalculator::GetActorBoundingBox(It);
+  const carla::geom::Location ActorBBoxLocation = carla::geom::Location(ActorBBox.Origin.X * TO_METERS, ActorBBox.Origin.Y * TO_METERS, ActorBBox.Origin.Z * TO_METERS);
+  const carla::geom::Vector3D ActorBBoxExtent = carla::geom::Vector3D(ActorBBox.Extent.X * TO_METERS, ActorBBox.Extent.Y * TO_METERS, ActorBBox.Extent.Z * TO_METERS);
+  const carla::geom::Rotation ActorBBoxRotation = carla::geom::Rotation(ActorBBox.Rotation.Pitch, ActorBBox.Rotation.Yaw, ActorBBox.Rotation.Roll);
+  const carla::geom::BoundingBox ApolloActorBBox = carla::geom::BoundingBox(ActorBBoxLocation, ActorBBoxExtent, ActorBBoxRotation);
+
+  ActorTransform = ActorView->GetActorGlobalTransform();
+  const FVector ActorLocation = ActorTransform.GetLocation();
+  const FRotator ActorRotation = ActorTransform.GetRotation().Rotator();  
+  // FVector ActorLocation = GetOwner()->GetActorLocation();
+  // const FRotator ActorRotation = GetOwner()->GetActorRotation();
+  // //add gps & quant
+  // ALargeMapManager * LargeMap = UCarlaStatics::GetLargeMapManager(GetWorld());
+  // if (LargeMap)
+  // {
+  //   ActorLocation = LargeMap->LocalToGlobalLocation(ActorLocation);
+  // }
   const carla::geom::Location Location = ActorLocation;
   const carla::geom::GeoLocation CurrentLocation = CurrentGeoReference.Transform(Location);
 
@@ -75,22 +91,81 @@ void AApolloStateSensor::PostPhysTick(UWorld *World, ELevelTick TickType, float 
   double Longitude = CurrentLocation.longitude + LongitudeBias + LonError;
   double Altitude = CurrentLocation.altitude + AltitudeBias + AltError;
 
-  // Location, Rotation, Latitude, Longitude, Altitude, Quant
-  const carla::geom::Location ApolloLocation = carla::geom::Location(ActorLocation.X, -ActorLocation.Y, ActorLocation.Z);
-  const carla::geom::Rotation ApolloRotation = carla::geom::Rotation(-ActorRotation.Pitch, -(ActorRotation.Yaw + 90), ActorRotation.Roll);
-  const carla::geom::GeoLocation ApolloGeoLocation = carla::geom::GeoLocation{Latitude, Longitude, Altitude};
-  const FQuat ApolloRotationQuat = FRotator(ApolloRotation.pitch, ApolloRotation.yaw, ApolloRotation.roll).Quaternion();
-  const float qw = ApolloRotationQuat.W;
-  const float qx = ApolloRotationQuat.X;
-  const float qy = ApolloRotationQuat.Y;
-  const float qz = ApolloRotationQuat.Z;
+  const carla::geom::GeoLocation ApolloActorGeoLocation = carla::geom::GeoLocation{Latitude, Longitude, Altitude};
 
-  carla::rpc::Actor actor_obj = GetEpisode().SerializeActor(GetOwner());
+  // Location, Rotation, Latitude, Longitude, Altitude, Quant
+  const carla::geom::Location ApolloActorLocation = carla::geom::Location(ActorLocation.X * TO_METERS, -ActorLocation.Y * TO_METERS, ActorLocation.Z * TO_METERS);
+  const carla::geom::Rotation ApolloActorRotation = carla::geom::Rotation(-ActorRotation.Pitch, -(ActorRotation.Yaw + 90), ActorRotation.Roll);
+  
+  const FQuat ApolloActorRotationQuat = FRotator(ApolloActorRotation.pitch, ApolloActorRotation.yaw, ApolloActorRotation.roll).Quaternion();
+  const float ApolloActorQw = ApolloActorRotationQuat.W;
+  const float ApolloActorQx = ApolloActorRotationQuat.X;
+  const float ApolloActorQy = ApolloActorRotationQuat.Y;
+  const float ApolloActorQz = ApolloActorRotationQuat.Z;
+
+  // Velocity
+  FTransform ActorTransform;
+  FVector Velocity(0.0f);
+  // FVector Acceleration(0.0f);
+  carla::geom::Vector3D ActorAngularVelocity(0.0f, 0.0f, 0.0f);
+
+  check(ActorView);
+
+  if(ActorView->IsDormant())
+  {
+    const FActorData* ActorData = ActorView->GetActorData();
+    Velocity = TO_METERS * ActorData->Velocity;
+    ActorAngularVelocity = carla::geom::Vector3D
+                                {ActorData->AngularVelocity.X,
+                                -ActorData->AngularVelocity.Y,
+                                -ActorData->AngularVelocity.Z};
+  }
+  else
+  {
+    Velocity = TO_METERS * ActorView->GetActor()->GetVelocity();
+    const auto RootComponent = Cast<UPrimitiveComponent>(Actor.GetRootComponent());
+    const FVector AngularVelocity =
+        RootComponent != nullptr ?
+            RootComponent->GetPhysicsAngularVelocityInDegrees() :
+            FVector{0.0f, 0.0f, 0.0f};
+    ActorAngularVelocity = carla::geom::Vector3D(AngularVelocity.X, -AngularVelocity.Y, -AngularVelocity.Z);
+  }
+
+  FVector &PreviousVelocity = ActorView->GetActorInfo()->Velocity;
+  const FVector Acceleration = (Velocity - PreviousVelocity) / DeltaSeconds;
+  PreviousVelocity = Velocity;
+  ActorTransform = ActorView->GetActorGlobalTransform();
+  const FVector ActorLocation = ActorTransform.GetLocation();
+  const FRotator ActorRotation = ActorTransform.GetRotation().Rotator();    
+
+  const carla::geom::Vector3D ApolloActorAcceleration = carla::geom::Vector3D(Acceleration.X, -Acceleration.Y, Acceleration.Z);
+  const carla::geom::Vector3D ApolloActorVelocity = carla::geom::Vector3D(Velocity.X, -Velocity.Y, Velocity.Z);
+  const carla::geom::Vector3D ApolloActorAngularVelocity = ActorAngularVelocity;
+  const float ApolloActorSpeed = ApolloActorVelocity.Length();
+
+  // carla::rpc::Actor actor_obj = GetEpisode().SerializeActor(GetOwner());
+  auto Vehicle = Cast<ACarlaWheeledVehicle>(ActorView->GetActor());
+  const carla::rpc::VehicleControl ApolloActorControl = carla::rpc::VehicleControl{Vehicle->GetVehicleControl()};
   
   {
     TRACE_CPUPROFILER_EVENT_SCOPE_STR("AApolloStateSensor Stream Send");
     auto Stream = GetDataStream(*this);
-    Stream.Send(*this, actor_obj, ApolloGeoLocation, qw, qx, qy, qz);
+    // Stream.Send(*this, actor_obj, ApolloGeoLocation, qw, qx, qy, qz);
+    Stream.Send(*this, ApolloActorId,
+                       ApolloActorType,
+                       ApolloActorBBox, 
+                       ApolloActorLocation,
+                       ApolloActorRotation,
+                       ApolloActorVelocity,
+                       ApolloActorSpeed,
+                       ApolloActorAcceleration,
+                       ApolloActorAngularVelocity,
+                       ApolloActorGeoLocation,
+                       ApolloActorQw,
+                       ApolloActorQx,
+                       ApolloActorQy,
+                       ApolloActorQz,
+                       ApolloActorControl);
   }
 }
 
@@ -154,7 +229,7 @@ void AApolloStateSensor::BeginPlay()
 {
   Super::BeginPlay();
 
-  const UCarlaEpisode* episode = UCarlaStatics::GetCurrentEpisode(GetWorld());
-  CurrentGeoReference = episode->GetGeoReference();
+  const UCarlaEpisode* tmp_episode = UCarlaStatics::GetCurrentEpisode(GetWorld());
+  CurrentGeoReference = tmp_episode->GetGeoReference();
 }
 

@@ -86,9 +86,9 @@ namespace sensor {
     std::pair<FWorldObserver *, s11n::EpisodeStateSerializer>,
     std::pair<AApolloGnssSensor *, s11n::ApolloGnssSerializer>,
     std::pair<AApolloChassisSensor *, s11n::ApolloChassisSerializer>,
-    std::pair<AApolloPerceptionSensor *, s11n::ApolloPerceptionSerializer>,
     std::pair<AApolloTransformSensor *, s11n::ApolloTransformSerializer>,
-    std::pair<AApolloStateSensor *, s11n::ApolloStateSerializer>
+    std::pair<AApolloStateSensor *, s11n::ApolloStateSerializer>,
+    std::pair<AApolloPerceptionSensor *, s11n::ApolloPerceptionSerializer>
   >;
 
 } // namespace sensor

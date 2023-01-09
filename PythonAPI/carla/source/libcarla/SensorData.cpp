@@ -154,7 +154,15 @@ namespace data {
   std::ostream &operator<<(std::ostream &out, const ApolloStateMeasurement &meas) {
     out << "ApolloStateMeasurement(frame=" << std::to_string(meas.GetFrame())
         << ", timestamp=" << std::to_string(meas.GetTimestamp())
-        << ", actor=" << meas.GetActor()
+        << ", id=" << meas.GetId()
+        << ", type=" << meas.GetType()
+        << ", bbox=" << meas.GetBBox()
+        << ", location=" << meas.GetLocation()
+        << ", rotation=" << meas.GetRotation()
+        << ", velocity=" << meas.GetVelocity()
+        << ", speed=" << std::to_string(meas.GetSpeed())
+        << ", acceleration=" << meas.GetAcceleration()
+        << ", angular_velocity=" << meas.GetAngularVelocity()
         << ", geo_location=" << meas.GetGeoLocation()
         << ", longitude=" << meas.GetLongitude()
         << ", latitude=" << meas.GetLatitude()
@@ -163,6 +171,7 @@ namespace data {
         << ", qx=" << std::to_string(meas.GetQx())
         << ", qy=" << std::to_string(meas.GetQy())
         << ", qz=" << std::to_string(meas.GetQz())
+        << ", control=" << meas.GetControl()
         << ')';
     return out;
   }
@@ -203,19 +212,6 @@ namespace data {
         << ')';
     return out;
   }
-
-  // std::ostream &operator<<(std::ostream &out, const ApolloObstacle &obstacle) {
-  //   out << "ApolloObstacle(id=" << std::to_string(obstacle.id)
-  //       << ", type=" << std::to_string(obstacle.type)
-  //       << ", bbox=" << std::to_string(obstacle.bbox)
-  //       << ", rotation=" << std::to_string(obstacle.rotation)
-  //       << ", location=" << std::to_string(obstacle.location)
-  //       << ", velocity=" << std::to_string(obstacle.velocity)
-  //       << ", angular_velocity=" << std::to_string(obstacle.angular_velocity)
-  //       << ", acceleration=" << std::to_string(obstacle.acceleration) 
-  //       << ')';
-  //   return out;
-  // }
 
   std::ostream &operator<<(std::ostream &out, const ApolloObstacleArray &obstacles) {
     out << "ApolloObstacleArray(frame=" << std::to_string(obstacles.GetFrame())
@@ -605,15 +601,24 @@ void export_sensor_data() {
   ;
 
   class_<csd::ApolloStateMeasurement, bases<cs::SensorData>, boost::noncopyable, boost::shared_ptr<csd::ApolloStateMeasurement>>("ApolloStateMeasurement", no_init)
-    .add_property("actor", &csd::ApolloStateMeasurement::GetActor)
+    .add_property("id", &csd::ApolloStateMeasurement::GetId)
+    .add_property("type", &csd::ApolloStateMeasurement::GetType)
+    .add_property("bbox", &csd::ApolloStateMeasurement::GetBBox)
+    .add_property("location", &csd::ApolloStateMeasurement::GetLocation)
+    .add_property("rotation", &csd::ApolloStateMeasurement::GetRotation)
+    .add_property("velocity", &csd::ApolloStateMeasurement::GetVelocity)
+    .add_property("speed", &csd::ApolloStateMeasurement::GetSpeed)
+    .add_property("acceleration", &csd::ApolloStateMeasurement::GetAcceleration)
+    .add_property("angular_velocity", &csd::ApolloStateMeasurement::GetAngularVelocity)
+    .add_property("geo_location", &csd::ApolloStateMeasurement::GetGeoLocation)
     .add_property("longitude", &csd::ApolloStateMeasurement::GetLongitude)
     .add_property("latitude", &csd::ApolloStateMeasurement::GetLatitude)
     .add_property("altitude", &csd::ApolloStateMeasurement::GetAltitude)
-    .add_property("geo_location", &csd::ApolloStateMeasurement::GetGeoLocation)
     .add_property("qw", &csd::ApolloStateMeasurement::GetQw)
     .add_property("qx", &csd::ApolloStateMeasurement::GetQx)
     .add_property("qy", &csd::ApolloStateMeasurement::GetQy)
     .add_property("qz", &csd::ApolloStateMeasurement::GetQz)
+    .add_property("control", &csd::ApolloStateMeasurement::GetControl)
     .def(self_ns::str(self_ns::self))
   ;
 
@@ -699,12 +704,4 @@ void export_sensor_data() {
     .def("get_obstacle", &csd::ApolloObstacleArray::GetObstacle, (arg("index")))
     .def(self_ns::str(self_ns::self))
   ;
-
-  // class_<csd::ApolloObstacleArray, bases<cs::SensorData>, boost::noncopyable, boost::shared_ptr<csd::ApolloObstacleArray>>("ApolloObstacleArray", no_init)
-  //   .def("__len__", &csd::ApolloObstacleArray::size)
-  //   .def("__iter__", iterator<csd::ApolloObstacleArray>())
-  //   .def("__getitem__", +[](const csd::ApolloObstacleArray &self, size_t pos) -> csd::ApolloObstacle {
-  //   return self.at(pos);})
-  // ;
-  // might need to add &  
 }
