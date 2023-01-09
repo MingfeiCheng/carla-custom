@@ -125,7 +125,7 @@ void AApolloStateSensor::PostPhysTick(UWorld *World, ELevelTick TickType, float 
   else
   {
     Velocity = TO_METERS * ActorView->GetActor()->GetVelocity();
-    const auto RootComponent = Cast<UPrimitiveComponent>(Actor.GetRootComponent());
+    const auto RootComponent = Cast<UPrimitiveComponent>(GetOwner().GetRootComponent());
     const FVector AngularVelocity =
         RootComponent != nullptr ?
             RootComponent->GetPhysicsAngularVelocityInDegrees() :
