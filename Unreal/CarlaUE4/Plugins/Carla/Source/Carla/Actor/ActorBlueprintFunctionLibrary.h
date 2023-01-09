@@ -17,6 +17,7 @@
 
 #include "Carla/Sensor/ApolloGnssSensor.h"
 #include "Carla/Sensor/ApolloStateSensor.h"
+#include "Carla/Sensor/CustomStateSensor.h"
 
 #include "Kismet/BlueprintFunctionLibrary.h"
 
@@ -229,6 +230,8 @@ public:
   static void SetApolloGnss(const FActorDescription &Description, AApolloGnssSensor *ApolloGnss);
 
   static void SetApolloState(const FActorDescription &Description, AApolloStateSensor *ApolloState);
+
+  static void SetCustomState(const FActorDescription &Description, ACustomStateSensor *CustomState);
 
   static void SetIMU(const FActorDescription &Description, AInertialMeasurementUnit *IMU);
 

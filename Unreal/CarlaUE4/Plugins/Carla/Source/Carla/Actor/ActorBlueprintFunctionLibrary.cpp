@@ -1708,6 +1708,35 @@ void UActorBlueprintFunctionLibrary::SetApolloState(
       RetrieveActorAttributeToFloat("noise_alt_bias", Description.Variations, 0.0f));
 }
 
+void UActorBlueprintFunctionLibrary::SetCustomState(
+    const FActorDescription &Description,
+    ACustomStateSensor *CustomState)
+{
+  CARLA_ABFL_CHECK_ACTOR(CustomState);
+  if (Description.Variations.Contains("noise_seed"))
+  {
+    CustomState->SetSeed(
+      RetrieveActorAttributeToInt("noise_seed", Description.Variations, 0));
+  }
+  else
+  {
+    CustomState->SetSeed(CustomState->GetRandomEngine()->GenerateRandomSeed());
+  }
+
+  CustomState->SetLatitudeDeviation(
+      RetrieveActorAttributeToFloat("noise_lat_stddev", Description.Variations, 0.0f));
+  CustomState->SetLongitudeDeviation(
+      RetrieveActorAttributeToFloat("noise_lon_stddev", Description.Variations, 0.0f));
+  CustomState->SetAltitudeDeviation(
+      RetrieveActorAttributeToFloat("noise_alt_stddev", Description.Variations, 0.0f));
+  CustomState->SetLatitudeBias(
+      RetrieveActorAttributeToFloat("noise_lat_bias", Description.Variations, 0.0f));
+  CustomState->SetLongitudeBias(
+      RetrieveActorAttributeToFloat("noise_lon_bias", Description.Variations, 0.0f));
+  CustomState->SetAltitudeBias(
+      RetrieveActorAttributeToFloat("noise_alt_bias", Description.Variations, 0.0f));
+}
+
 void UActorBlueprintFunctionLibrary::SetIMU(
     const FActorDescription &Description,
     AInertialMeasurementUnit *IMU)
