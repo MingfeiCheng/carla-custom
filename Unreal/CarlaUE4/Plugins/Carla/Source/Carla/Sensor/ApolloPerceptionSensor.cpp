@@ -114,7 +114,7 @@ void AApolloPerceptionSensor::PostPhysTick(UWorld *World, ELevelTick TickType, f
 
   TSet<AActor *> DetectedActors;
   // Box->GetOverlappingActors(DetectedActors, ACarlaWheeledVehicle::StaticClass());
-  Box->GetOverlappingActors(DetectedActors,  AStaticMeshActor::StaticClass());
+  Box->GetOverlappingActors(DetectedActors);
   DetectedActors.Remove(GetOwner());
 
   if (DetectedActors.Num() > 0){
@@ -141,59 +141,79 @@ void AApolloPerceptionSensor::PostPhysTick(UWorld *World, ELevelTick TickType, f
         
         if (FCarlaActor::ActorType::Vehicle == ActorType){
           ApolloActorType = "dynamic.vehicle";
-        }else if (FCarlaActor::ActorType::TrafficSign == ActorType){
-          ApolloActorType = "static.traffic_sign";
-        }else if (FCarlaActor::ActorType::TrafficLight == ActorType){
-          ApolloActorType = "static.traffic_light";
         }else if (FCarlaActor::ActorType::Walker == ActorType){
           ApolloActorType = "dynamic.walker";
-        }       
-
-        FTransform ActorTransform;
-        FVector Velocity(0.0f);
-        // FVector Acceleration(0.0f);
-
-        check(ActorView);
-
-        if(ActorView->IsDormant())
-        {
-          const FActorData* ActorData = ActorView->GetActorData();
-          Velocity = TO_METERS * ActorData->Velocity;
-          // AngularVelocity = carla::geom::Vector3D
-          //                   {ActorData->AngularVelocity.X,
-          //                   ActorData->AngularVelocity.Y,
-          //                   ActorData->AngularVelocity.Z};
-          // Acceleration = FWorldObserver_GetAcceleration(*View, Velocity, DeltaSeconds);
-          // State = FWorldObserver_GetDormantActorState(*View, Registry);
-        }
-        else
-        {
-          Velocity = TO_METERS * ActorView->GetActor()->GetVelocity();
-          // AngularVelocity = FWorldObserver_GetAngularVelocity(*View->GetActor());
-          // Acceleration = FWorldObserver_GetAcceleration(*View, Velocity, DeltaSeconds);
-          // State = FWorldObserver_GetActorState(*View, Registry);
+        }else{
+          ApolloActorType = "static";
         }
 
-        FVector &PreviousVelocity = ActorView->GetActorInfo()->Velocity;
-        const FVector Acceleration = (Velocity - PreviousVelocity) / DeltaSeconds;
-        PreviousVelocity = Velocity;
-        ActorTransform = ActorView->GetActorGlobalTransform();
-        const FVector ActorLocation = ActorTransform.GetLocation();
-        const FRotator ActorRotation = ActorTransform.GetRotation().Rotator();    
+        if (ApolloActorType == "static"){
+          FTransform ActorTransform;
+          FVector Velocity(0.0f);
+          // FVector Acceleration(0.0f);
+          ActorTransform = ActorView->GetActorGlobalTransform();
+          const FVector ActorLocation = ActorTransform.GetLocation();
+          const FRotator ActorRotation = ActorTransform.GetRotation().Rotator();    
 
-        carla::geom::Vector3D ApolloActorAcceleration = carla::geom::Vector3D(Acceleration.X, -Acceleration.Y, Acceleration.Z);
-        carla::geom::Vector3D ApolloActorVelocity = carla::geom::Vector3D(Velocity.X, -Velocity.Y, Velocity.Z);
-        const carla::geom::Location ApolloActorLocation = carla::geom::Location(ActorLocation.X * TO_METERS, -ActorLocation.Y * TO_METERS, ActorLocation.Z * TO_METERS);
-        const carla::geom::Rotation ApolloActorRotation = carla::geom::Rotation(ActorRotation.Pitch, ActorRotation.Yaw, ActorRotation.Roll);
+          carla::geom::Vector3D ApolloActorAcceleration = carla::geom::Vector3D(0.0f, 0.0f, 0.0f);
+          carla::geom::Vector3D ApolloActorVelocity = carla::geom::Vector3D(0.0f, 0.0f, 0.0f);
+          const carla::geom::Location ApolloActorLocation = carla::geom::Location(ActorLocation.X * TO_METERS, -ActorLocation.Y * TO_METERS, ActorLocation.Z * TO_METERS);
+          const carla::geom::Rotation ApolloActorRotation = carla::geom::Rotation(ActorRotation.Pitch, ActorRotation.Yaw, ActorRotation.Roll);
 
-        ApolloObstacles.push_back(carla::sensor::data::ApolloObstacle(ApolloActorId, 
-                                                                      ApolloActorType,
-                                                                      ApolloActorBBox,
-                                                                      ApolloActorRotation,
-                                                                      ApolloActorLocation,
-                                                                      ApolloActorVelocity,
-                                                                      ApolloActorAcceleration));
-      }
+          ApolloObstacles.push_back(carla::sensor::data::ApolloObstacle(ApolloActorId, 
+                                                                        ApolloActorType,
+                                                                        ApolloActorBBox,
+                                                                        ApolloActorRotation,
+                                                                        ApolloActorLocation,
+                                                                        ApolloActorVelocity,
+                                                                        ApolloActorAcceleration));
+        }else{
+          FTransform ActorTransform;
+          FVector Velocity(0.0f);
+          // FVector Acceleration(0.0f);
+
+          check(ActorView);
+
+          if(ActorView->IsDormant())
+          {
+            const FActorData* ActorData = ActorView->GetActorData();
+            Velocity = TO_METERS * ActorData->Velocity;
+            // AngularVelocity = carla::geom::Vector3D
+            //                   {ActorData->AngularVelocity.X,
+            //                   ActorData->AngularVelocity.Y,
+            //                   ActorData->AngularVelocity.Z};
+            // Acceleration = FWorldObserver_GetAcceleration(*View, Velocity, DeltaSeconds);
+            // State = FWorldObserver_GetDormantActorState(*View, Registry);
+          }
+          else
+          {
+            Velocity = TO_METERS * ActorView->GetActor()->GetVelocity();
+            // AngularVelocity = FWorldObserver_GetAngularVelocity(*View->GetActor());
+            // Acceleration = FWorldObserver_GetAcceleration(*View, Velocity, DeltaSeconds);
+            // State = FWorldObserver_GetActorState(*View, Registry);
+          }
+
+          FVector &PreviousVelocity = ActorView->GetActorInfo()->Velocity;
+          const FVector Acceleration = (Velocity - PreviousVelocity) / DeltaSeconds;
+          PreviousVelocity = Velocity;
+          ActorTransform = ActorView->GetActorGlobalTransform();
+          const FVector ActorLocation = ActorTransform.GetLocation();
+          const FRotator ActorRotation = ActorTransform.GetRotation().Rotator();    
+
+          carla::geom::Vector3D ApolloActorAcceleration = carla::geom::Vector3D(Acceleration.X, -Acceleration.Y, Acceleration.Z);
+          carla::geom::Vector3D ApolloActorVelocity = carla::geom::Vector3D(Velocity.X, -Velocity.Y, Velocity.Z);
+          const carla::geom::Location ApolloActorLocation = carla::geom::Location(ActorLocation.X * TO_METERS, -ActorLocation.Y * TO_METERS, ActorLocation.Z * TO_METERS);
+          const carla::geom::Rotation ApolloActorRotation = carla::geom::Rotation(ActorRotation.Pitch, ActorRotation.Yaw, ActorRotation.Roll);
+
+          ApolloObstacles.push_back(carla::sensor::data::ApolloObstacle(ApolloActorId, 
+                                                                        ApolloActorType,
+                                                                        ApolloActorBBox,
+                                                                        ApolloActorRotation,
+                                                                        ApolloActorLocation,
+                                                                        ApolloActorVelocity,
+                                                                        ApolloActorAcceleration));
+          }
+        }
 
       TRACE_CPUPROFILER_EVENT_SCOPE_STR("AApolloPerceptionSensor Stream Send");
       auto Stream = GetDataStream(*this);
