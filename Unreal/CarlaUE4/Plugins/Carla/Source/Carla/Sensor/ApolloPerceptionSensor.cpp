@@ -6,6 +6,7 @@
 
 #include <exception>
 #include <fstream>
+#include <math.h>
 
 #include "Carla.h"
 #include "Carla/Sensor/WorldObserver.h"
@@ -130,6 +131,7 @@ void AApolloPerceptionSensor::PostPhysTick(UWorld *World, ELevelTick TickType, f
     const FCarlaActor* ActorView = It.Value.Get();
     const FActorInfo* ActorInfo = ActorView->GetActorInfo();
     const carla::rpc::ActorId ApolloActorId = ActorView->GetActorId();
+    
     if(OwnerActorId==ApolloActorId){
       continue;
     }
@@ -142,8 +144,10 @@ void AApolloPerceptionSensor::PostPhysTick(UWorld *World, ELevelTick TickType, f
       ApolloActorType = "dynamic.walker";
     }else if (FCarlaActor::ActorType::TrafficLight == ActorType){
       ApolloActorType = "static.traffic_light";
+      continue;
     }else if (FCarlaActor::ActorType::TrafficSign == ActorType){
       ApolloActorType = "static.traffic_sign";
+      continue;
     }else if (FCarlaActor::ActorType::Sensor == ActorType){
       continue;
     }else if (FCarlaActor::ActorType::INVALID == ActorType){
@@ -153,6 +157,12 @@ void AApolloPerceptionSensor::PostPhysTick(UWorld *World, ELevelTick TickType, f
     }
 
     FBoundingBox ActorBBox = UBoundingBoxCalculator::GetActorBoundingBox(ActorView->GetActor());
+    if(isnan(ActorBBox.Origin.X) || isnan(ActorBBox.Origin.Y) || isnan(ActorBBox.Origin.Z)){
+      continue;
+    }
+    if(isinf(ActorBBox.Extent.X) || isinf(ActorBBox.Extent.Y) || isinf(ActorBBox.Extent.Z)){
+      continue
+    }
     const carla::geom::Location ActorBBoxLocation = carla::geom::Location(ActorBBox.Origin.X * TO_METERS, ActorBBox.Origin.Y * TO_METERS, ActorBBox.Origin.Z * TO_METERS);
     const carla::geom::Vector3D ActorBBoxExtent = carla::geom::Vector3D(ActorBBox.Extent.X * TO_METERS, ActorBBox.Extent.Y * TO_METERS, ActorBBox.Extent.Z * TO_METERS);
     const carla::geom::Rotation ActorBBoxRotation = carla::geom::Rotation(ActorBBox.Rotation.Pitch, ActorBBox.Rotation.Yaw, ActorBBox.Rotation.Roll);
