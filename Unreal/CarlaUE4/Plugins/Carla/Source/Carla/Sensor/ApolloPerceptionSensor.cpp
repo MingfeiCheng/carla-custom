@@ -102,7 +102,6 @@ void AApolloPerceptionSensor::SetOwner(AActor *Owner)
   Super::SetOwner(Owner);
 
   auto BoundingBox = UBoundingBoxCalculator::GetActorBoundingBox(Owner);
-
   Box->SetBoxExtent(BoundingBox.Extent + Box->GetUnscaledBoxExtent());
 }
 
@@ -118,14 +117,14 @@ void AApolloPerceptionSensor::PostPhysTick(UWorld *World, ELevelTick TickType, f
   if (DetectedActors.Num() > 0){
     {      
       // const FActorRegistry &registry = episode.GetActorRegistry();
-      const UCarlaEpisode* Episode = UCarlaStatics::GetCurrentEpisode(GetWorld());
+      // const UCarlaEpisode* Episode = UCarlaStatics::GetCurrentEpisode(GetWorld());
       // const auto &Episode = GetEpisode();
       ObstacleArray ApolloObstacles;
       constexpr float TO_METERS = 1e-2;
 
       for(auto& It : DetectedActors){
-        // const FCarlaActor* View = It.Value.Get();
-        const FCarlaActor* ActorView = Episode->FindCarlaActor(It);
+        // const FCarlaActor* ActorView = It.Value.Get();
+        const FCarlaActor* ActorView = GetEpisode().FindCarlaActor(It);
         const FActorInfo* ActorInfo = ActorView->GetActorInfo();
 
         const carla::rpc::ActorId ApolloActorId = ActorView->GetActorId();
@@ -192,10 +191,12 @@ void AApolloPerceptionSensor::PostPhysTick(UWorld *World, ELevelTick TickType, f
                                                                       ApolloActorVelocity,
                                                                       ApolloActorAcceleration));
       }
+
       TRACE_CPUPROFILER_EVENT_SCOPE_STR("AApolloPerceptionSensor Stream Send");
       auto Stream = GetDataStream(*this);
       // auto Buffer = Stream.PopBufferFromPool();
       Stream.Send(*this, ApolloObstacles);
+      
     }
   }
 
