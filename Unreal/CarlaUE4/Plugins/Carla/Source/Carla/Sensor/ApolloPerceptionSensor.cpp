@@ -147,7 +147,7 @@ void AApolloPerceptionSensor::PostPhysTick(UWorld *World, ELevelTick TickType, f
           ApolloActorType = "static";
         }
 
-        if (ApolloActorType == "static"){
+        if (ApolloActorType.compare("static") == 0){
           FTransform ActorTransform;
           FVector Velocity(0.0f);
           // FVector Acceleration(0.0f);
