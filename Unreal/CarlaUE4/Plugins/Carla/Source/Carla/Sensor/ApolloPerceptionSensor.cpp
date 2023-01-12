@@ -111,7 +111,8 @@ void AApolloPerceptionSensor::PostPhysTick(UWorld *World, ELevelTick TickType, f
   TRACE_CPUPROFILER_EVENT_SCOPE(AApolloPerceptionSensor::PostPhysTick);
 
   TSet<AActor *> DetectedActors;
-  Box->GetOverlappingActors(DetectedActors, ACarlaWheeledVehicle::StaticClass());
+  // Box->GetOverlappingActors(DetectedActors, ACarlaWheeledVehicle::StaticClass());
+  Box->GetOverlappingActors(DetectedActors,  AActor::StaticClass());
   DetectedActors.Remove(GetOwner());
 
   if (DetectedActors.Num() > 0){
@@ -196,7 +197,7 @@ void AApolloPerceptionSensor::PostPhysTick(UWorld *World, ELevelTick TickType, f
       auto Stream = GetDataStream(*this);
       // auto Buffer = Stream.PopBufferFromPool();
       Stream.Send(*this, ApolloObstacles);
-      
+
     }
   }
 
