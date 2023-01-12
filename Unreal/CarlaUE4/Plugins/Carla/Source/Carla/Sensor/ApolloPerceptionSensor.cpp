@@ -19,6 +19,8 @@
 #include "Carla/Actor/CarlaActor.h"
 #include "Carla/Vehicle/CarlaWheeledVehicle.h"
 
+#include "Engine/StaticMeshActor.h"
+
 #include "CoreGlobals.h"
 
 #include <compiler/disable-ue4-macros.h>
@@ -112,7 +114,7 @@ void AApolloPerceptionSensor::PostPhysTick(UWorld *World, ELevelTick TickType, f
 
   TSet<AActor *> DetectedActors;
   // Box->GetOverlappingActors(DetectedActors, ACarlaWheeledVehicle::StaticClass());
-  Box->GetOverlappingActors(DetectedActors,  AActor::StaticClass());
+  Box->GetOverlappingActors(DetectedActors,  AStaticMeshActor::StaticClass());
   DetectedActors.Remove(GetOwner());
 
   if (DetectedActors.Num() > 0){
